@@ -1,5 +1,7 @@
 # influxdb-client-r
 
+**DISCLAIMER: THIS IS A WORK IN PROGRESS**
+
 This repository contains R client package for InfluxDB 2.0.
 
 * [Features](#features)
