@@ -88,7 +88,7 @@ InfluxDBClient <- R6::R6Class(
 
       # process response
       if (resp == "\r\n") {
-        print('empty response')
+        message('empty response')
         NULL # TODO return empty list?
       } else {
         # split stream by empty line
@@ -108,7 +108,7 @@ InfluxDBClient <- R6::R6Class(
               nrows = 3,
               comment.char = ""
             )[2, ])
-          print(datatypes)
+          message(sprintf("%s ", datatypes))
 
           # map Flux types to R types
           colClasses <-
@@ -147,17 +147,6 @@ InfluxDBClient <- R6::R6Class(
         tables
       }
     }
-
-#    getQueryApi = function() {
-#      .Deprecated("query")
-#      defaultHeaders <- c()
-#      defaultHeaders['Authorization'] <- paste0('Token ', self$token)
-#      print(paste('url', self$url))
-#      apiClient <- ApiClient$new(basePath = paste0(self$url, '/api/v2'),
-#                                 defaultHeaders = defaultHeaders)
-#      print(paste('got api client with basePath', apiClient$basePath))
-#      QueryApi$new(apiClient)
-#    }
   ),
   private = list(
     .apiClient = NULL,
@@ -174,7 +163,6 @@ InfluxDBClient <- R6::R6Class(
           private$.apiClient <-
             FluxApiClient$new(basePath = paste0(self$url, '/api/v2'),
                               defaultHeaders = defaultHeaders)
-          print(paste('got new api client for ', private$.apiClient$basePath))
         }
       } else {
         private$.apiClient <- value
@@ -186,7 +174,6 @@ InfluxDBClient <- R6::R6Class(
       if (missing(value)) {
         if (is.null(private$.healthApi)) {
           private$.healthApi <- HealthApi$new(self$apiClient)
-          print('got new health api')
         }
       } else {
         private$.healthApi <- value
@@ -198,7 +185,6 @@ InfluxDBClient <- R6::R6Class(
       if (missing(value)) {
         if (is.null(private$.queryApi)) {
           private$.queryApi <- QueryApi$new(self$apiClient)
-          print('got new query api')
         }
       } else {
         private$.queryApi <- value
