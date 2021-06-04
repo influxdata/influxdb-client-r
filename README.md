@@ -2,17 +2,19 @@
 
 This repository contains R client package for InfluxDB 2.0.
 
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-    - [Client instantiation](#client-instantiation)
-    - [Querying data](#querying-data)
-    - [Health checking](#health-checking)
-- [License](#license)
+* [Features](#features)
+* [Installation](#installation)
+  * [Installing R dependencies](#installing-r-dependencies)
+  * [Installing `influxdbclient` package](#installing-influxdbclient-package)
+* [Usage](#usage)
+  * [Client instantiation](#client-instantiation)
+  * [Querying data](#querying-data)
+  * [Health checking](#health-checking)
+* [License](#license)
 
 ## Features
 
-InfluxDB 2.0 client supports:
+InfluxDB 2.0 Client supports:
 
 - Querying data using Flux
     - Streaming result to list of `data.frame` 
@@ -21,14 +23,20 @@ InfluxDB 2.0 client supports:
 
 ## Installation
 
-```R
-install.packages("influxdbclient")
+### Installing R dependencies  
+
+Install required packages in **R** using
+
+```r
+install.packages(c('devtools', 'httr', 'bit64', 'plyr', 'jsonlite', 'rlist'))
 ```
 
-## Loading
+### Installing `influxdbclient` package  
 
-```R
-library(influxdbclient)
+Install the latest version of the `influxdbclient` package in **R** using
+
+```r
+devtools::install_github("bonitoo-io/influxdbclient")
 ```
 
 ## Usage
@@ -36,7 +44,7 @@ library(influxdbclient)
 ### Client instantiation
 Specify **url**, **token** and **org** via parameters:
 
-```R
+```r
 client = InfluxDBClient$new(url = 'http://localhost:8086',
                             token = 'my-token',
                             org = 'my-org')
@@ -52,7 +60,7 @@ client = InfluxDBClient$new(url = 'http://localhost:8086',
 
 ### Querying data
 
-```R
+```r
 client = InfluxDBClient$new(url = 'http://localhost:8086',
                             token = 'my-token',
                             org = 'my-org')
@@ -70,7 +78,7 @@ Response is a list of `data.frame`.
 
 ### Health checking
 
-```R
+```r
 client = InfluxDBClient$new(url = 'http://localhost:8086',
                             token = 'my-token',
                             org = 'my-org')
