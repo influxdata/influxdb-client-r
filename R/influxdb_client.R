@@ -41,7 +41,7 @@ InfluxDBClient <- R6::R6Class(
         "#datatype" = "NULL",
         "string" = "character",
         "long" = "integer64",
-        "bool" = "logical",
+        "boolean" = "logical",
         "dateTime:RFC3339" = "rfc3339"
       )
     },
@@ -118,7 +118,7 @@ InfluxDBClient <- R6::R6Class(
                 "#datatype" = "NULL",
                 "string" = "character",
                 "long" = "integer64",
-                "bool" = "logical",
+                "boolean" = "logical",
                 "dateTime:RFC3339" = "rfc3339"
               ),
               warn_missing = FALSE
