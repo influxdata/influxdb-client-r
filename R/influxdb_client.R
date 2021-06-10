@@ -246,7 +246,7 @@ InfluxDBClient <- R6::R6Class(
         con <- textConnection("buffer", open = "w", local = TRUE)
         for (i in 1:nrow(df)) {
           row <- df[i,]
-          measurement <- row[measurementCol]
+          measurement <- row[,measurementCol]
           tags <- row[tagCols]
           fields <- row[fieldCols]
           fieldNames <- NULL
@@ -255,14 +255,14 @@ InfluxDBClient <- R6::R6Class(
           } else {
             fieldNames <- fieldCols
           }
-          time <- row[timeCol]
+          time <- row[,timeCol]
           line <- sprintf("%s,%s %s %s",
-                          measurement[[1]],
+                          measurement,
                           paste(tagCols, lapply(lapply(tags, private$as.flux.booleanIf), as.character),
                                 sep = "=", collapse = ","),
                           paste(fieldNames, lapply(lapply(fields, private$as.flux.booleanIf), as.character),
                                 sep = "=", collapse = ","),
-                          private$as.flux.timestamp(time[[1]], precision))
+                          private$as.flux.timestamp(time, precision))
           writeLines(line, con = con)
         }
         close(con)
