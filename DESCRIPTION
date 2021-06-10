@@ -11,5 +11,4 @@ License: MIT License + file LICENSE
 LazyData: true
 Imports: R6, httr, jsonlite, base64enc, bit64, nanotime, plyr, rlist
 RoxygenNote: 7.1.1
-Suggests:
-    testthat (>= 3.0.0)
+Suggests: testthat
