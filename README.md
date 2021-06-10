@@ -35,7 +35,7 @@ InfluxDB 2.0 Client supports:
 Install required dependencies with
 
 ```r
-install.packages(c("httr", "jsonlite", "base64enc", "bit64", "nanotime", "plyr", "rlist"))
+install.packages(c("httr", "jsonlite", "base64enc", "bit64", "nanotime", "plyr"))
 ```
 
 ### Installing `influxdbclient` package  

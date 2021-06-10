@@ -176,12 +176,14 @@ InfluxDBClient <- R6::R6Class(
         dfTables <- split(df, df$table)
 
         # append tables to result
-        for (dfTable in dfTables) {
-          table <- dfTable[-1] # first column is table index, no longer needed
-          tables <- rlist::list.append(tables, table)
-        }
+        mtables <- lapply(dfTables, function (dfTable) {
+          rownames(dfTable) <- NULL # reset row names to seq starting at 1
+          dfTable[-1] # first column is table index, no longer needed
+        })
+        tables <- append(tables, mtables)
       }
-      tables
+
+      unname(tables)
     },
 
     toLineProtocol = function(x,
@@ -244,6 +246,7 @@ InfluxDBClient <- R6::R6Class(
         close(con)
         buffer
       })
+
       buffers
     }
   ),
