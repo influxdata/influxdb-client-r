@@ -50,7 +50,7 @@ test_that("toLineProtocol", {
   expect_equal(lp, expected)
 })
 
-test_that("toLineProtocol pivoted", {
+test_that("toLineProtocol / pivoted", {
   # rename some columns in order to test non-default parameters
   # change measurement value to avoid overwriting source
   data <- lapply(.data.pivoted,
@@ -67,4 +67,52 @@ test_that("toLineProtocol pivoted", {
                                timeCol = 'time')
   expected <- .lp.pivoted
   expect_equal(lp, expected)
+})
+
+test_that("toLineProtocol / not existing measurement column", {
+  data <- .data.pivoted
+  f <- function () {
+    .client$toLineProtocol(data, precision = 'ns',
+                           measurementCol = 'no-measurement',
+                           tagCols = c("region", "sensor_id"),
+                           fieldCols = c("altitude", "grounded", "temperature"),
+                           timeCol = '_time')
+  }
+  expect_error(f(), "measurement column 'no-measurement' not found in data frame")
+})
+
+test_that("toLineProtocol / not existing tag columns", {
+  data <- .data.pivoted
+  f <- function () {
+    .client$toLineProtocol(data, precision = 'ns',
+                           measurementCol = '_measurement',
+                           tagCols = c("region", "sensor_id", "no-1", "no-2"),
+                           fieldCols = c("altitude", "grounded", "temperature"),
+                           timeCol = '_time')
+  }
+  expect_error(f(), "tag columns not found in data frame: no-1,no-2")
+})
+
+test_that("toLineProtocol / not existing field columns", {
+  data <- .data.pivoted
+  f <- function () {
+    .client$toLineProtocol(data, precision = 'ns',
+                           measurementCol = '_measurement',
+                           tagCols = c("region", "sensor_id"),
+                           fieldCols = c("altitude", "no-1", "no-2"),
+                           timeCol = '_time')
+  }
+  expect_error(f(), "field columns not found in data frame: no-1,no-2")
+})
+
+test_that("toLineProtocol / not existing time column", {
+  data <- .data.pivoted
+  f <- function () {
+    .client$toLineProtocol(data, precision = 'ns',
+                           measurementCol = '_measurement',
+                           tagCols = c("region", "sensor_id"),
+                           fieldCols = c("altitude", "grounded", "temperature"),
+                           timeCol = 'no-time')
+  }
+  expect_error(f(), "time column 'no-time' not found in data frame")
 })

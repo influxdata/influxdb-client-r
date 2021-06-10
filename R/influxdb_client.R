@@ -194,12 +194,18 @@ InfluxDBClient <- R6::R6Class(
                               timeCol = '_time') {
       if (is.null(measurementCol)) {
         stop('`measurementCol` parameter cannot be NULL')
+      } else if (is.vector(measurementCol) & length(measurementCol) != 1) {
+        stop('`measurementCol` parameter must select single column')
       }
       if (is.null(fieldCols)) {
         stop('`fieldCols` parameter cannot be NULL')
+      } else if (is.vector(fieldCols) & length(fieldCols) == 0) {
+        stop('`fieldCols` parameter cannot be empty vector')
       }
       if (is.null(timeCol)) {
         stop('`timeCol` parameter cannot be NULL')
+      } else if (is.vector(timeCol) & length(timeCol) != 1) {
+        stop('`timeCol` parameter must select single column')
       }
 
       # temporary sanity check
@@ -218,8 +224,24 @@ InfluxDBClient <- R6::R6Class(
 
       # for all data frames
       buffers <- lapply(x, FUN = function(df) {
-        if (!all(fieldCols %in% colnames(df))) {
-          stop('not all field columns found in data frame x')
+        colNames <- colnames(df)
+        if (!(measurementCol %in% colNames)) {
+          stop(sprintf("measurement column '%s' not found in data frame",
+                       measurementCol))
+        }
+        if (!all(tagCols %in% colNames)) {
+          notFound <- tagCols[!(tagCols %in% colNames)]
+          stop(sprintf('tag columns not found in data frame: %s',
+                       paste(notFound, sep = "", collapse = ",")))
+        }
+        if (!all(fieldCols %in% colNames)) {
+          notFound <- fieldCols[!(fieldCols %in% colNames)]
+          stop(sprintf('field columns not found in data frame: %s',
+                       paste(notFound, sep = "", collapse = ",")))
+        }
+        if (!(timeCol %in% colNames)) {
+          stop(sprintf("time column '%s' not found in data frame",
+                       timeCol))
         }
         con <- textConnection("buffer", open = "w", local = TRUE)
         for (i in 1:nrow(df)) {
