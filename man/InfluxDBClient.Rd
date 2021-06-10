@@ -27,6 +27,9 @@ InfluxDBClient Class
 \item \href{#method-new}{\code{InfluxDBClient$new()}}
 \item \href{#method-health}{\code{InfluxDBClient$health()}}
 \item \href{#method-query}{\code{InfluxDBClient$query()}}
+\item \href{#method-write}{\code{InfluxDBClient$write()}}
+\item \href{#method-fromAnnotatedCsv}{\code{InfluxDBClient$fromAnnotatedCsv()}}
+\item \href{#method-toLineProtocol}{\code{InfluxDBClient$toLineProtocol()}}
 \item \href{#method-clone}{\code{InfluxDBClient$clone()}}
 }
 }
@@ -54,6 +57,40 @@ InfluxDBClient Class
 \subsection{Method \code{query()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$query(text)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-write"></a>}}
+\if{latex}{\out{\hypertarget{method-write}{}}}
+\subsection{Method \code{write()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$write(x, bucket, precision = "ns", ...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-fromAnnotatedCsv"></a>}}
+\if{latex}{\out{\hypertarget{method-fromAnnotatedCsv}{}}}
+\subsection{Method \code{fromAnnotatedCsv()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$fromAnnotatedCsv(x)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-toLineProtocol"></a>}}
+\if{latex}{\out{\hypertarget{method-toLineProtocol}{}}}
+\subsection{Method \code{toLineProtocol()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$toLineProtocol(
+  x,
+  precision,
+  measurementCol = "_measurement",
+  tagCols = NULL,
+  fieldCols = c(`_field` = "_value"),
+  timeCol = "_time"
+)}\if{html}{\out{</div>}}
 }
 
 }
