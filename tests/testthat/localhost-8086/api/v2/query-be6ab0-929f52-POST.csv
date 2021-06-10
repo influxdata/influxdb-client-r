@@ -1,0 +1,10 @@
+#group,false,false,false,true,true,true,false,false,false
+#datatype,string,long,dateTime:RFC3339,string,string,string,long,boolean,double
+#default,_result,,,,,,,,
+,result,table,_time,_measurement,region,sensor_id,altitude,grounded,temperature
+,,0,2021-06-09T09:52:41Z,airSensors,south,TLM0101,549,false,71.78440995425728
+,,0,2021-06-09T09:52:51Z,airSensors,south,TLM0101,547,false,71.76843988420723
+,,0,2021-06-09T09:53:01Z,airSensors,south,TLM0101,563,true,71.78199276624738
+,,0,2021-06-09T09:53:11Z,airSensors,south,TLM0101,560,true,71.74877669961361
+,,0,2021-06-09T09:53:21Z,airSensors,south,TLM0101,544,false,71.73355792660601
+
