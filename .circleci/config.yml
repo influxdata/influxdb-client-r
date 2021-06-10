@@ -2,18 +2,15 @@ version: 2
 jobs:
   build:
     docker:
-      - image: rocker/verse:3.6.3
+      - image: rocker/tidyverse:4.0.5
     steps:
       - checkout
       - run:
           name: Install package dependencies
-          command: R -e "install.packages(c('httr', 'jsonlite', 'base64enc', 'bit64', 'nanotime', 'plyr', 'rlist'))"
+          command: R -e "devtools::install_deps(dep = TRUE)"
       - run:
           name: Build package
           command: R CMD build .
-      - run:
-          name: Install tests package dependencies
-          command: R -e "install.packages(c('testthat', 'httptest'))"
       - run:
           name: Check package
           command: R CMD check --no-manual *tar.gz
