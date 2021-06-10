@@ -1,0 +1,41 @@
+{
+    "authorizations": "/api/v2/authorizations",
+    "backup": "/api/v2/backup",
+    "buckets": "/api/v2/buckets",
+    "checks": "/api/v2/checks",
+    "dashboards": "/api/v2/dashboards",
+    "delete": "/api/v2/delete",
+    "external": {
+        "statusFeed": "https://www.influxdata.com/feed/json"
+    },
+    "flags": "/api/v2/flags",
+    "labels": "/api/v2/labels",
+    "me": "/api/v2/me",
+    "notificationEndpoints": "/api/v2/notificationEndpoints",
+    "notificationRules": "/api/v2/notificationRules",
+    "orgs": "/api/v2/orgs",
+    "plugins": "/api/v2/telegraf/plugins",
+    "query": {
+        "analyze": "/api/v2/query/analyze",
+        "ast": "/api/v2/query/ast",
+        "self": "/api/v2/query",
+        "suggestions": "/api/v2/query/suggestions"
+    },
+    "restore": "/api/v2/restore",
+    "scrapers": "/api/v2/scrapers",
+    "setup": "/api/v2/setup",
+    "signin": "/api/v2/signin",
+    "signout": "/api/v2/signout",
+    "sources": "/api/v2/sources",
+    "swagger": "/api/v2/swagger.json",
+    "system": {
+        "debug": "/debug/pprof",
+        "health": "/health",
+        "metrics": "/metrics"
+    },
+    "tasks": "/api/v2/tasks",
+    "telegrafs": "/api/v2/telegrafs",
+    "users": "/api/v2/users",
+    "variables": "/api/v2/variables",
+    "write": "/api/v2/write"
+}

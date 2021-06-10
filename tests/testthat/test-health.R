@@ -1,9 +1,8 @@
-context("Testing health context")
+.client = test.client
 
-test_that("testing health", {
-  client <- InfluxDBClient$new(url="http://localhost:8086",
-                               token = "NoY1Uie5rIoWEkJ263N8nf-A4Oc-A3ApPWMqcNO1xiQDmu4jChLJIwvVG826bWWsNGpbfCgPaj6MO2LPynUAbw==",
-                               org="bonitoo")
-#  response <- client$health()
-#  print(response)
+with_mock_api({
+  test_that("health", {
+    response <- .client$health()
+    expect_equal(class(response), c('HealthCheck', 'R6'))
+  })
 })

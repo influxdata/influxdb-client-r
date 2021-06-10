@@ -1,10 +1,22 @@
-context("Testing query context")
+.client = test.client
+.data = test.airSensors.data
+.data.pivoted = test.airSensors.data.pivoted
 
-test_that("testing query", {
-  print('TEST!!!')
-  client <- InfluxDBClient$new(url="http://localhost:8086",
-                               token = "NoY1Uie5rIoWEkJ263N8nf-A4Oc-A3ApPWMqcNO1xiQDmu4jChLJIwvVG826bWWsNGpbfCgPaj6MO2LPynUAbw==",
-                               org="bonitoo")
-#  response <- client$query(text = 'from(bucket: \\"my-bucket\\") |> range(start: -100y) |> limit(n: 10) |> drop(columns: [\\"_start\\", \\"_stop\\"])')
-#  print(response)
+with_mock_api({
+  test_that("query", {
+    response <- .client$query(text='from(bucket: \\"r-testing\\") |> range(start: -10y) |> filter(fn: (r) => r._measurement == \\"airSensors\\" and r.sensor_id == \\"TLM0101\\") |> limit(n: 5) |> drop(columns: [\\"_start\\", \\"_stop\\"])')
+    expected <- .data
+    expect_equal(response, expected)
+  })
+
+  test_that("query pivoted", {
+    response <- .client$query(text='import \\"influxdata/influxdb/schema\\" from(bucket: \\"r-testing\\") |> range(start: -10y) |> filter(fn: (r) => r._measurement == \\"airSensors\\" and r.sensor_id == \\"TLM0101\\") |> schema.fieldsAsCols() |> limit(n: 5) |> drop(columns: [\\"_start\\", \\"_stop\\"])')
+    expected <- .data.pivoted
+    expect_equal(response, expected)
+  })
+
+  test_that("query empty result", {
+    response <- .client$query(text='from(bucket: \\"r-testing\\") |> range(start: -10y) |> filter(fn: (r) => r._measurement == \\"doesnotexist\\")')
+    expect_null(response)
+  })
 })
