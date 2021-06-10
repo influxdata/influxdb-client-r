@@ -9,6 +9,6 @@ Depends: R (>= 3.3)
 Encoding: UTF-8
 License: MIT License + file LICENSE
 LazyData: true
-Imports: R6, httr, jsonlite, base64enc, bit64, nanotime, plyr, rlist
+Imports: R6, httr, jsonlite, base64enc, bit64, nanotime, plyr
 RoxygenNote: 7.1.1
 Suggests: testthat, httptest
