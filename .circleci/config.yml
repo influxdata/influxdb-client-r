@@ -7,7 +7,7 @@ jobs:
       - checkout
       - run:
           name: Install package dependencies
-          command: R -e "devtools::install_deps(dep = TRUE)"
+          command: R -e "devtools::install_deps(dependencies = TRUE, upgrade = 'always')"
       - run:
           name: Build package
           command: R CMD build .
