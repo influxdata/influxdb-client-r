@@ -18,7 +18,7 @@ with_mock_api({
     expect_null(response)
   })
 
-  test_that("write pivoted", {
+  test_that("write / pivoted", {
     # rename some columns in order to test non-default parameters
     # change measurement value to avoid overwriting source
     data <- lapply(.data.pivoted,
