@@ -60,8 +60,8 @@ client <- InfluxDBClient$new(url = "http://localhost:8086",
 | Parameter | Description | Type | Default |
 |---|---|---|---|
 | `url` | InfluxDB instance URL | `character` | none |
-| `token` | Authentication token | `character` | none |
-| `org` | Organization name | `character` | none |
+| `token` | authentication token | `character` | none |
+| `org` | organization name | `character` | none |
 
 ### Querying data
 
@@ -138,19 +138,21 @@ The example is valid for `data.frame` `data` like the following:
 
 | Parameter | Description | Type | Default |
 |---|---|---|---|
-| `x` | Data  | `data.frame` (or list of) | none |
-| `bucket` | Target bucket name | `character` | none |
-| `precision` | Timestamp precision | `character` (one of `s`, `ms`, `us`, `ns`) | none |
-| `measurementCol` | Measurement column name | `character` | `'_measurement'` |
-| `tagCols` | Tags column names | `character` | `NULL` |
-| `fieldCols` | Fields column names | `character` | `c("_field"="_value")` |
-| `timeCol` | Time column name | `character` | `'_time'` |
+| `x` | data  | `data.frame` (or list of) | none |
+| `bucket` | target bucket name | `character` | none |
+| `precision` | timestamp precision | `character` (one of `s`, `ms`, `us`, `ns`) | none |
+| `measurementCol` | measurement column name | `character` | `'_measurement'` |
+| `tagCols` | tags column names | `character` | `NULL` |
+| `fieldCols` | fields column names | `character` | `c("_field"="_value")` |
+| `timeCol` | time column name | `character` | `'_time'` |
+
+Supported time column value types: `nanotime`, `POSIXct`
+
+Response is an instance of `ApiResponse` in case of error, otherwise `NULL`.
 
 Note: default `fieldCols` are suitable for writing back unpivoted data retrieved from
 InfluxDB before. For usual tables ("pivoted" in Flux world), `fieldCols` should be
 unnamed list, eg. `c("humidity", "temperature", ...)`.
-
-Response is an instance of `ApiResponse` in case of error, otherwise `NULL`.
 
 ### Health checking
 
