@@ -292,11 +292,12 @@ InfluxDBClient <- R6::R6Class(
           lpTimestamp <- private$as.lp.timestamp(time, precision)
 
           # construct line
-          line <- if (length(tagCols)) {
-            sprintf("%s,%s %s %s", lpMeasurement, lpTagSet, lpFieldSet, lpTimestamp)
-          } else {
-            sprintf("%s %s %s", lpMeasurement, lpFieldSet, lpTimestamp)
-          }
+          line <-
+            if (length(tagCols) > 0) {
+              sprintf("%s,%s %s %s", lpMeasurement, lpTagSet, lpFieldSet, lpTimestamp)
+            } else {
+              sprintf("%s %s %s", lpMeasurement, lpFieldSet, lpTimestamp)
+            }
 
           # write to buffer
           writeLines(line, con = con)
