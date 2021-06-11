@@ -57,6 +57,11 @@ InfluxDBClient <- R6::R6Class(
     },
 
     query = function(text) {
+      # validate parameters
+      if (is.null(text)) {
+        stop("'text' cannot be NULL")
+      }
+
       # escape double quotes
       text <- gsub("\"", "\\\"", text, fixed = TRUE)
 
@@ -96,19 +101,18 @@ InfluxDBClient <- R6::R6Class(
                      fieldCols = c("_field"="_value"),
                      timeCol = '_time',
                      ...) {
-      # detect input type
-      clazz <- NULL
-      if (is.vector(x)) {
-        if (length(x) == 0) {
-          stop('Empty input vector')
-        } else {
-          clazz <- class(x[[1]])
-        }
-      } else {
-        clazz <- class(x)
+      # validate parameters
+      xIsCharacter <- all(lapply(x, class) == 'character')
+      xIsDataFrame <- all(lapply(x, class) == 'data.frame')
+      if (!(xIsCharacter | xIsDataFrame)) {
+        stop("'x' must be data.frame or character")
+      }
+      if (is.null(bucket)) {
+        stop("'bucket' cannot be NULL")
       }
 
-      # serialize x into line protocol
+      # serialize input into line protocol
+      clazz <- if (xIsCharacter) "character" else if (xIsDataFrame) "data.frame"
       body <- switch(
         clazz,
         "character"= { x },

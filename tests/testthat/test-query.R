@@ -27,3 +27,10 @@ with_mock_api({
     expect_equal(response, expected)
   })
 })
+
+test_that("query / NULL text query", {
+  f <- function() {
+    .client$query(text=NULL)
+  }
+  expect_error(f(), "'text' cannot be NULL")
+})

@@ -35,4 +35,13 @@ with_mock_api({
                               timeCol = 'time')
     expect_null(response)
   })
+
+  test_that("write / NULL bucket", {
+    data <- data.frame()
+    f = function() {
+      .client$write(data, bucket = NULL, precision = 'ns',
+                    tagCols = c("region", "sensor_id"))
+    }
+    expect_error(f(), "'bucket' cannot be NUL")
+  })
 })
