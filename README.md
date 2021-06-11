@@ -24,7 +24,7 @@ InfluxDB 2.0 Client supports:
 
 ### Known Issues
 
-- [query] double quotes in Flux query text must be escaped manually
+- [write] batching not implemented yet
 
 ## Installation
 
@@ -69,7 +69,7 @@ client <- InfluxDBClient$new(url = 'http://localhost:8086',
                              token = 'my-token',
                              org = 'my-org')
                             
-data <- client$query(text='from(bucket: \\"my-bucket\\") |> range(start: -1h) |> drop(columns: [\\"_start\\", \\"_stop\\"])')
+data <- client$query(text='from(bucket: "my-bucket") |> range(start: -1h) |> drop(columns: ["_start", "_stop"])')
 ```
 
 Response is a `list` of `data.frame`s.
