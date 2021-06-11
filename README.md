@@ -24,8 +24,6 @@ InfluxDB 2.0 Client supports:
 
 ### Known Issues
 
-- [write / line protocol] string value fields are not supported yet
-- [write / line protocol] special character escaping is not implemented yet (https://docs.influxdata.com/influxdb/cloud/reference/syntax/line-protocol/#special-characters)
 - [query] double quotes in Flux query text must be escaped manually
 
 ## Installation
@@ -111,17 +109,17 @@ response <- client$write(data, bucket = 'my-bucket', precision = 'us',
 
 | Parameter | Description | Type | Default |
 |---|---|---|---|
-| `data` | Data  | `data.frame` | none |
+| `data` | Data  | `data.frame` (or list of) | none |
 | `bucket` | Target bucket name | `character` | none |
 | `precision` | Timestamp precision | `character` (one of `s`, `ms`, `us`, `ns`) | none |
 | `measurementCol` | Measurement column name | `character` | `'_measurement'` |
-| `tagCols` | Tag column name(s) | `character` | `NULL` |
-| `fieldCols` | Field column name(s) | `character` | `c("_field"="_value")` |
+| `tagCols` | Tags column names | `character` | `NULL` |
+| `fieldCols` | Fields column names | `character` | `c("_field"="_value")` |
 | `timeCol` | Time column name | `character` | `'_time'` |
 
-Note: default `fieldCols` are suitable for writing unpivoted data retrieved from 
-InfluxDB before. For usual tables ("pivoted"), `fieldCols` should be unnamed list, eg.
-`c("humidity", "temperature", ...)`.
+Note: default `fieldCols` are suitable for writing back unpivoted data retrieved from
+InfluxDB before. For usual tables ("pivoted" in Flux world), `fieldCols` should be
+unnamed list, eg. `c("humidity", "temperature", ...)`.
 
 Response is an instance of `ApiResponse` in case of error, otherwise `NULL`.
 
