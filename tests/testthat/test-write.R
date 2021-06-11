@@ -29,10 +29,10 @@ with_mock_api({
                      return(t)
                    })
     response <- .client$write(data, bucket='r-testing', precision = 'ns',
-                             measurementCol = 'name',
-                             tagCols = c("region", "sensor_id"),
-                             fieldCols = c("altitude", "grounded", "temperature"),
-                             timeCol = 'time')
+                              measurementCol = 'name',
+                              tagCols = c("region", "sensor_id"),
+                              fieldCols = c("altitude", "grounded", "temperature"),
+                              timeCol = 'time')
     expect_null(response)
   })
 })
