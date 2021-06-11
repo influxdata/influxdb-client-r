@@ -57,6 +57,9 @@ InfluxDBClient <- R6::R6Class(
     },
 
     query = function(text) {
+      # escape double quotes
+      text <- gsub("\"", "\\\"", text, fixed = TRUE)
+
       # create query instance
       q <- Query$new(query = text,
                      dialect = self$dialect,
