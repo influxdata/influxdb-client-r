@@ -108,7 +108,7 @@ client <- InfluxDBClient$new(url = "http://localhost:8086",
 data <- ...
 response <- client$write(data, bucket = "my-bucket", precision = "us",
                          measurementCol = "name",
-                         tagCols = c("location", "node"),
+                         tagCols = c("region", "sensor_id"),
                          fieldCols = c("altitude", "temperature"),
                          timeCol = "time")
 ```
@@ -122,6 +122,7 @@ The example is valid for `data.frame` `data` like the following:
 3 2021-06-09T09:53:01+00:00 airSensors  south   TLM0101      563     TRUE  71.7819928
 4 2021-06-09T09:53:11+00:00 airSensors  south   TLM0101      560     TRUE  71.7487767
 5 2021-06-09T09:53:21+00:00 airSensors  south   TLM0101      544    FALSE  71.7335579
+
 > str(data)
 'data.frame':	5 obs. of  7 variables:
  $ time       :integer64 1623232361000000000 1623232371000000000 1623232381000000000 1623232391000000000 1623232401000000000
