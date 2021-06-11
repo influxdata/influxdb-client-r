@@ -86,7 +86,13 @@ InfluxDBClient <- R6::R6Class(
       }
     },
 
-    write = function(x, bucket, precision = 'ns', ...) {
+    write = function(x, bucket,
+                     precision = c('ns', 'us', 'ms', 's'),
+                     measurementCol = '_measurement',
+                     tagCols = NULL,
+                     fieldCols = c("_field"="_value"),
+                     timeCol = '_time',
+                     ...) {
       # detect input type
       clazz <- NULL
       if (is.vector(x)) {
@@ -103,7 +109,10 @@ InfluxDBClient <- R6::R6Class(
       body <- switch(
         clazz,
         "character"= { x },
-        "data.frame"= { self$toLineProtocol(x, precision, ...) },
+        "data.frame"= {
+          self$toLineProtocol(x, precision,
+                              measurementCol, tagCols, fieldCols, timeCol)
+        },
         stop(paste('Unsupported type for write:', clazz))
       )
       body <- unlist(body)
@@ -112,6 +121,7 @@ InfluxDBClient <- R6::R6Class(
       resp <- self$writeApi$PostWrite(org = self$org,
                                       bucket = bucket,
                                       body = body,
+                                      content.type = 'text/plain; charset=utf-8',
                                       precision = precision)
 
       # handle errors
@@ -188,31 +198,35 @@ InfluxDBClient <- R6::R6Class(
 
     toLineProtocol = function(x,
                               precision,
-                              measurementCol = '_measurement',
-                              tagCols = NULL,
-                              fieldCols = c("_field"="_value"),
-                              timeCol = '_time') {
-      if (is.null(measurementCol)) {
-        stop('`measurementCol` parameter cannot be NULL')
-      } else if (is.vector(measurementCol) & length(measurementCol) != 1) {
-        stop('`measurementCol` parameter must select single column')
+                              measurementCol,
+                              tagCols,
+                              fieldCols,
+                              timeCol) {
+      if (!all(lapply(x, class) == 'data.frame')) {
+        stop("'x' must be data.frame")
       }
-      if (is.null(fieldCols)) {
-        stop('`fieldCols` parameter cannot be NULL')
-      } else if (is.vector(fieldCols) & length(fieldCols) == 0) {
-        stop('`fieldCols` parameter cannot be empty vector')
+      if (is.null(precision)) {
+        stop("'precision' cannot be NULL")
       }
-      if (is.null(timeCol)) {
-        stop('`timeCol` parameter cannot be NULL')
-      } else if (is.vector(timeCol) & length(timeCol) != 1) {
-        stop('`timeCol` parameter must select single column')
+      precision <- match.arg(precision, c('ns', 'us', 'ms', 's'))
+      if (length(measurementCol) != 1) {
+        stop("'measurementCol' must select single column")
+      }
+      if (length(tagCols) == 0) {
+        message("'tagCols' is empty")
+      }
+      if (length(fieldCols) == 0) {
+        stop("'fieldCols' parameter cannot be empty")
+      }
+      if (length(timeCol) != 1) {
+        stop("'timeCol' parameter must select single column")
       }
 
       # temporary sanity check
       named <- FALSE
       if (any(names(fieldCols) != "")) {
         if (any(names(fieldCols) == "")) {
-          stop('mixed named `fieldCols` list not supported')
+          stop("mixed named 'fieldCols' list not supported")
         }
         named <- TRUE
       }
@@ -223,7 +237,8 @@ InfluxDBClient <- R6::R6Class(
       }
 
       # for all data frames
-      buffers <- lapply(x, FUN = function(df) {
+      buffers <- lapply(x, function(df) {
+        # check fo columns presence in data frame
         colNames <- colnames(df)
         if (!(measurementCol %in% colNames)) {
           stop(sprintf("measurement column '%s' not found in data frame",
@@ -243,29 +258,46 @@ InfluxDBClient <- R6::R6Class(
           stop(sprintf("time column '%s' not found in data frame",
                        timeCol))
         }
+
+        # output buffer
         con <- textConnection("buffer", open = "w", local = TRUE)
+
+        # for all rows in data frame
         for (i in 1:nrow(df)) {
+          # get row
           row <- df[i,]
+
+          # retrieve column(s)
           measurement <- row[,measurementCol]
           tags <- row[tagCols]
           fields <- row[fieldCols]
-          fieldNames <- NULL
-          if (named) {
-            fieldNames <- row[names(fieldCols)]
-          } else {
-            fieldNames <- fieldCols
-          }
+          fieldNames <- if (named) row[names(fieldCols)] else fieldCols
           time <- row[,timeCol]
-          line <- sprintf("%s,%s %s %s",
-                          measurement,
-                          paste(tagCols, lapply(lapply(tags, private$as.flux.booleanIf), as.character),
-                                sep = "=", collapse = ","),
-                          paste(fieldNames, lapply(lapply(fields, private$as.flux.booleanIf), as.character),
-                                sep = "=", collapse = ","),
-                          private$as.flux.timestamp(time, precision))
+
+          # format values for line protocol
+          lpMeasurement <- private$as.lp.tag(measurement)
+          lpTagSet <- paste(lapply(tagCols, private$as.lp.tag),
+                            lapply(tags, private$as.lp.tag),
+                            sep = "=", collapse = ",")
+          lpFieldSet <- paste(lapply(fieldNames, private$as.lp.tag),
+                              lapply(fields, private$as.lp.value),
+                              sep = "=", collapse = ",")
+          lpTimestamp <- private$as.lp.timestamp(time, precision)
+
+          # construct line
+          line <- if (length(tagCols)) {
+            sprintf("%s,%s %s %s", lpMeasurement, lpTagSet, lpFieldSet, lpTimestamp)
+          } else {
+            sprintf("%s %s %s", lpMeasurement, lpFieldSet, lpTimestamp)
+          }
+
+          # write to buffer
           writeLines(line, con = con)
         }
+
+        # close buffer
         close(con)
+
         buffer
       })
 
@@ -278,15 +310,36 @@ InfluxDBClient <- R6::R6Class(
     .queryApi = NULL,
     .writeApi = NULL,
 
-    as.flux.booleanIf = function(x) {
-      if (class(x) == "logical") {
-        tolower(as.character(x))
-      } else {
-        x
-      }
+    as.lp.tag = function(x) {
+      switch (
+        class(x),
+        "character"= {
+          x <- gsub(",", "\\,", x, fixed = TRUE)
+          x <- gsub("=", "\\=", x, fixed = TRUE)
+          x <- gsub(" ", "\\ ", x, fixed = TRUE)
+        },
+        as.character(x)
+      )
     },
 
-    as.flux.timestamp = function(x, precision) {
+    as.lp.value = function(x) {
+      switch (
+        class(x),
+        "logical"= tolower(as.character(x)),
+        "character" = {
+          x <- gsub("\"", "\\\"", x, fixed = TRUE)
+          if (grepl(" ", x))
+            sprintf("\"%s\"", x)
+          else
+            x
+        },
+        "integer" = sprintf("%di", x),
+        "integer64" = sprintf("%si", as.character(x)),
+        as.character(x)
+      )
+    },
+
+    as.lp.timestamp = function(x, precision) {
       switch(
         class(x),
         "nanotime"= { private$as.rfc3339nano.timestamp(x, precision = precision) },
