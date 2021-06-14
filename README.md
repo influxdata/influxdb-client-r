@@ -79,7 +79,7 @@ Response is a `list` of `data.frame`s.
 |---|---|---|---|
 | `text` | Flux query | `character` | none |
 
-#### Use retrieved data as time series
+#### Using retrieved data as time series
 
 Flux timestamps are parsed into `nanotime` (`integer64` underneath) type, because
 R datetime types do not support nanosecond precision. `nanotime` is not
@@ -93,7 +93,16 @@ df1$time <- as.POSIXct(df1$`_time`)
 ```
 Then, a time series object can be created from the data frame, eg. using `tsbox` package:
 ```r
-ts_ts(ts_df(df1))
+ts1 <- ts_ts(ts_df(df1))
+```
+
+Such data frame, or a time series object created from it, can be used for decomposition,
+anomaly detection etc, like
+```r
+df1$`_value` %>% ts(freq=168) %>% stl(s.window=13) %>% autoplot()
+```
+```r
+ts1[c("time", "_value")] %>% ts(freq=168) %>% stl(s.window=13) %>% autoplot()
 ```
 
 ### Writing data
