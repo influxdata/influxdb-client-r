@@ -167,7 +167,7 @@ unnamed list, eg. `c("humidity", "temperature", ...)`.
 Method `health`.
 
 ```r
-client <- InfluxDBClient$new(url = "http://localhost:8086,
+client <- InfluxDBClient$new(url = "http://localhost:8086",
                              token = "my-token",
                              org = "my-org")
                             
