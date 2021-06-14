@@ -5,10 +5,17 @@
 \alias{FluxApiClient}
 \title{FluxApiClient}
 \format{
-An \code{R6Class} generator object
+An \code{R6Class} object
 }
 \description{
 FluxApiClient Class
+}
+\details{
+FluxApiClient Class
+
+Customized \code{ApiClient} to handle non-JSON replies from InfluxDB,
+such as query results. Used in \code{InfluxDBClient} instead of generated
+\code{ApiClient}.
 }
 \section{Super class}{
 \code{\link[influxdbclient:ApiClient]{influxdbclient::ApiClient}} -> \code{FluxApiClient}
@@ -34,6 +41,7 @@ FluxApiClient Class
 \if{html}{\out{<a id="method-deserialize"></a>}}
 \if{latex}{\out{\hypertarget{method-deserialize}{}}}
 \subsection{Method \code{deserialize()}}{
+Overriden \code{deserialize} method from base class.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FluxApiClient$deserialize(resp, returnType, pkgEnv)}\if{html}{\out{</div>}}
 }
