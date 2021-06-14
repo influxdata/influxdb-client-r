@@ -233,7 +233,7 @@ test_that("toLineProtocol / fieldCols is not single column", {
                            fieldCols = NULL,
                            timeCol = '_time')
   }
-  expect_error(f(), "'fieldCols' parameter cannot be empty")
+  expect_error(f(), "'fieldCols' cannot be empty")
 })
 
 test_that("toLineProtocol / time column is not single column", {
@@ -245,7 +245,7 @@ test_that("toLineProtocol / time column is not single column", {
                            fieldCols = c("altitude", "grounded", "temperature"),
                            timeCol = NULL)
   }
-  expect_error(f(), "'timeCol' parameter must select single column")
+  expect_error(f(), "'timeCol' must select single column")
 })
 
 test_that("toLineProtocol / not existing time column", {
