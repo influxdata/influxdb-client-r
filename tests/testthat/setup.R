@@ -1,10 +1,33 @@
 library(testthat)
 library(httptest)
 
+# helper for testing private methods of InfluxDBClient
+InfluxDBClientTest <- R6::R6Class(
+  inherit = InfluxDBClient,
+  public = list(
+    fromAnnotatedCsv = function(x) {
+      self$.fromAnnotatedCsv(x)
+    },
+    toLineProtocol = function(x,
+                              precision,
+                              measurementCol,
+                              tagCols,
+                              fieldCols,
+                              timeCol) {
+      private$.toLineProtocol(x,
+                              precision,
+                              measurementCol,
+                              tagCols,
+                              fieldCols,
+                              timeCol)
+    }
+  )
+)
+
 test.url <- 'http://localhost:8086'
 test.token <- 'DcvGNmM_fyYW0sqcSlVyllcR90MITaTKge19P3iDJvnPmCdF2vnwiL888bocS4bmIDb8Tc2fBZQfdiegB5UFDw=='
 test.org <- 'bonitoo'
-test.client <- InfluxDBClient$new(url = test.url, token = test.token, org = test.org)
+test.client <- InfluxDBClientTest$new(url = test.url, token = test.token, org = test.org)
 
 .airSensors.time5 = c(
   as.nanotime(1623232361000000000),
