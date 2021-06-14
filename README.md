@@ -31,15 +31,11 @@ InfluxDB 2.0 Client supports:
 
 ### Installing R dependencies  
 
-Install required dependencies with
-
 ```r
 install.packages(c("httr", "jsonlite", "base64enc", "bit64", "nanotime", "plyr"))
 ```
 
 ### Installing `influxdbclient` package  
-
-Install the latest version of `influxdbclient` package with
 
 ```r
 remotes::install_github("bonitoo-io/influxdb-client-r")
@@ -159,9 +155,9 @@ unnamed list, eg. `c("humidity", "temperature", ...)`.
 Method `health`.
 
 ```r
-client <- InfluxDBClient$new(url = 'http://localhost:8086',
-                             token = 'my-token',
-                             org = 'my-org')
+client <- InfluxDBClient$new(url = "http://localhost:8086,
+                             token = "my-token",
+                             org = "my-org")
                             
 check <- client$health()
 ```

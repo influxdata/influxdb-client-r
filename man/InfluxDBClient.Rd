@@ -5,15 +5,71 @@
 \alias{InfluxDBClient}
 \title{InfluxDBClient}
 \format{
-An \code{R6Class} generator object
+An \code{R6Class} object
 }
 \description{
 InfluxDBClient Class
 }
+\details{
+InfluxDBClient Class
+
+Client for querying from and writing data to InfluxDB 2.0.
+Uses classes generates from OpenAPI contract.
+}
+\examples{
+
+## ------------------------------------------------
+## Method `InfluxDBClient$new`
+## ------------------------------------------------
+
+
+\dontrun{
+client <- InfluxDBClient$new(url = "http://localhost:8086",
+                             token = "my-token",
+                             org = "my-org")
+}
+
+## ------------------------------------------------
+## Method `InfluxDBClient$health`
+## ------------------------------------------------
+
+
+\dontrun{
+client <- InfluxDBClient$new(...)
+status <- client$health()
+}
+
+## ------------------------------------------------
+## Method `InfluxDBClient$query`
+## ------------------------------------------------
+
+
+\dontrun{
+client <- InfluxDBClient$new(...)
+data <- client$query('from(bucket: "my-bucket") |> range(start: -1h) |> drop(columns: ["_start", "_stop"])')
+}
+
+## ------------------------------------------------
+## Method `InfluxDBClient$write`
+## ------------------------------------------------
+
+
+\dontrun{
+data <- data.frame(...)
+client <- InfluxDBClient$new(...)
+client$write(data,
+             bucket = "my-bucket",
+             precision = "ms",
+             measurementCol = "name",
+             tagCols = c("location", "id"),
+             fieldCols = c("altitude", "temperature"),
+             timeCol = "time")
+}
+}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{url}}{Database url}
+\item{\code{url}}{Database URL}
 
 \item{\code{token}}{Authentication token}
 
@@ -28,8 +84,6 @@ InfluxDBClient Class
 \item \href{#method-health}{\code{InfluxDBClient$health()}}
 \item \href{#method-query}{\code{InfluxDBClient$query()}}
 \item \href{#method-write}{\code{InfluxDBClient$write()}}
-\item \href{#method-fromAnnotatedCsv}{\code{InfluxDBClient$fromAnnotatedCsv()}}
-\item \href{#method-toLineProtocol}{\code{InfluxDBClient$toLineProtocol()}}
 \item \href{#method-clone}{\code{InfluxDBClient$clone()}}
 }
 }
@@ -37,8 +91,33 @@ InfluxDBClient Class
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Creates instance of \code{InfluxDBClient}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$new(url = NULL, token = NULL, org = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{url}}{InfluxDB instance URL}
+
+\item{\code{token}}{Authetication token}
+
+\item{\code{org}}{Organization name}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{
+\dontrun{
+client <- InfluxDBClient$new(url = "http://localhost:8086",
+                             token = "my-token",
+                             org = "my-org")
+}
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -46,8 +125,24 @@ InfluxDBClient Class
 \if{html}{\out{<a id="method-health"></a>}}
 \if{latex}{\out{\hypertarget{method-health}{}}}
 \subsection{Method \code{health()}}{
+Checks status of InfluxDB instance.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$health()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Instance of \code{HealtCheck} or error
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{
+\dontrun{
+client <- InfluxDBClient$new(...)
+status <- client$health()
+}
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -55,8 +150,31 @@ InfluxDBClient Class
 \if{html}{\out{<a id="method-query"></a>}}
 \if{latex}{\out{\hypertarget{method-query}{}}}
 \subsection{Method \code{query()}}{
+Queries data in InfluxDB.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$query(text)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{text}}{Flux query}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Data as (list of) \code{data.frame}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{
+\dontrun{
+client <- InfluxDBClient$new(...)
+data <- client$query('from(bucket: "my-bucket") |> range(start: -1h) |> drop(columns: ["_start", "_stop"])')
+}
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
@@ -64,33 +182,60 @@ InfluxDBClient Class
 \if{html}{\out{<a id="method-write"></a>}}
 \if{latex}{\out{\hypertarget{method-write}{}}}
 \subsection{Method \code{write()}}{
+Writes data to InfluxDB.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$write(x, bucket, precision = "ns", ...)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-fromAnnotatedCsv"></a>}}
-\if{latex}{\out{\hypertarget{method-fromAnnotatedCsv}{}}}
-\subsection{Method \code{fromAnnotatedCsv()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$fromAnnotatedCsv(x)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-toLineProtocol"></a>}}
-\if{latex}{\out{\hypertarget{method-toLineProtocol}{}}}
-\subsection{Method \code{toLineProtocol()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$toLineProtocol(
+\if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$write(
   x,
-  precision,
+  bucket,
+  precision = c("ns", "us", "ms", "s"),
   measurementCol = "_measurement",
   tagCols = NULL,
   fieldCols = c(`_field` = "_value"),
-  timeCol = "_time"
+  timeCol = "_time",
+  ...
 )}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{Data as (list of) \code{data.frame}}
+
+\item{\code{bucket}}{Target bucket name}
+
+\item{\code{precision}}{Time precision}
+
+\item{\code{measurementCol}}{Name of measurement column}
+
+\item{\code{tagCols}}{Names of tag (index) columns}
+
+\item{\code{fieldCols}}{Names of field columns. In case of unpivoted data
+previously retrieved from InfluxDB, use default value ie. named list
+\code{c("_field"="_value")}.
+For all other cases, just use simple vector of column names (see Examples).}
+
+\item{\code{timestampCol}}{Name of time column. The column values should be either
+of \code{nanotime} or \code{POSIXct} type.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{
+\dontrun{
+data <- data.frame(...)
+client <- InfluxDBClient$new(...)
+client$write(data,
+             bucket = "my-bucket",
+             precision = "ms",
+             measurementCol = "name",
+             tagCols = c("location", "id"),
+             fieldCols = c("altitude", "temperature"),
+             timeCol = "time")
+}
+}
+\if{html}{\out{</div>}}
+
 }
 
 }
