@@ -86,11 +86,14 @@ R datetime types do not support nanosecond precision. `nanotime` is not
 a time-based object appropriate for creating a time series, though.
 To add such column to the data, just coerce the time column (usually `_time`), like
 ```r
-data$tstime <- as.POSIXct(data$`_time`)
+# pick a data frame of interest from the result
+df1 <- data[[1]]
+# coerce nanotime column to new POSIXct one
+df1$time <- as.POSIXct(df1$`_time`)
 ```
-Then, time series can be created from the data, eg. using `tsbox` package:
+Then, a time series object can be created from the data frame, eg. using `tsbox` package:
 ```r
-ts_ts(xts(data, order.by = data$tstime))
+ts_ts(ts_df(df1))
 ```
 
 ### Writing data
