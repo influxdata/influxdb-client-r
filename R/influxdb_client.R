@@ -123,7 +123,7 @@ InfluxDBClient <- R6::R6Class(
         message('empty response')
         NULL # TODO return empty list?
       } else {
-        self$fromAnnotatedCsv(resp)
+        private$.fromAnnotatedCsv(resp)
       }
     },
 
@@ -175,8 +175,8 @@ InfluxDBClient <- R6::R6Class(
         clazz,
         "character"= { x },
         "data.frame"= {
-          self$toLineProtocol(x, precision,
-                              measurementCol, tagCols, fieldCols, timeCol)
+          private$.toLineProtocol(x, precision,
+                                  measurementCol, tagCols, fieldCols, timeCol)
         },
         stop(paste('Unsupported type for write:', clazz))
       )
@@ -200,9 +200,79 @@ InfluxDBClient <- R6::R6Class(
           )
         stop(errMsg)
       }
+    }
+  ),
+  private = list(
+    .apiClient = NULL,
+    .healthApi = NULL,
+    .queryApi = NULL,
+    .writeApi = NULL,
+
+    # as.lp.* methods are candidates for public functions
+
+    as.lp.tag = function(x) {
+      switch (
+        class(x),
+        "character"= {
+          x <- gsub(",", "\\,", x, fixed = TRUE)
+          x <- gsub("=", "\\=", x, fixed = TRUE)
+          x <- gsub(" ", "\\ ", x, fixed = TRUE)
+        },
+        as.character(x)
+      )
     },
 
-    fromAnnotatedCsv = function(x) {
+    as.lp.value = function(x) {
+      switch (
+        class(x),
+        "logical"= tolower(as.character(x)),
+        "character" = {
+          x <- gsub("\"", "\\\"", x, fixed = TRUE)
+          if (grepl(" ", x))
+            sprintf("\"%s\"", x)
+          else
+            x
+        },
+        "integer" = sprintf("%di", x),
+        "integer64" = sprintf("%si", as.character(x)),
+        as.character(x)
+      )
+    },
+
+    as.lp.timestamp = function(x, precision) {
+      switch(
+        class(x),
+        "nanotime"= { private$as.rfc3339nano.timestamp(x, precision = precision) },
+        "POSIXct"= { private$as.POSIXct.timestamp(x, precision = precision) },
+        stop(paste('unsupported time column type:', class(x)))
+      )
+    },
+
+    as.rfc3339nano.timestamp = function(nano, precision) {
+      n <- as.integer64(nano)
+      v <- switch(
+        precision,
+        "s"=  { n / 1e9 },
+        "ms"= { n / 1e6 },
+        "us"= { n / 1e3 },
+        "ns"= { n },
+      )
+      as.character(as.integer64(v))
+    },
+
+    as.POSIXct.timestamp = function(datetime, precision) {
+      n <- as.numeric(datetime)
+      v <- switch(
+        precision,
+        "s"=  { n },
+        "ms"= { n * 1e3 },
+        "us"= { n * 1e6 },
+        "ns"= { n * 1e9 },
+      )
+      sprintf("%.0f", trunc(v))
+    },
+
+    .fromAnnotatedCsv = function(x) {
       # split stream by empty line
       csvTables <-
         strsplit(x, split = "\r\n\r\n", useBytes = TRUE)[[1]]
@@ -261,7 +331,7 @@ InfluxDBClient <- R6::R6Class(
       unname(tables)
     },
 
-    toLineProtocol = function(x,
+    .toLineProtocol = function(x,
                               precision,
                               measurementCol,
                               tagCols,
@@ -369,76 +439,7 @@ InfluxDBClient <- R6::R6Class(
 
       buffers
     }
-  ),
-  private = list(
-    .apiClient = NULL,
-    .healthApi = NULL,
-    .queryApi = NULL,
-    .writeApi = NULL,
 
-    # as.lp.* methods are candidates for public functions
-
-    as.lp.tag = function(x) {
-      switch (
-        class(x),
-        "character"= {
-          x <- gsub(",", "\\,", x, fixed = TRUE)
-          x <- gsub("=", "\\=", x, fixed = TRUE)
-          x <- gsub(" ", "\\ ", x, fixed = TRUE)
-        },
-        as.character(x)
-      )
-    },
-
-    as.lp.value = function(x) {
-      switch (
-        class(x),
-        "logical"= tolower(as.character(x)),
-        "character" = {
-          x <- gsub("\"", "\\\"", x, fixed = TRUE)
-          if (grepl(" ", x))
-            sprintf("\"%s\"", x)
-          else
-            x
-        },
-        "integer" = sprintf("%di", x),
-        "integer64" = sprintf("%si", as.character(x)),
-        as.character(x)
-      )
-    },
-
-    as.lp.timestamp = function(x, precision) {
-      switch(
-        class(x),
-        "nanotime"= { private$as.rfc3339nano.timestamp(x, precision = precision) },
-        "POSIXct"= { private$as.POSIXct.timestamp(x, precision = precision) },
-        stop(paste('unsupported time column type:', class(x)))
-      )
-    },
-
-    as.rfc3339nano.timestamp = function(nano, precision) {
-      n <- as.integer64(nano)
-      v <- switch(
-        precision,
-        "s"=  { n / 1e9 },
-        "ms"= { n / 1e6 },
-        "us"= { n / 1e3 },
-        "ns"= { n },
-      )
-      as.character(as.integer64(v))
-    },
-
-    as.POSIXct.timestamp = function(datetime, precision) {
-      n <- as.numeric(datetime)
-      v <- switch(
-        precision,
-        "s"=  { n },
-        "ms"= { n * 1e3 },
-        "us"= { n * 1e6 },
-        "ns"= { n * 1e9 },
-      )
-      sprintf("%.0f", trunc(v))
-    }
   ),
   active = list(
     apiClient = function(value) {
