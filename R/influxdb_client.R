@@ -120,7 +120,7 @@ InfluxDBClient <- R6::R6Class(
 
       # process response
       if (resp == "\r\n") {
-        message('empty response')
+        message("empty response")
         NULL # TODO return empty list?
       } else {
         private$.fromAnnotatedCsv(resp)
@@ -153,15 +153,15 @@ InfluxDBClient <- R6::R6Class(
     #'              timeCol = "time")
     #' }
     write = function(x, bucket,
-                     precision = c('ns', 'us', 'ms', 's'),
+                     precision = c("ns", "us", "ms", "s"),
                      measurementCol = '_measurement',
                      tagCols = NULL,
                      fieldCols = c("_field"="_value"),
-                     timeCol = '_time',
+                     timeCol = "_time",
                      ...) {
       # validate parameters
-      xIsCharacter <- all(lapply(x, class) == 'character')
-      xIsDataFrame <- all(lapply(x, class) == 'data.frame')
+      xIsCharacter <- all(lapply(x, class) == "character")
+      xIsDataFrame <- all(lapply(x, class) == "data.frame")
       if (!(xIsCharacter | xIsDataFrame)) {
         stop("'x' must be data.frame or character")
       }
@@ -178,7 +178,7 @@ InfluxDBClient <- R6::R6Class(
           private$.toLineProtocol(x, precision,
                                   measurementCol, tagCols, fieldCols, timeCol)
         },
-        stop(paste('Unsupported type for write:', clazz))
+        stop(paste("Unsupported type for write:", clazz))
       )
       body <- unlist(body)
 
@@ -186,7 +186,7 @@ InfluxDBClient <- R6::R6Class(
       resp <- self$writeApi$PostWrite(org = self$org,
                                       bucket = bucket,
                                       body = body,
-                                      content.type = 'text/plain; charset=utf-8',
+                                      content.type = "text/plain; charset=utf-8",
                                       precision = precision)
 
       # handle errors
@@ -244,7 +244,7 @@ InfluxDBClient <- R6::R6Class(
         class(x),
         "nanotime"= { private$as.rfc3339nano.timestamp(x, precision = precision) },
         "POSIXct"= { private$as.POSIXct.timestamp(x, precision = precision) },
-        stop(paste('unsupported time column type:', class(x)))
+        stop(paste("unsupported time column type:", class(x)))
       )
     },
 
@@ -337,13 +337,13 @@ InfluxDBClient <- R6::R6Class(
                               tagCols,
                               fieldCols,
                               timeCol) {
-      if (!all(lapply(x, class) == 'data.frame')) {
+      if (!all(lapply(x, class) == "data.frame")) {
         stop("'x' must be data.frame")
       }
       if (is.null(precision)) {
         stop("'precision' cannot be NULL")
       }
-      precision <- match.arg(precision, c('ns', 'us', 'ms', 's'))
+      precision <- match.arg(precision, c("ns", "us", "ms", "s"))
       if (length(measurementCol) != 1) {
         stop("'measurementCol' must select single column")
       }
@@ -351,10 +351,10 @@ InfluxDBClient <- R6::R6Class(
         message("'tagCols' is empty")
       }
       if (length(fieldCols) == 0) {
-        stop("'fieldCols' parameter cannot be empty")
+        stop("'fieldCols' cannot be empty")
       }
       if (length(timeCol) != 1) {
-        stop("'timeCol' parameter must select single column")
+        stop("'timeCol' must select single column")
       }
 
       # temporary sanity check
@@ -381,12 +381,12 @@ InfluxDBClient <- R6::R6Class(
         }
         if (!all(tagCols %in% colNames)) {
           notFound <- tagCols[!(tagCols %in% colNames)]
-          stop(sprintf('tag columns not found in data frame: %s',
+          stop(sprintf("tag columns not found in data frame: %s",
                        paste(notFound, sep = "", collapse = ",")))
         }
         if (!all(fieldCols %in% colNames)) {
           notFound <- fieldCols[!(fieldCols %in% colNames)]
-          stop(sprintf('field columns not found in data frame: %s',
+          stop(sprintf("field columns not found in data frame: %s",
                        paste(notFound, sep = "", collapse = ",")))
         }
         if (!(timeCol %in% colNames)) {
@@ -446,9 +446,9 @@ InfluxDBClient <- R6::R6Class(
       if (missing(value)) {
         if (is.null(private$.apiClient)) {
           defaultHeaders <- c()
-          defaultHeaders['Authorization'] <- paste0('Token ', self$token)
+          defaultHeaders['Authorization'] <- paste0("Token ", self$token)
           private$.apiClient <-
-            FluxApiClient$new(basePath = paste0(self$url, '/api/v2'),
+            FluxApiClient$new(basePath = paste0(self$url, "/api/v2"),
                               defaultHeaders = defaultHeaders)
         }
       } else {
