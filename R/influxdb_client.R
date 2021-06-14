@@ -1,8 +1,13 @@
+#' InfluxDBClient Class
+#'
+#' Client for querying from and writing data to InfluxDB 2.0.
+#' Uses classes generates from OpenAPI contract.
+#'
 #' @docType class
 #' @title InfluxDBClient
 #' @description InfluxDBClient Class
-#' @format An \code{R6Class} generator object
-#' @field url Database url
+#' @format An \code{R6Class} object
+#' @field url Database URL
 #' @field token Authentication token
 #' @field org Organization name
 #' @export
@@ -18,6 +23,17 @@ InfluxDBClient <- R6::R6Class(
     # query dialect
     dialect = NULL,
     # constructor
+    #' @description Creates instance of \code{InfluxDBClient}.
+    #' @param url InfluxDB instance URL
+    #' @param token Authetication token
+    #' @param org Organization name
+    #' @examples
+    #'
+    #' \dontrun{
+    #' client <- InfluxDBClient$new(url = "http://localhost:8086",
+    #'                              token = "my-token",
+    #'                              org = "my-org")
+    #' }
     initialize = function(url = NULL, token = NULL, org = NULL) {
       if (!is.null(url)) {
         self$url <- url
@@ -37,6 +53,14 @@ InfluxDBClient <- R6::R6Class(
                     annotations = c("group", "datatype", "default"))
     },
 
+    #' @description Checks status of InfluxDB instance.
+    #' @return Instance of \code{HealtCheck} or error
+    #' @examples
+    #'
+    #' \dontrun{
+    #' client <- InfluxDBClient$new(...)
+    #' status <- client$health()
+    #' }
     health = function() {
       # call API
       resp <- self$healthApi$GetHealth()
@@ -56,6 +80,15 @@ InfluxDBClient <- R6::R6Class(
       resp
     },
 
+    #' @description Queries data in InfluxDB.
+    #' @param text Flux query
+    #' @return Data as (list of) \code{data.frame}
+    #' @examples
+    #'
+    #' \dontrun{
+    #' client <- InfluxDBClient$new(...)
+    #' data <- client$query('from(bucket: "my-bucket") |> range(start: -1h) |> drop(columns: ["_start", "_stop"])')
+    #' }
     query = function(text) {
       # validate parameters
       if (is.null(text)) {
@@ -94,6 +127,31 @@ InfluxDBClient <- R6::R6Class(
       }
     },
 
+    #' @description Writes data to InfluxDB.
+    #' @param x Data as (list of) \code{data.frame}
+    #' @param bucket Target bucket name
+    #' @param precision Time precision
+    #' @param measurementCol Name of measurement column
+    #' @param tagCols Names of tag (index) columns
+    #' @param fieldCols Names of field columns. In case of unpivoted data
+    #' previously retrieved from InfluxDB, use default value ie. named list
+    #' \code{c("_field"="_value")}.
+    #' For all other cases, just use simple vector of column names (see Examples).
+    #' @param timestampCol Name of time column. The column values should be either
+    #' of \code{nanotime} or \code{POSIXct} type.
+    #' @examples
+    #'
+    #' \dontrun{
+    #' data <- data.frame(...)
+    #' client <- InfluxDBClient$new(...)
+    #' client$write(data,
+    #'              bucket = "my-bucket",
+    #'              precision = "ms",
+    #'              measurementCol = "name",
+    #'              tagCols = c("location", "id"),
+    #'              fieldCols = c("altitude", "temperature"),
+    #'              timeCol = "time")
+    #' }
     write = function(x, bucket,
                      precision = c('ns', 'us', 'ms', 's'),
                      measurementCol = '_measurement',
@@ -317,6 +375,8 @@ InfluxDBClient <- R6::R6Class(
     .healthApi = NULL,
     .queryApi = NULL,
     .writeApi = NULL,
+
+    # as.lp.* methods are candidates for public functions
 
     as.lp.tag = function(x) {
       switch (
