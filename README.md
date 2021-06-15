@@ -51,6 +51,15 @@ client <- InfluxDBClient$new(url = "http://localhost:8086",
                              org = "my-org")
 ```
 
+Hint: to avoid SSL certificate validation errors when accessing InfluxDB instance
+over https such as `SSL certificate problem: unable to get local issuer certificate`,
+you can try to disable the validation using the following call before using any
+`InfluxDBClient` method. _Warning: it will disable peer certificate validation for the current R session._
+```r
+library(httr)
+httr::set_config(config(ssl_verifypeer = FALSE))
+```
+
 #### Parameters
 
 | Parameter | Description | Type | Default |
@@ -61,7 +70,7 @@ client <- InfluxDBClient$new(url = "http://localhost:8086",
 
 ### Querying data
 
-Method `query`.
+Use `query` method.
 
 ```r
 client <- InfluxDBClient$new(url = "http://localhost:8086",
@@ -107,7 +116,7 @@ ts1[c("time", "_value")] %>% ts(freq=168) %>% stl(s.window=13) %>% autoplot()
 
 ### Writing data
 
-Method `write`.
+Use `write` method.
 
 ```r
 client <- InfluxDBClient$new(url = "http://localhost:8086",
@@ -164,7 +173,7 @@ unnamed list, eg. `c("humidity", "temperature", ...)`.
 
 ### Health checking
 
-Method `health`.
+Use `health` method.
 
 ```r
 client <- InfluxDBClient$new(url = "http://localhost:8086",
