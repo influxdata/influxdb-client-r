@@ -26,11 +26,19 @@ with_mock_api({
     expected <- .data.multi
     expect_equal(response, expected)
   })
+
+  test_that("query / non-existent bucket", {
+    f <- function() {
+      .client$query(text='from(bucket: "no-bucket") |> range(start: -10y) |> filter(fn: (r) => r._measurement == "airSensors" and r.sensor_id == "TLM0101") |> drop(columns: ["_start", "_stop"])')
+    }
+    expect_error(f(), 'API client error (404): failed to initialize execute state: could not find bucket "no-bucket"',
+                 fixed = TRUE)
+  })
 })
 
 test_that("query / NULL text query", {
   f <- function() {
     .client$query(text=NULL)
   }
-  expect_error(f(), "'text' cannot be NULL")
+  expect_error(f(), "'text' cannot be NULL", fixed = TRUE)
 })

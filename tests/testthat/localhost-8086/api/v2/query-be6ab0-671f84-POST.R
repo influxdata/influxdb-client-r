@@ -1,0 +1,17 @@
+structure(list(url = "http://localhost:8086/api/v2/query?org=bonitoo", 
+    status_code = 404L, headers = structure(list(`content-type` = "application/json; charset=utf-8", 
+        vary = "Accept-Encoding", `x-platform-error-code` = "not found", 
+        date = "Tue, 15 Jun 2021 08:53:14 GMT", `transfer-encoding` = "chunked"), class = c("insensitive", 
+    "list")), all_headers = list(list(status = 404L, version = "HTTP/1.1", 
+        headers = structure(list(`content-type` = "application/json; charset=utf-8", 
+            vary = "Accept-Encoding", `x-platform-error-code` = "not found", 
+            date = "Tue, 15 Jun 2021 08:53:14 GMT", `transfer-encoding` = "chunked"), class = c("insensitive", 
+        "list")))), cookies = structure(list(domain = logical(0), 
+        flag = logical(0), path = logical(0), secure = logical(0), 
+        expiration = structure(numeric(0), class = c("POSIXct", 
+        "POSIXt")), name = logical(0), value = logical(0)), row.names = integer(0), class = "data.frame"), 
+    content = charToRaw("{\"code\":\"not found\",\"message\":\"failed to initialize execute state: could not find bucket \\\"no-bucket\\\"\"}"), 
+    date = structure(1623747194, class = c("POSIXct", "POSIXt"
+    ), tzone = "GMT"), times = c(redirect = 0, namelookup = 0.00201, 
+    connect = 0.0021, pretransfer = 0.002189, starttransfer = 0.012402, 
+    total = 0.012458)), class = "response")

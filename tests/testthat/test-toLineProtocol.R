@@ -137,7 +137,7 @@ test_that("toLineProtocol / x is not data.frame", {
                            fieldCols = c("altitude", "grounded", "temperature"),
                            timeCol = '_time')
   }
-  expect_error(f(), "'x' must be data.frame")
+  expect_error(f(), "'x' must be data.frame", fixed = TRUE)
 })
 
 test_that("toLineProtocol / x is not list of data.frame", {
@@ -149,7 +149,7 @@ test_that("toLineProtocol / x is not list of data.frame", {
                            fieldCols = c("altitude", "grounded", "temperature"),
                            timeCol = '_time')
   }
-  expect_error(f(), "'x' must be data.frame")
+  expect_error(f(), "'x' must be data.frame", fixed = TRUE)
 })
 
 test_that("toLineProtocol / NULL precision", {
@@ -161,7 +161,7 @@ test_that("toLineProtocol / NULL precision", {
                            fieldCols = c("altitude", "grounded", "temperature"),
                            timeCol = '_time')
   }
-  expect_error(f(), "'precision' cannot be NULL")
+  expect_error(f(), "'precision' cannot be NULL", fixed = TRUE)
 })
 
 test_that("toLineProtocol / invalid precision", {
@@ -173,7 +173,7 @@ test_that("toLineProtocol / invalid precision", {
                            fieldCols = c("altitude", "grounded", "temperature"),
                            timeCol = '_time')
   }
-  expect_error(f())
+  expect_error(f(), "'arg' should be one of .*") # regexp due to some issue with R CMD check
 })
 
 test_that("toLineProtocol / not existing measurement column", {
@@ -185,7 +185,8 @@ test_that("toLineProtocol / not existing measurement column", {
                            fieldCols = c("altitude", "grounded", "temperature"),
                            timeCol = '_time')
   }
-  expect_error(f(), "measurement column 'no-measurement' not found in data frame")
+  expect_error(f(), "measurement column 'no-measurement' not found in data frame",
+               fixed = TRUE)
 })
 
 test_that("toLineProtocol / not existing tag columns", {
@@ -197,7 +198,8 @@ test_that("toLineProtocol / not existing tag columns", {
                            fieldCols = c("altitude", "grounded", "temperature"),
                            timeCol = '_time')
   }
-  expect_error(f(), "tag columns not found in data frame: no-1,no-2")
+  expect_error(f(), "tag columns not found in data frame: no-1,no-2",
+               fixed = TRUE)
 })
 
 test_that("toLineProtocol / not existing field columns", {
@@ -209,7 +211,8 @@ test_that("toLineProtocol / not existing field columns", {
                            fieldCols = c("altitude", "no-1", "no-2"),
                            timeCol = '_time')
   }
-  expect_error(f(), "field columns not found in data frame: no-1,no-2")
+  expect_error(f(), "field columns not found in data frame: no-1,no-2",
+               fixed = TRUE)
 })
 
 test_that("toLineProtocol / measurementCol is not single column", {
@@ -221,7 +224,8 @@ test_that("toLineProtocol / measurementCol is not single column", {
                            fieldCols = c("altitude", "grounded", "temperature"),
                            timeCol = '_time')
   }
-  expect_error(f(), "'measurementCol' must select single column")
+  expect_error(f(), "'measurementCol' must select single column",
+               fixed = TRUE)
 })
 
 test_that("toLineProtocol / fieldCols is not single column", {
@@ -233,7 +237,7 @@ test_that("toLineProtocol / fieldCols is not single column", {
                            fieldCols = NULL,
                            timeCol = '_time')
   }
-  expect_error(f(), "'fieldCols' cannot be empty")
+  expect_error(f(), "'fieldCols' cannot be empty", fixed = TRUE)
 })
 
 test_that("toLineProtocol / time column is not single column", {
@@ -245,7 +249,7 @@ test_that("toLineProtocol / time column is not single column", {
                            fieldCols = c("altitude", "grounded", "temperature"),
                            timeCol = NULL)
   }
-  expect_error(f(), "'timeCol' must select single column")
+  expect_error(f(), "'timeCol' must select single column", fixed = TRUE)
 })
 
 test_that("toLineProtocol / not existing time column", {
@@ -257,5 +261,6 @@ test_that("toLineProtocol / not existing time column", {
                            fieldCols = c("altitude", "grounded", "temperature"),
                            timeCol = 'no-time')
   }
-  expect_error(f(), "time column 'no-time' not found in data frame")
+  expect_error(f(), "time column 'no-time' not found in data frame",
+               fixed = TRUE)
 })

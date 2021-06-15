@@ -42,6 +42,14 @@ with_mock_api({
       .client$write(data, bucket = NULL, precision = 'ns',
                     tagCols = c("region", "sensor_id"))
     }
-    expect_error(f(), "'bucket' cannot be NUL")
+    expect_error(f(), "'bucket' cannot be NULL", fixed = TRUE)
+  })
+
+    test_that("write / non-existent bucket", {
+    data <- data.frame()
+    f = function() {
+      .client$write(data, bucket = "no-bucket", precision = 'ns')
+    }
+    expect_error(f(), 'API client error (404): bucket "no-bucket" not found', fixed = TRUE)
   })
 })
