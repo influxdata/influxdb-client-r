@@ -12,6 +12,7 @@ This repository contains R package for InfluxDB 2.0 Client.
 * [Usage](#usage)
   * [Client instantiation](#client-instantiation)
   * [Querying data](#querying-data)
+  * [Writing data](#writing-data)
   * [Health checking](#health-checking)
 * [License](#license)
 
