@@ -1,17 +1,17 @@
-#' FluxApiClient Class
+#' InfluxDBApiClient Class
 #'
 #' Customized \code{ApiClient} to handle non-JSON replies from InfluxDB,
 #' such as query results. Used in \code{InfluxDBClient} instead of generated
 #' \code{ApiClient}.
 #'
 #' @docType class
-#' @title FluxApiClient
-#' @description FluxApiClient Class
+#' @title InfluxDBApiClient
+#' @description InfluxDBApiClient Class
 #' @format An \code{R6Class} object
 #' @export
-FluxApiClient <- R6::R6Class(
+InfluxDBApiClient <- R6::R6Class(
   inherit = ApiClient,
-  'FluxApiClient',
+  'InfluxDBApiClient',
   public = list(
     #' @description Overriden \code{deserialize} method from base class.
     deserialize = function(resp, returnType, pkgEnv) {

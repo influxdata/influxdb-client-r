@@ -448,8 +448,8 @@ InfluxDBClient <- R6::R6Class(
           defaultHeaders <- c()
           defaultHeaders['Authorization'] <- paste0("Token ", self$token)
           private$.apiClient <-
-            FluxApiClient$new(basePath = paste0(self$url, "/api/v2"),
-                              defaultHeaders = defaultHeaders)
+            InfluxDBApiClient$new(basePath = paste0(self$url, "/api/v2"),
+                                  defaultHeaders = defaultHeaders)
         }
       } else {
         private$.apiClient <- value
