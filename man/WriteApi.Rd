@@ -21,10 +21,10 @@ influxdbclient.Write
 \item \emph{ @param } bucket character
 \item \emph{ @param } body character
 \item \emph{ @param } zap.trace.span character
-\item \emph{ @param } content.encoding Enum < [gzip, identity] >
-\item \emph{ @param } content.type Enum < [text/plain, text/plain; charset&#x3D;utf-8, application/vnd.influx.arrow] >
+\item \emph{ @param } content.encoding Enum < [gzip, identity] > 
+\item \emph{ @param } content.type Enum < [text/plain, text/plain; charset&#x3D;utf-8, application/vnd.influx.arrow] > 
 \item \emph{ @param } content.length integer
-\item \emph{ @param } accept Enum < [application/json] >
+\item \emph{ @param } accept Enum < [application/json] > 
 \item \emph{ @param } org.id character
 \item \emph{ @param } precision \link{WritePrecision}
 
@@ -38,28 +38,28 @@ influxdbclient.Write
 }
 \item status code : 400 | Line protocol poorly formed and no points were written.  Response can be used to determine the first malformed line in the body line-protocol. All data in body was rejected and not written.
 
-\item return type : LineProtocolError
+\item return type : LineProtocolError 
 \item response headers :
 
 \tabular{ll}{
 }
 \item status code : 401 | Token does not have sufficient permissions to write to this organization and bucket or the organization and bucket do not exist.
 
-\item return type : Error
+\item return type : Error 
 \item response headers :
 
 \tabular{ll}{
 }
 \item status code : 403 | No token was sent and they are required.
 
-\item return type : Error
+\item return type : Error 
 \item response headers :
 
 \tabular{ll}{
 }
 \item status code : 413 | Write has been rejected because the payload is too large. Error message returns max size supported. All data in body was rejected and not written.
 
-\item return type : LineProtocolLengthError
+\item return type : LineProtocolLengthError 
 \item response headers :
 
 \tabular{ll}{
@@ -82,7 +82,7 @@ Retry-After \tab A non-negative decimal integer indicating the seconds to delay 
 }
 \item status code : 0 | Internal server error
 
-\item return type : Error
+\item return type : Error 
 \item response headers :
 
 \tabular{ll}{

@@ -23,14 +23,14 @@ influxdbclient.Query
 
 \item status code : 200 | Suggestions for next functions in call chain
 
-\item return type : FluxSuggestions
+\item return type : FluxSuggestions 
 \item response headers :
 
 \tabular{ll}{
 }
 \item status code : 0 | Any response other than 200 is an internal server error
 
-\item return type : Error
+\item return type : Error 
 \item response headers :
 
 \tabular{ll}{
@@ -48,14 +48,14 @@ influxdbclient.Query
 
 \item status code : 200 | Suggestions for next functions in call chain
 
-\item return type : FluxSuggestion
+\item return type : FluxSuggestion 
 \item response headers :
 
 \tabular{ll}{
 }
 \item status code : 0 | Any response other than 200 is an internal server error
 
-\item return type : Error
+\item return type : Error 
 \item response headers :
 
 \tabular{ll}{
@@ -67,8 +67,8 @@ influxdbclient.Query
 
 \itemize{
 \item \emph{ @param } zap.trace.span character
-\item \emph{ @param } accept.encoding Enum < [gzip, identity] >
-\item \emph{ @param } content.type Enum < [application/json, application/vnd.flux] >
+\item \emph{ @param } accept.encoding Enum < [gzip, identity] > 
+\item \emph{ @param } content.type Enum < [application/json, application/vnd.flux] > 
 \item \emph{ @param } org character
 \item \emph{ @param } org.id character
 \item \emph{ @param } query \link{Query}
@@ -76,7 +76,7 @@ influxdbclient.Query
 
 \item status code : 200 | Query results
 
-\item return type : character
+\item return type : character 
 \item response headers :
 
 \tabular{ll}{
@@ -93,7 +93,7 @@ Retry-After \tab A non-negative decimal integer indicating the seconds to delay 
 }
 \item status code : 0 | Error processing query
 
-\item return type : Error
+\item return type : Error 
 \item response headers :
 
 \tabular{ll}{
@@ -105,21 +105,21 @@ Retry-After \tab A non-negative decimal integer indicating the seconds to delay 
 
 \itemize{
 \item \emph{ @param } zap.trace.span character
-\item \emph{ @param } content.type Enum < [application/json] >
+\item \emph{ @param } content.type Enum < [application/json] > 
 \item \emph{ @param } query \link{Query}
 \item \emph{ @returnType } \link{AnalyzeQueryResponse} \cr
 
 
 \item status code : 200 | Query analyze results. Errors will be empty if the query is valid.
 
-\item return type : AnalyzeQueryResponse
+\item return type : AnalyzeQueryResponse 
 \item response headers :
 
 \tabular{ll}{
 }
 \item status code : 0 | Internal server error
 
-\item return type : Error
+\item return type : Error 
 \item response headers :
 
 \tabular{ll}{
@@ -133,21 +133,21 @@ Analyzes flux query and generates a query specification.
 
 \itemize{
 \item \emph{ @param } zap.trace.span character
-\item \emph{ @param } content.type Enum < [application/json] >
+\item \emph{ @param } content.type Enum < [application/json] > 
 \item \emph{ @param } language.request \link{LanguageRequest}
 \item \emph{ @returnType } \link{ASTResponse} \cr
 
 
 \item status code : 200 | Abstract syntax tree of flux query.
 
-\item return type : ASTResponse
+\item return type : ASTResponse 
 \item response headers :
 
 \tabular{ll}{
 }
 \item status code : 0 | Any response other than 200 is an internal server error
 
-\item return type : Error
+\item return type : Error 
 \item response headers :
 
 \tabular{ll}{
@@ -185,7 +185,7 @@ result <- api.instance$GetQuerySuggestionsName(var.name, zap.trace.span=var.zap.
 library(influxdbclient)
 var.zap.trace.span <- '{\"trace_id\":\"1\",\"span_id\":\"1\",\"baggage\":{\"key\":\"value\"}}' # character | OpenTracing span context
 var.accept.encoding <- 'identity' # character | The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand.
-var.content.type <- 'content.type_example' # character |
+var.content.type <- 'content.type_example' # character | 
 var.org <- 'org_example' # character | Specifies the name of the organization executing the query. Takes either the ID or Name interchangeably. If both `orgID` and `org` are specified, `org` takes precedence.
 var.org.id <- 'org.id_example' # character | Specifies the ID of the organization executing the query. If both `orgID` and `org` are specified, `org` takes precedence.
 var.query <- Query$new() # Query | Flux query or specification to execute
@@ -200,7 +200,7 @@ result <- api.instance$PostQuery(zap.trace.span=var.zap.trace.span, accept.encod
 
 library(influxdbclient)
 var.zap.trace.span <- '{\"trace_id\":\"1\",\"span_id\":\"1\",\"baggage\":{\"key\":\"value\"}}' # character | OpenTracing span context
-var.content.type <- 'content.type_example' # character |
+var.content.type <- 'content.type_example' # character | 
 var.query <- Query$new() # Query | Flux or InfluxQL query to analyze
 
 #Analyze an InfluxQL or Flux query
@@ -213,7 +213,7 @@ result <- api.instance$PostQueryAnalyze(zap.trace.span=var.zap.trace.span, conte
 
 library(influxdbclient)
 var.zap.trace.span <- '{\"trace_id\":\"1\",\"span_id\":\"1\",\"baggage\":{\"key\":\"value\"}}' # character | OpenTracing span context
-var.content.type <- 'content.type_example' # character |
+var.content.type <- 'content.type_example' # character | 
 var.language.request <- LanguageRequest$new() # LanguageRequest | Analyzed Flux query to generate abstract syntax tree.
 
 api.instance <- QueryApi$new()
