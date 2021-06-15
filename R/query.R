@@ -15,7 +15,7 @@
 #'
 #' @field extern  \link{File} [optional]
 #'
-#' @field query  character
+#' @field query  character 
 #'
 #' @field type  character [optional]
 #'

@@ -15,7 +15,7 @@
 #' @section Methods:
 #' \describe{
 #' \strong{ GetQuerySuggestions } \emph{  }
-#'
+#' 
 #'
 #' \itemize{
 #' \item \emph{ @param } zap.trace.span character
@@ -24,14 +24,14 @@
 #'
 #' \item status code : 200 | Suggestions for next functions in call chain
 #'
-#' \item return type : FluxSuggestions
+#' \item return type : FluxSuggestions 
 #' \item response headers :
 #'
 #' \tabular{ll}{
 #' }
 #' \item status code : 0 | Any response other than 200 is an internal server error
 #'
-#' \item return type : Error
+#' \item return type : Error 
 #' \item response headers :
 #'
 #' \tabular{ll}{
@@ -39,7 +39,7 @@
 #' }
 #'
 #' \strong{ GetQuerySuggestionsName } \emph{  }
-#'
+#' 
 #'
 #' \itemize{
 #' \item \emph{ @param } name character
@@ -49,14 +49,14 @@
 #'
 #' \item status code : 200 | Suggestions for next functions in call chain
 #'
-#' \item return type : FluxSuggestion
+#' \item return type : FluxSuggestion 
 #' \item response headers :
 #'
 #' \tabular{ll}{
 #' }
 #' \item status code : 0 | Any response other than 200 is an internal server error
 #'
-#' \item return type : Error
+#' \item return type : Error 
 #' \item response headers :
 #'
 #' \tabular{ll}{
@@ -64,12 +64,12 @@
 #' }
 #'
 #' \strong{ PostQuery } \emph{ Query InfluxDB }
-#'
+#' 
 #'
 #' \itemize{
 #' \item \emph{ @param } zap.trace.span character
-#' \item \emph{ @param } accept.encoding Enum < [gzip, identity] >
-#' \item \emph{ @param } content.type Enum < [application/json, application/vnd.flux] >
+#' \item \emph{ @param } accept.encoding Enum < [gzip, identity] > 
+#' \item \emph{ @param } content.type Enum < [application/json, application/vnd.flux] > 
 #' \item \emph{ @param } org character
 #' \item \emph{ @param } org.id character
 #' \item \emph{ @param } query \link{Query}
@@ -77,7 +77,7 @@
 #'
 #' \item status code : 200 | Query results
 #'
-#' \item return type : character
+#' \item return type : character 
 #' \item response headers :
 #'
 #' \tabular{ll}{
@@ -94,7 +94,7 @@
 #' }
 #' \item status code : 0 | Error processing query
 #'
-#' \item return type : Error
+#' \item return type : Error 
 #' \item response headers :
 #'
 #' \tabular{ll}{
@@ -102,25 +102,25 @@
 #' }
 #'
 #' \strong{ PostQueryAnalyze } \emph{ Analyze an InfluxQL or Flux query }
-#'
+#' 
 #'
 #' \itemize{
 #' \item \emph{ @param } zap.trace.span character
-#' \item \emph{ @param } content.type Enum < [application/json] >
+#' \item \emph{ @param } content.type Enum < [application/json] > 
 #' \item \emph{ @param } query \link{Query}
 #' \item \emph{ @returnType } \link{AnalyzeQueryResponse} \cr
 #'
 #'
 #' \item status code : 200 | Query analyze results. Errors will be empty if the query is valid.
 #'
-#' \item return type : AnalyzeQueryResponse
+#' \item return type : AnalyzeQueryResponse 
 #' \item response headers :
 #'
 #' \tabular{ll}{
 #' }
 #' \item status code : 0 | Internal server error
 #'
-#' \item return type : Error
+#' \item return type : Error 
 #' \item response headers :
 #'
 #' \tabular{ll}{
@@ -134,21 +134,21 @@
 #'
 #' \itemize{
 #' \item \emph{ @param } zap.trace.span character
-#' \item \emph{ @param } content.type Enum < [application/json] >
+#' \item \emph{ @param } content.type Enum < [application/json] > 
 #' \item \emph{ @param } language.request \link{LanguageRequest}
 #' \item \emph{ @returnType } \link{ASTResponse} \cr
 #'
 #'
 #' \item status code : 200 | Abstract syntax tree of flux query.
 #'
-#' \item return type : ASTResponse
+#' \item return type : ASTResponse 
 #' \item response headers :
 #'
 #' \tabular{ll}{
 #' }
 #' \item status code : 0 | Any response other than 200 is an internal server error
 #'
-#' \item return type : Error
+#' \item return type : Error 
 #' \item response headers :
 #'
 #' \tabular{ll}{
@@ -186,7 +186,7 @@
 #' library(influxdbclient)
 #' var.zap.trace.span <- '{\"trace_id\":\"1\",\"span_id\":\"1\",\"baggage\":{\"key\":\"value\"}}' # character | OpenTracing span context
 #' var.accept.encoding <- 'identity' # character | The Accept-Encoding request HTTP header advertises which content encoding, usually a compression algorithm, the client is able to understand.
-#' var.content.type <- 'content.type_example' # character |
+#' var.content.type <- 'content.type_example' # character | 
 #' var.org <- 'org_example' # character | Specifies the name of the organization executing the query. Takes either the ID or Name interchangeably. If both `orgID` and `org` are specified, `org` takes precedence.
 #' var.org.id <- 'org.id_example' # character | Specifies the ID of the organization executing the query. If both `orgID` and `org` are specified, `org` takes precedence.
 #' var.query <- Query$new() # Query | Flux query or specification to execute
@@ -201,7 +201,7 @@
 #'
 #' library(influxdbclient)
 #' var.zap.trace.span <- '{\"trace_id\":\"1\",\"span_id\":\"1\",\"baggage\":{\"key\":\"value\"}}' # character | OpenTracing span context
-#' var.content.type <- 'content.type_example' # character |
+#' var.content.type <- 'content.type_example' # character | 
 #' var.query <- Query$new() # Query | Flux or InfluxQL query to analyze
 #'
 #' #Analyze an InfluxQL or Flux query
@@ -214,7 +214,7 @@
 #'
 #' library(influxdbclient)
 #' var.zap.trace.span <- '{\"trace_id\":\"1\",\"span_id\":\"1\",\"baggage\":{\"key\":\"value\"}}' # character | OpenTracing span context
-#' var.content.type <- 'content.type_example' # character |
+#' var.content.type <- 'content.type_example' # character | 
 #' var.language.request <- LanguageRequest$new() # LanguageRequest | Analyzed Flux query to generate abstract syntax tree.
 #'
 #' api.instance <- QueryApi$new()
@@ -257,7 +257,9 @@ QueryApi <- R6::R6Class(
       queryParams <- list()
       headerParams <- c()
 
-      headerParams['Zap-Trace-Span'] <- `zap.trace.span`
+      if (!is.null(`zap.trace.span`)) {
+        headerParams['Zap-Trace-Span'] <- `zap.trace.span`
+      }
 
       body <- NULL
       urlPath <- "/query/suggestions"
@@ -308,7 +310,9 @@ QueryApi <- R6::R6Class(
         stop("Missing required parameter `name`.")
       }
 
-      headerParams['Zap-Trace-Span'] <- `zap.trace.span`
+      if (!is.null(`zap.trace.span`)) {
+        headerParams['Zap-Trace-Span'] <- `zap.trace.span`
+      }
 
       body <- NULL
       urlPath <- "/query/suggestions/{name}"
@@ -359,15 +363,15 @@ QueryApi <- R6::R6Class(
       queryParams <- list()
       headerParams <- c()
 
-      if (!is.null(zap.trace.span)) {
+      if (!is.null(`zap.trace.span`)) {
         headerParams['Zap-Trace-Span'] <- `zap.trace.span`
       }
 
-      if (!is.null(accept.encoding)) {
+      if (!is.null(`accept.encoding`)) {
         headerParams['Accept-Encoding'] <- `accept.encoding`
       }
 
-      if (!is.null(content.type)) {
+      if (!is.null(`content.type`)) {
         headerParams['Content-Type'] <- `content.type`
       }
 
@@ -378,8 +382,12 @@ QueryApi <- R6::R6Class(
       if (!is.null(org.id)) {
         queryParams['orgID'] <- org.id
       }
+
       if (!missing(`query`)) {
-        body <- `query`$toJSONString()
+        contentType <- headerParams['Content-Type']
+        if (is.na(contentType) || is.null(contentType) || startsWith(contentType, 'application/json')) {
+          body <- `query`$toJSONString()
+        }
       } else {
         body <- NULL
       }
@@ -392,6 +400,7 @@ QueryApi <- R6::R6Class(
                                  headerParams = headerParams,
                                  body = body,
                                  ...)
+
       if (httr::status_code(resp) >= 200 && httr::status_code(resp) <= 299) {
         deserializedRespObj <- tryCatch(
           self$apiClient$deserialize(resp, "character", loadNamespace("influxdbclient")),
@@ -427,12 +436,19 @@ QueryApi <- R6::R6Class(
       queryParams <- list()
       headerParams <- c()
 
-      headerParams['Zap-Trace-Span'] <- `zap.trace.span`
+      if (!is.null(`zap.trace.span`)) {
+        headerParams['Zap-Trace-Span'] <- `zap.trace.span`
+      }
 
-      headerParams['Content-Type'] <- `content.type`
+      if (!is.null(`content.type`)) {
+        headerParams['Content-Type'] <- `content.type`
+      }
 
       if (!missing(`query`)) {
-        body <- `query`$toJSONString()
+        contentType <- headerParams['Content-Type']
+        if (is.na(contentType) || is.null(contentType) || startsWith(contentType, 'application/json')) {
+          body <- `query`$toJSONString()
+        }
       } else {
         body <- NULL
       }
@@ -481,12 +497,19 @@ QueryApi <- R6::R6Class(
       queryParams <- list()
       headerParams <- c()
 
-      headerParams['Zap-Trace-Span'] <- `zap.trace.span`
+      if (!is.null(`zap.trace.span`)) {
+        headerParams['Zap-Trace-Span'] <- `zap.trace.span`
+      }
 
-      headerParams['Content-Type'] <- `content.type`
+      if (!is.null(`content.type`)) {
+        headerParams['Content-Type'] <- `content.type`
+      }
 
       if (!missing(`language.request`)) {
-        body <- `language.request`$toJSONString()
+        contentType <- headerParams['Content-Type']
+        if (is.na(contentType) || is.null(contentType) || startsWith(contentType, 'application/json')) {
+          body <- `language.request`$toJSONString()
+        }
       } else {
         body <- NULL
       }

@@ -130,19 +130,25 @@ ApiClient  <- R6::R6Class(
 
     Execute = function(url, method, queryParams, headerParams, body, ...){
       headers <- httr::add_headers(c(headerParams, self$defaultHeaders))
+
       httpTimeout <- NULL
       if (!is.null(self$timeout)) {
         httpTimeout <- httr::timeout(self$timeout)
       }
 
+      contentType <- headers$headers['Content-Type']
+      if (is.na(contentType) || is.null(contentType)) {
+        contentType <- "application/json"
+      }
+
       if (method == "GET") {
         httr::GET(url, query = queryParams, headers, httpTimeout, httr::user_agent(self$`userAgent`), ...)
       } else if (method == "POST") {
-        httr::POST(url, query = queryParams, headers, body = body, httr::content_type("application/json"), httpTimeout, httr::user_agent(self$`userAgent`), ...)
+        httr::POST(url, query = queryParams, headers, body = body, httr::content_type(contentType), httpTimeout, httr::user_agent(self$`userAgent`), ...)
       } else if (method == "PUT") {
-        httr::PUT(url, query = queryParams, headers, body = body, httr::content_type("application/json"), httpTimeout, httpTimeout, httr::user_agent(self$`userAgent`), ...)
+        httr::PUT(url, query = queryParams, headers, body = body, httr::content_type(contentType), httpTimeout, httpTimeout, httr::user_agent(self$`userAgent`), ...)
       } else if (method == "PATCH") {
-        httr::PATCH(url, query = queryParams, headers, body = body, httr::content_type("application/json"), httpTimeout, httpTimeout, httr::user_agent(self$`userAgent`), ...)
+        httr::PATCH(url, query = queryParams, headers, body = body, httr::content_type(contentType), httpTimeout, httpTimeout, httr::user_agent(self$`userAgent`), ...)
       } else if (method == "HEAD") {
         httr::HEAD(url, query = queryParams, headers, httpTimeout, httpTimeout, httr::user_agent(self$`userAgent`), ...)
       } else if (method == "DELETE") {
