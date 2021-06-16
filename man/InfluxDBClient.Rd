@@ -50,6 +50,16 @@ data <- client$query('from(bucket: "my-bucket") |> range(start: -1h) |> drop(col
 }
 
 ## ------------------------------------------------
+## Method `InfluxDBClient$ready`
+## ------------------------------------------------
+
+
+\dontrun{
+client <- InfluxDBClient$new(...)
+status <- client$ready()
+}
+
+## ------------------------------------------------
 ## Method `InfluxDBClient$write`
 ## ------------------------------------------------
 
@@ -83,6 +93,7 @@ client$write(data,
 \item \href{#method-new}{\code{InfluxDBClient$new()}}
 \item \href{#method-health}{\code{InfluxDBClient$health()}}
 \item \href{#method-query}{\code{InfluxDBClient$query()}}
+\item \href{#method-ready}{\code{InfluxDBClient$ready()}}
 \item \href{#method-write}{\code{InfluxDBClient$write()}}
 \item \href{#method-clone}{\code{InfluxDBClient$clone()}}
 }
@@ -125,7 +136,7 @@ client <- InfluxDBClient$new(url = "http://localhost:8086",
 \if{html}{\out{<a id="method-health"></a>}}
 \if{latex}{\out{\hypertarget{method-health}{}}}
 \subsection{Method \code{health()}}{
-Checks status of InfluxDB instance.
+Gets the health of the instance.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$health()}\if{html}{\out{</div>}}
 }
@@ -171,6 +182,31 @@ Data as (list of) \code{data.frame}
 \dontrun{
 client <- InfluxDBClient$new(...)
 data <- client$query('from(bucket: "my-bucket") |> range(start: -1h) |> drop(columns: ["_start", "_stop"])')
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ready"></a>}}
+\if{latex}{\out{\hypertarget{method-ready}{}}}
+\subsection{Method \code{ready()}}{
+Get the readiness of the instance.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$ready()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+Instance of \code{Ready} or error
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{
+\dontrun{
+client <- InfluxDBClient$new(...)
+status <- client$ready()
 }
 }
 \if{html}{\out{</div>}}

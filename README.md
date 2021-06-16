@@ -13,7 +13,7 @@ This repository contains R package for InfluxDB 2.0 Client.
   * [Client instantiation](#client-instantiation)
   * [Querying data](#querying-data)
   * [Writing data](#writing-data)
-  * [Health checking](#health-checking)
+  * [Getting instance info](#getting-instance-info)
 * [License](#license)
 
 ## Features
@@ -172,19 +172,35 @@ Note: default `fieldCols` are suitable for writing back unpivoted data retrieved
 InfluxDB before. For usual tables ("pivoted" in Flux world), `fieldCols` should be
 unnamed list, eg. `c("humidity", "temperature", ...)`.
 
-### Health checking
+### Getting instance info
 
-Use `health` method.
+#### Health
+
+Use `health` method to get the health info.
 
 ```r
 client <- InfluxDBClient$new(url = "http://localhost:8086",
                              token = "my-token",
                              org = "my-org")
-                            
+
 check <- client$health()
 ```
 
 Response is either instance of `HealthCheck` or error.
+
+#### Readiness
+
+Use `ready` method to get the readiness status.
+
+```r
+client <- InfluxDBClient$new(url = "http://localhost:8086",
+                             token = "my-token",
+                             org = "my-org")
+
+check <- client$ready()
+```
+
+Response is either instance of `Ready` or error.
 
 ## License
 
