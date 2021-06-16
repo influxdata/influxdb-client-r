@@ -53,7 +53,7 @@ InfluxDBClient <- R6::R6Class(
                     annotations = c("group", "datatype", "default"))
     },
 
-    #' @description Checks status of InfluxDB instance.
+    #' @description Gets the health of the instance.
     #' @return Instance of \code{HealtCheck} or error
     #' @examples
     #'
@@ -125,6 +125,33 @@ InfluxDBClient <- R6::R6Class(
       } else {
         private$.fromAnnotatedCsv(resp)
       }
+    },
+
+    #' @description Gets the readiness of the instance.
+    #' @return Instance of \code{Ready} or error
+    #' @examples
+    #'
+    #' \dontrun{
+    #' client <- InfluxDBClient$new(...)
+    #' status <- client$ready()
+    #' }
+    ready = function() {
+      # call API
+      resp <- self$readyApi$GetReady()
+
+      # handle errors
+      if (identical(class(resp), c("ApiResponse", "R6"))) {
+        errMsg <-
+          sprintf(
+            "%s (%d): %s",
+            resp$content,
+            httr::status_code(resp$response),
+            httr::content(resp$response)$message
+          )
+        stop(errMsg)
+      }
+
+      resp
     },
 
     #' @description Writes data to InfluxDB.
@@ -206,6 +233,7 @@ InfluxDBClient <- R6::R6Class(
     .apiClient = NULL,
     .healthApi = NULL,
     .queryApi = NULL,
+    .readyApi = NULL,
     .writeApi = NULL,
 
     # as.lp.* methods are candidates for public functions
@@ -477,6 +505,17 @@ InfluxDBClient <- R6::R6Class(
         private$.queryApi <- value
       }
       private$.queryApi
+    },
+
+    readyApi = function(value) {
+      if (missing(value)) {
+        if (is.null(private$.readyApi)) {
+          private$.readyApi <- ReadyApi$new(self$apiClient)
+        }
+      } else {
+        private$.readyApi <- value
+      }
+      private$.readyApi
     },
 
     writeApi = function(value) {
