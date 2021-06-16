@@ -66,16 +66,7 @@ InfluxDBClient <- R6::R6Class(
       resp <- self$healthApi$GetHealth()
 
       # handle errors
-      if (identical(class(resp), c("ApiResponse", "R6"))) {
-        errMsg <-
-          sprintf(
-            "%s (%d): %s",
-            resp$content,
-            httr::status_code(resp$response),
-            httr::content(resp$response)$message
-          )
-        stop(errMsg)
-      }
+      private$.throwIfNot2xx(resp)
 
       resp
     },
@@ -107,16 +98,7 @@ InfluxDBClient <- R6::R6Class(
       resp <- self$queryApi$PostQuery(query = q, org = self$org)
 
       # handle errors
-      if (identical(class(resp), c("ApiResponse", "R6"))) {
-        errMsg <-
-          sprintf(
-            "%s (%d): %s",
-            resp$content,
-            httr::status_code(resp$response),
-            httr::content(resp$response)$message
-          )
-        stop(errMsg)
-      }
+      private$.throwIfNot2xx(resp)
 
       # process response
       if (resp == "\r\n") {
@@ -140,16 +122,7 @@ InfluxDBClient <- R6::R6Class(
       resp <- self$readyApi$GetReady()
 
       # handle errors
-      if (identical(class(resp), c("ApiResponse", "R6"))) {
-        errMsg <-
-          sprintf(
-            "%s (%d): %s",
-            resp$content,
-            httr::status_code(resp$response),
-            httr::content(resp$response)$message
-          )
-        stop(errMsg)
-      }
+      private$.throwIfNot2xx(resp)
 
       resp
     },
@@ -217,16 +190,7 @@ InfluxDBClient <- R6::R6Class(
                                       precision = precision)
 
       # handle errors
-      if (identical(class(resp), c("ApiResponse", "R6"))) {
-        errMsg <-
-          sprintf(
-            "%s (%d): %s",
-            resp$content,
-            httr::status_code(resp$response),
-            httr::content(resp$response)$message
-          )
-        stop(errMsg)
-      }
+      private$.throwIfNot2xx(resp)
     }
   ),
   private = list(
@@ -298,6 +262,19 @@ InfluxDBClient <- R6::R6Class(
         "ns"= { n * 1e9 },
       )
       sprintf("%.0f", trunc(v))
+    },
+
+    .throwIfNot2xx = function(resp) {
+      if (identical(class(resp), c("ApiResponse", "R6"))) {
+        errMsg <-
+          sprintf(
+            "%s (%d): %s",
+            resp$content,
+            httr::status_code(resp$response),
+            httr::content(resp$response)$message
+          )
+        stop(errMsg)
+      }
     },
 
     .fromAnnotatedCsv = function(x) {
