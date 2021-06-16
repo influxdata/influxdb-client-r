@@ -22,11 +22,12 @@ InfluxDB 2.0 Client supports:
 
 - Querying data
 - Writing data
-- Health check
+- Health and readiness check
 
 ### Known Issues
 
 - [write] batching not implemented yet
+- [write] retry not implemented yet
 
 ## Installation
 
