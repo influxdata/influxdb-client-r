@@ -90,15 +90,15 @@ Response is a `list` of `data.frame`s.
 | Parameter | Description | Type | Default |
 |---|---|---|---|
 | `text` | Flux query | `character` | none |
-| `time.mapping` | Flux time to new POSIXct column mapping | `c("_time"="time")` | none |
+| `time.mapping` | Flux time to `POSIXct` column mapping | named `list` | `c("_time"="time")` |
 
 #### Using retrieved data as time series
 
 Flux timestamps are parsed into `nanotime` (`integer64` underneath) type, because
 R datetime types do not support nanosecond precision. `nanotime` is not
 a time-based object appropriate for creating a time series, though. By default,
-`query` coerces the `_time` column to `time` column of `POSIXct` type, with possible
-loss precision (which is unimportant in the context of R time series).
+`query` coerces the `_time` column to `time` column of `POSIXct` type (see `time.mapping`
+parameter), with possible loss precision (which is unimportant in the context of R time series).
 
 Select data of interest from the result like
 ```r
