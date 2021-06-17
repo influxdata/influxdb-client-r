@@ -5,24 +5,47 @@
 
 with_mock_api({
   test_that("query", {
-    response <- .client$query(text='from(bucket: "r-testing") |> range(start: -10y) |> filter(fn: (r) => r._measurement == "airSensors" and r.sensor_id == "TLM0101") |> limit(n: 5) |> drop(columns: ["_start", "_stop"])')
+    response <- .client$query(text='from(bucket: "r-testing") |> range(start: -10y) |> filter(fn: (r) => r._measurement == "airSensors" and r.sensor_id == "TLM0101") |> limit(n: 5) |> drop(columns: ["_start", "_stop"])',
+                              time.mapping = NULL)
     expected <- .data
     expect_equal(response, expected)
   })
 
+  test_that("query / default time mapping", {
+    response <- .client$query(text='from(bucket: "r-testing") |> range(start: -10y) |> filter(fn: (r) => r._measurement == "airSensors" and r.sensor_id == "TLM0101") |> limit(n: 5) |> drop(columns: ["_start", "_stop"])')
+    expected <- lapply(.data, function(df) {
+      df$time <- as.POSIXct(df$`_time`)
+      df
+    })
+    expect_equal(response, expected)
+  })
+
+  test_that("query / explicit time mapping", {
+    response <- .client$query(text='from(bucket: "r-testing") |> range(start: -10y) |> filter(fn: (r) => r._measurement == "airSensors" and r.sensor_id == "TLM0101") |> limit(n: 5) |> drop(columns: ["_start", "_stop"])',
+                              time.mapping = c("_time"="posixct"))
+    expected <- lapply(.data, function(df) {
+      df$posixct <- as.POSIXct(df$`_time`)
+      df
+    })
+    expect_equal(response, expected)
+  })
+
   test_that("query / pivoted", {
-    response <- .client$query(text='import "influxdata/influxdb/schema" from(bucket: "r-testing") |> range(start: -10y) |> filter(fn: (r) => r._measurement == "airSensors" and r.sensor_id == "TLM0101") |> schema.fieldsAsCols() |> limit(n: 5) |> drop(columns: ["_start", "_stop"])')
+    response <- .client$query(text='import "influxdata/influxdb/schema" from(bucket: "r-testing") |> range(start: -10y) |> filter(fn: (r) => r._measurement == "airSensors" and r.sensor_id == "TLM0101") |> schema.fieldsAsCols() |> limit(n: 5) |> drop(columns: ["_start", "_stop"])',
+                              time.mapping = NULL)
     expected <- .data.pivoted
     expect_equal(response, expected)
   })
 
   test_that("query / empty result", {
-    response <- .client$query(text='from(bucket: "r-testing") |> range(start: -10y) |> filter(fn: (r) => r._measurement == "doesnotexist")')
+    response <- .client$query(text='from(bucket: "r-testing") |> range(start: -10y) |> filter(fn: (r) => r._measurement == "doesnotexist")',
+                              time.mapping = NULL)
     expect_null(response)
   })
 
   test_that("query / multiple tables in one csv table", {
-    response <- .client$query(text='from(bucket: "r-testing") |> range(start: -10y) |> filter(fn: (r) => r._measurement == "airSensors" and (r.sensor_id == "TLM0101" or r.sensor_id == "TLM0102") and r._field != "grounded") |> limit(n: 3) |> drop(columns: ["_start", "_stop"])')
+    response <- .client$query(text='from(bucket: "r-testing") |> range(start: -10y) |> filter(fn: (r) => r._measurement == "airSensors" and (r.sensor_id == "TLM0101" or r.sensor_id == "TLM0102") and r._field != "grounded") |> limit(n: 3) |> drop(columns: ["_start", "_stop"])',
+                              time.mapping = NULL)
     expected <- .data.multi
     expect_equal(response, expected)
   })
@@ -38,7 +61,14 @@ with_mock_api({
 
 test_that("query / NULL text query", {
   f <- function() {
-    .client$query(text=NULL)
+    .client$query(NULL)
   }
   expect_error(f(), "'text' cannot be NULL", fixed = TRUE)
+})
+
+test_that("query / invalid time mapping", {
+  f <- function() {
+    .client$query('whatever', time.mapping = c("_time", "time"))
+  }
+  expect_error(f(), "'time.mapping' must be named list with 1 element", fixed = TRUE)
 })
