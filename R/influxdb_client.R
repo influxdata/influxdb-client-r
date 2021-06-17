@@ -73,6 +73,8 @@ InfluxDBClient <- R6::R6Class(
 
     #' @description Queries data in InfluxDB.
     #' @param text Flux query
+    #' @param time.mapping Flux time to (new) POSIXct column mapping (named list).
+    #' Use `NULL` to skip it.
     #' @return Data as (list of) \code{data.frame}
     #' @examples
     #'
@@ -80,13 +82,18 @@ InfluxDBClient <- R6::R6Class(
     #' client <- InfluxDBClient$new(...)
     #' data <- client$query('from(bucket: "my-bucket") |> range(start: -1h) |> drop(columns: ["_start", "_stop"])')
     #' }
-    query = function(text) {
+    query = function(text, time.mapping = c("_time"="time")) {
       # validate parameters
       if (is.null(text)) {
         stop("'text' cannot be NULL")
       }
+      if (!is.null(time.mapping) ) {
+        if (length(time.mapping) != 1 || is.null(names(time.mapping)) || any(names(time.mapping) == "")) {
+          stop("'time.mapping' must be named list with 1 element")
+        }
+      }
 
-      # escape double quotes
+      # escape double quotes in the query
       text <- gsub("\"", "\\\"", text, fixed = TRUE)
 
       # create query instance
@@ -105,7 +112,25 @@ InfluxDBClient <- R6::R6Class(
         message("empty response")
         NULL # TODO return empty list?
       } else {
-        private$.fromAnnotatedCsv(resp)
+        result <- private$.fromAnnotatedCsv(resp)
+        if (is.null(time.mapping)) {
+          result
+        } else {
+          srcCol <- names(time.mapping)[[1]]
+          targetCol <- time.mapping[[1]]
+          result <- lapply(result, function(df) {
+            if (!srcCol %in% colnames(df)) {
+              stop(sprintf("cannot coerce '%s' to '%s': column does not exist",
+                           srcCol, targetCol))
+            }
+            if (targetCol %in% colnames(df)) {
+              stop(sprintf("cannot coerce '%s' to '%s': column already exist",
+                           srcCol, targetCol))
+            }
+            df[targetCol] <- as.POSIXct(df[,srcCol])
+            df
+          })
+        }
       }
     },
 

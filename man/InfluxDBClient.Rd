@@ -163,13 +163,16 @@ status <- client$health()
 \subsection{Method \code{query()}}{
 Queries data in InfluxDB.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$query(text)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$query(text, time.mapping = c(`_time` = "time"))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{text}}{Flux query}
+
+\item{\code{time.mapping}}{Flux time to (new) POSIXct column mapping (named list).
+Use `NULL` to skip it.}
 }
 \if{html}{\out{</div>}}
 }
@@ -193,7 +196,7 @@ data <- client$query('from(bucket: "my-bucket") |> range(start: -1h) |> drop(col
 \if{html}{\out{<a id="method-ready"></a>}}
 \if{latex}{\out{\hypertarget{method-ready}{}}}
 \subsection{Method \code{ready()}}{
-Get the readiness of the instance.
+Gets the readiness of the instance.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$ready()}\if{html}{\out{</div>}}
 }
