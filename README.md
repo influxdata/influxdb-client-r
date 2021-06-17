@@ -80,6 +80,7 @@ client <- InfluxDBClient$new(url = "http://localhost:8086",
                              org = "my-org")
                             
 data <- client$query(text='from(bucket: "my-bucket") |> range(start: -1h) |> drop(columns: ["_start", "_stop"])')
+data
 ```
 
 Response is a `list` of `data.frame`s.
@@ -89,32 +90,37 @@ Response is a `list` of `data.frame`s.
 | Parameter | Description | Type | Default |
 |---|---|---|---|
 | `text` | Flux query | `character` | none |
+| `time.mapping` | Flux time to new POSIXct column mapping | `c("_time"="time")` | none |
 
 #### Using retrieved data as time series
 
 Flux timestamps are parsed into `nanotime` (`integer64` underneath) type, because
 R datetime types do not support nanosecond precision. `nanotime` is not
-a time-based object appropriate for creating a time series, though.
-To add such column to the data, just coerce the time column (usually `_time`), like
+a time-based object appropriate for creating a time series, though. By default,
+`query` coerces the `_time` column to `time` column of `POSIXct` type, with possible
+loss precision (which is unimportant in the context of R time series).
+
+Select data of interest from the result like
 ```r
-# pick a data frame of interest from the result
-df1 <- data[[1]]
-# coerce nanotime column to new POSIXct one
-df1$time <- as.POSIXct(df1$`_time`)
+# from the first data frame, pick subset containing `time` and `_value` columns only
+df1 <- data[[1]][c("time", "_value")]
 ```
+
 Then, a time series object can be created from the data frame, eg. using `tsbox` package:
 ```r
 ts1 <- ts_ts(ts_df(df1))
 ```
 
-Such data frame, or a time series object created from it, can be used for decomposition,
+A data frame, or a time series object created from it, can be used for decomposition,
 anomaly detection etc, like
 ```r
 df1$`_value` %>% ts(freq=168) %>% stl(s.window=13) %>% autoplot()
 ```
+or
 ```r
-ts1[c("time", "_value")] %>% ts(freq=168) %>% stl(s.window=13) %>% autoplot()
+ts1 %>% ts(freq=168) %>% stl(s.window=13) %>% autoplot()
 ```
+
 
 ### Writing data
 
