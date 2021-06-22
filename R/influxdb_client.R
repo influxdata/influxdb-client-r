@@ -155,6 +155,7 @@ InfluxDBClient <- R6::R6Class(
     #' @description Writes data to InfluxDB.
     #' @param x Data as (list of) \code{data.frame}
     #' @param bucket Target bucket name
+    #' @param batch.size Batch size
     #' @param precision Time precision
     #' @param measurementCol Name of measurement column
     #' @param tagCols Names of tag (index) columns
@@ -178,6 +179,7 @@ InfluxDBClient <- R6::R6Class(
     #'              timeCol = "time")
     #' }
     write = function(x, bucket,
+                     batch.size = 5000,
                      precision = c("ns", "us", "ms", "s"),
                      measurementCol = '_measurement',
                      tagCols = NULL,
@@ -196,7 +198,7 @@ InfluxDBClient <- R6::R6Class(
 
       # serialize input into line protocol
       clazz <- if (xIsCharacter) "character" else if (xIsDataFrame) "data.frame"
-      body <- switch(
+      lp <- switch(
         clazz,
         "character"= { x },
         "data.frame"= {
@@ -205,17 +207,33 @@ InfluxDBClient <- R6::R6Class(
         },
         stop(paste("Unsupported type for write:", clazz))
       )
-      body <- unlist(body)
 
-      # call API
-      resp <- self$writeApi$PostWrite(org = self$org,
-                                      bucket = bucket,
-                                      body = body,
-                                      content.type = "text/plain; charset=utf-8",
-                                      precision = precision)
+      # reusable send
+      send <- function(body) {
+        # call API
+        resp <- self$writeApi$PostWrite(org = self$org,
+                                        bucket = bucket,
+                                        body = body,
+                                        content.type = "text/plain; charset=utf-8",
+                                        precision = precision)
 
-      # handle errors
-      private$.throwIfNot2xx(resp)
+        # handle errors
+        private$.throwIfNot2xx(resp)
+      }
+
+      # re-chunk line protocol data (https://stackoverflow.com/questions/3318333/split-a-vector-into-chunks)
+      lp <- unlist(lp)
+      n <- ceiling(length(lp) / batch.size)
+      if (n > 1) { # >= 2
+        batches <- split(lp, cut(seq_along(lp), n, labels = FALSE))
+      } else {
+        batches <- list(lp)
+      }
+
+      # send line protocol data in batches
+      for (batch in batches) {
+        send(batch)
+      }
     }
   ),
   private = list(

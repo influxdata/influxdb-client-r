@@ -226,6 +226,7 @@ Writes data to InfluxDB.
 \if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$write(
   x,
   bucket,
+  batch.size = 5000,
   precision = c("ns", "us", "ms", "s"),
   measurementCol = "_measurement",
   tagCols = NULL,
@@ -241,6 +242,8 @@ Writes data to InfluxDB.
 \item{\code{x}}{Data as (list of) \code{data.frame}}
 
 \item{\code{bucket}}{Target bucket name}
+
+\item{\code{batch.size}}{Batch size}
 
 \item{\code{precision}}{Time precision}
 
