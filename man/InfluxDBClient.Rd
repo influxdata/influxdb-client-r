@@ -163,7 +163,7 @@ status <- client$health()
 \subsection{Method \code{query()}}{
 Queries data in InfluxDB.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$query(text, time.mapping = c(`_time` = "time"))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$query(text, POSIXctCol = c(`_time` = "time"))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -171,7 +171,7 @@ Queries data in InfluxDB.
 \describe{
 \item{\code{text}}{Flux query}
 
-\item{\code{time.mapping}}{Flux time to (new) POSIXct column mapping (named list).
+\item{\code{POSIXctCol}}{Flux time to (new) \code{POSIXct} column mapping (named list).
 Default is \code{c("_time"="time")}. Use \code{NULL} to skip it.}
 }
 \if{html}{\out{</div>}}
@@ -226,7 +226,7 @@ Writes data to InfluxDB.
 \if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$write(
   x,
   bucket,
-  batch.size = 5000,
+  batchSize = 5000,
   precision = c("ns", "us", "ms", "s"),
   measurementCol = "_measurement",
   tagCols = NULL,
@@ -243,7 +243,7 @@ Writes data to InfluxDB.
 
 \item{\code{bucket}}{Target bucket name}
 
-\item{\code{batch.size}}{Batch size. Positive number or \code{FALSE} to disable.
+\item{\code{batchSize}}{Batch size. Positive number or \code{FALSE} to disable.
 Default is \code{5000}.}
 
 \item{\code{precision}}{Time precision}

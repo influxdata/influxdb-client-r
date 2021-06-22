@@ -89,14 +89,14 @@ Response is a `list` of `data.frame`s.
 | Parameter | Description | Type | Default |
 |---|---|---|---|
 | `text` | Flux query | `character` | none |
-| `time.mapping` | Flux time to `POSIXct` column mapping | named `list` | `c("_time"="time")` |
+| `POSIXctCol` | Flux time to `POSIXct` column mapping | named `list` | `c("_time"="time")` |
 
 #### Using retrieved data as time series
 
 Flux timestamps are parsed into `nanotime` (`integer64` underneath) type, because
 R datetime types do not support nanosecond precision. `nanotime` is not
 a time-based object appropriate for creating a time series, though. By default,
-`query` coerces the `_time` column to `time` column of `POSIXct` type (see `time.mapping`
+`query` coerces the `_time` column to `time` column of `POSIXct` type (see `POSIXctCol`
 parameter), with possible loss precision (which is unimportant in the context of R time series).
 
 Select data of interest from the result like
@@ -164,6 +164,7 @@ The example is valid for `data.frame` `data` like the following:
 |---|---|---|---|
 | `x` | data  | `data.frame` (or list of) | none |
 | `bucket` | target bucket name | `character` | none |
+| `batchSize` | batch size | `numeric` | `5000` |
 | `precision` | timestamp precision | `character` (one of `s`, `ms`, `us`, `ns`) | none |
 | `measurementCol` | measurement column name | `character` | `'_measurement'` |
 | `tagCols` | tags column names | `character` | `NULL` |

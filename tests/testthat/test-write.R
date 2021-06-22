@@ -47,7 +47,7 @@ with_mock_api({
                      return(t)
                    })
     response <- .client$write(data, bucket='r-testing',
-                              batch.size = 3, # input has 5 lines -> 2 batches (3 and 2 liners)
+                              batchSize = 3, # input has 5 lines -> 2 batches (3 and 2 liners)
                               precision = 'ns',
                               measurementCol = 'name',
                               tagCols = c("region", "sensor_id"),
@@ -67,7 +67,7 @@ with_mock_api({
                      return(t)
                    })
     response <- .client$write(data, bucket='r-testing',
-                              batch.size = FALSE,
+                              batchSize = FALSE,
                               precision = 'ns',
                               measurementCol = 'name',
                               tagCols = c("region", "sensor_id"),

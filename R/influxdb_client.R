@@ -73,7 +73,7 @@ InfluxDBClient <- R6::R6Class(
 
     #' @description Queries data in InfluxDB.
     #' @param text Flux query
-    #' @param time.mapping Flux time to (new) POSIXct column mapping (named list).
+    #' @param POSIXctCol Flux time to (new) \code{POSIXct} column mapping (named list).
     #' Default is \code{c("_time"="time")}. Use \code{NULL} to skip it.
     #' @return Data as (list of) \code{data.frame}
     #' @examples
@@ -82,14 +82,14 @@ InfluxDBClient <- R6::R6Class(
     #' client <- InfluxDBClient$new(...)
     #' data <- client$query('from(bucket: "my-bucket") |> range(start: -1h) |> drop(columns: ["_start", "_stop"])')
     #' }
-    query = function(text, time.mapping = c("_time"="time")) {
+    query = function(text, POSIXctCol = c("_time"="time")) {
       # validate parameters
       if (is.null(text)) {
         stop("'text' cannot be NULL")
       }
-      if (!is.null(time.mapping) ) {
-        if (length(time.mapping) != 1 || is.null(names(time.mapping)) || any(names(time.mapping) == "")) {
-          stop("'time.mapping' must be named list with 1 element")
+      if (!is.null(POSIXctCol) ) {
+        if (length(POSIXctCol) != 1 || is.null(names(POSIXctCol)) || any(names(POSIXctCol) == "")) {
+          stop("'POSIXctCol' must be named list with 1 element")
         }
       }
 
@@ -113,11 +113,11 @@ InfluxDBClient <- R6::R6Class(
         NULL # TODO return empty list?
       } else {
         result <- private$.fromAnnotatedCsv(resp)
-        if (is.null(time.mapping)) {
+        if (is.null(POSIXctCol)) {
           result
         } else {
-          srcCol <- names(time.mapping)[[1]]
-          targetCol <- time.mapping[[1]]
+          srcCol <- names(POSIXctCol)[[1]]
+          targetCol <- POSIXctCol[[1]]
           result <- lapply(result, function(df) {
             if (!srcCol %in% colnames(df)) {
               stop(sprintf("cannot coerce '%s' to '%s': column does not exist",
@@ -155,7 +155,7 @@ InfluxDBClient <- R6::R6Class(
     #' @description Writes data to InfluxDB.
     #' @param x Data as (list of) \code{data.frame}
     #' @param bucket Target bucket name
-    #' @param batch.size Batch size. Positive number or \code{FALSE} to disable.
+    #' @param batchSize Batch size. Positive number or \code{FALSE} to disable.
     #' Default is \code{5000}.
     #' @param precision Time precision
     #' @param measurementCol Name of measurement column. Default is \code{"_measurement"}.
@@ -180,7 +180,7 @@ InfluxDBClient <- R6::R6Class(
     #'              timeCol = "time")
     #' }
     write = function(x, bucket,
-                     batch.size = 5000,
+                     batchSize = 5000,
                      precision = c("ns", "us", "ms", "s"),
                      measurementCol = "_measurement",
                      tagCols = NULL,
@@ -196,8 +196,8 @@ InfluxDBClient <- R6::R6Class(
       if (is.null(bucket)) {
         stop("'bucket' cannot be NULL")
       }
-      if (is.numeric(batch.size) && batch.size < 1) {
-        stop("'batch.size' must be >= 1 or FALSE")
+      if (is.numeric(batchSize) && batchSize < 1) {
+        stop("'batchSize' must be >= 1 or FALSE")
       }
 
       # serialize input into line protocol
@@ -227,7 +227,7 @@ InfluxDBClient <- R6::R6Class(
 
       # re-chunk line protocol data (https://stackoverflow.com/questions/3318333/split-a-vector-into-chunks)
       lp <- unlist(lp)
-      n <- if (identical(batch.size, FALSE)) 1 else ceiling(length(lp) / batch.size)
+      n <- if (identical(batchSize, FALSE)) 1 else ceiling(length(lp) / batchSize)
       if (n > 1) { # >= 2
         batches <- split(lp, cut(seq_along(lp), n, labels = FALSE))
       } else {
