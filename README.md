@@ -78,7 +78,7 @@ client <- InfluxDBClient$new(url = "http://localhost:8086",
                              token = "my-token",
                              org = "my-org")
                             
-data <- client$query(text='from(bucket: "my-bucket") |> range(start: -1h) |> drop(columns: ["_start", "_stop"])')
+data <- client$query('from(bucket: "my-bucket") |> range(start: -1h) |> drop(columns: ["_start", "_stop"])')
 data
 ```
 
