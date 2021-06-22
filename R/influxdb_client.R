@@ -74,7 +74,7 @@ InfluxDBClient <- R6::R6Class(
     #' @description Queries data in InfluxDB.
     #' @param text Flux query
     #' @param time.mapping Flux time to (new) POSIXct column mapping (named list).
-    #' Use `NULL` to skip it.
+    #' Default is \code{c("_time"="time")}. Use \code{NULL} to skip it.
     #' @return Data as (list of) \code{data.frame}
     #' @examples
     #'
@@ -155,16 +155,17 @@ InfluxDBClient <- R6::R6Class(
     #' @description Writes data to InfluxDB.
     #' @param x Data as (list of) \code{data.frame}
     #' @param bucket Target bucket name
-    #' @param batch.size Batch size
+    #' @param batch.size Batch size. Positive number or \code{FALSE} to disable.
+    #' Default is \code{5000}.
     #' @param precision Time precision
-    #' @param measurementCol Name of measurement column
+    #' @param measurementCol Name of measurement column. Default is \code{"_measurement"}.
     #' @param tagCols Names of tag (index) columns
     #' @param fieldCols Names of field columns. In case of unpivoted data
     #' previously retrieved from InfluxDB, use default value ie. named list
     #' \code{c("_field"="_value")}.
     #' For all other cases, just use simple vector of column names (see Examples).
-    #' @param timestampCol Name of time column. The column values should be either
-    #' of \code{nanotime} or \code{POSIXct} type.
+    #' @param timeCol Name of time column. The column values should be either
+    #' of \code{nanotime} or \code{POSIXct} type. Default is \code{"_time"}.
     #' @examples
     #'
     #' \dontrun{
@@ -181,7 +182,7 @@ InfluxDBClient <- R6::R6Class(
     write = function(x, bucket,
                      batch.size = 5000,
                      precision = c("ns", "us", "ms", "s"),
-                     measurementCol = '_measurement',
+                     measurementCol = "_measurement",
                      tagCols = NULL,
                      fieldCols = c("_field"="_value"),
                      timeCol = "_time",
@@ -194,6 +195,9 @@ InfluxDBClient <- R6::R6Class(
       }
       if (is.null(bucket)) {
         stop("'bucket' cannot be NULL")
+      }
+      if (is.numeric(batch.size) && batch.size < 1) {
+        stop("'batch.size' must be >= 1 or FALSE")
       }
 
       # serialize input into line protocol
@@ -223,7 +227,7 @@ InfluxDBClient <- R6::R6Class(
 
       # re-chunk line protocol data (https://stackoverflow.com/questions/3318333/split-a-vector-into-chunks)
       lp <- unlist(lp)
-      n <- ceiling(length(lp) / batch.size)
+      n <- if (identical(batch.size, FALSE)) 1 else ceiling(length(lp) / batch.size)
       if (n > 1) { # >= 2
         batches <- split(lp, cut(seq_along(lp), n, labels = FALSE))
       } else {

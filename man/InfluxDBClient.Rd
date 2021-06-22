@@ -172,7 +172,7 @@ Queries data in InfluxDB.
 \item{\code{text}}{Flux query}
 
 \item{\code{time.mapping}}{Flux time to (new) POSIXct column mapping (named list).
-Use `NULL` to skip it.}
+Default is \code{c("_time"="time")}. Use \code{NULL} to skip it.}
 }
 \if{html}{\out{</div>}}
 }
@@ -243,11 +243,12 @@ Writes data to InfluxDB.
 
 \item{\code{bucket}}{Target bucket name}
 
-\item{\code{batch.size}}{Batch size}
+\item{\code{batch.size}}{Batch size. Positive number or \code{FALSE} to disable.
+Default is \code{5000}.}
 
 \item{\code{precision}}{Time precision}
 
-\item{\code{measurementCol}}{Name of measurement column}
+\item{\code{measurementCol}}{Name of measurement column. Default is \code{"_measurement"}.}
 
 \item{\code{tagCols}}{Names of tag (index) columns}
 
@@ -256,8 +257,8 @@ previously retrieved from InfluxDB, use default value ie. named list
 \code{c("_field"="_value")}.
 For all other cases, just use simple vector of column names (see Examples).}
 
-\item{\code{timestampCol}}{Name of time column. The column values should be either
-of \code{nanotime} or \code{POSIXct} type.}
+\item{\code{timeCol}}{Name of time column. The column values should be either
+of \code{nanotime} or \code{POSIXct} type. Default is \code{"_time"}.}
 }
 \if{html}{\out{</div>}}
 }
