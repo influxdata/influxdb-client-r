@@ -106,7 +106,7 @@ data <- client$query('from(bucket: "my-bucket") |> range(start: -1h) |> drop(col
 data
 ```
 
-Response is a `list` of `data.frame`s.
+Response is a `list` of `data.frame`s. Each `data.frame` corresponds to one Flux table.
 
 #### Parameters
 
