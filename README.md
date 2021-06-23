@@ -6,7 +6,7 @@ This repository contains R package for InfluxDB 2.0 Client per [#274: R Library 
 
 * [Features](#features)
   * [Type Mapping](#type-mapping)
-  * [Known Issues](#known-issues)
+* [Known Issues](#known-issues)
 * [Installation](#installation)
   * [Installing R dependencies](#installing-r-dependencies)
   * [Installing `influxdbclient` package](#installing-influxdbclient-package)
@@ -47,7 +47,7 @@ R -> InfluxDB:
 | `logical` | `bool` |
 | `nanotime`, `POSIXct` | `time` |
 
-### Known Issues
+## Known Issues
 
 - [write] retry not implemented yet
 - [1.x compatibility] not implemented yet
@@ -189,17 +189,17 @@ The example is valid for `data.frame` `data` like the following:
 | `bucket` | target bucket name | `character` | none |
 | `batchSize` | batch size | `numeric` | `5000` |
 | `precision` | timestamp precision | `character` (one of `s`, `ms`, `us`, `ns`) | none |
-| `measurementCol` | measurement column name | `character` | `'_measurement'` |
+| `measurementCol` | measurement column name | `character` | `"_measurement"` |
 | `tagCols` | tags column names | `character` | `NULL` |
 | `fieldCols` | fields column names | `character` | `c("_field"="_value")` |
-| `timeCol` | time column name | `character` | `'_time'` |
+| `timeCol` | time column name | `character` | `"_time"` |
 
 Supported time column value types: `nanotime`, `POSIXct`
 
 Response is an instance of `ApiResponse` in case of error, otherwise `NULL`.
 
-Note: default `fieldCols` are suitable for writing back unpivoted data retrieved from
-InfluxDB before. For usual tables ("pivoted" in Flux world), `fieldCols` should be
+Note: default `fieldCols` value is suitable for writing back unpivoted data retrieved
+from  InfluxDB before. For usual tables ("pivoted" in Flux world), `fieldCols` should be
 unnamed list, eg. `c("humidity", "temperature", ...)`.
 
 ### Getting instance info
