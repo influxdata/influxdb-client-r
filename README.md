@@ -2,7 +2,7 @@
 
 **DISCLAIMER: THIS IS A WORK IN PROGRESS**
 
-This repository contains R package for InfluxDB 2.0 Client.
+This repository contains R package for InfluxDB 2.0 Client per [#274: R Library Request for InfluxDB 2.x](https://github.com/influxdata/feature-requests/issues/274).
 
 * [Features](#features)
   * [Type Mapping](#type-mapping)
