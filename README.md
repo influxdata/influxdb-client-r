@@ -27,6 +27,7 @@ InfluxDB 2.0 Client supports:
 ### Known Issues
 
 - [write] retry not implemented yet
+- [1.x compatibility] not implemented yet
 
 ## Installation
 
