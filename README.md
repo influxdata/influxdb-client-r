@@ -5,7 +5,8 @@
 This repository contains R package for InfluxDB 2.0 Client.
 
 * [Features](#features)
-* [Known Issues](#known-issues)
+  * [Type Mapping](#type-mapping)
+  * [Known Issues](#known-issues)
 * [Installation](#installation)
   * [Installing R dependencies](#installing-r-dependencies)
   * [Installing `influxdbclient` package](#installing-influxdbclient-package)
@@ -23,6 +24,28 @@ InfluxDB 2.0 Client supports:
 - Querying data
 - Writing data
 - Health and readiness check
+
+### Type mapping
+
+InfluxDB/Flux -> R:
+
+| Flux type | R type |
+|---|---|
+| `string` | `character` |
+| `int` | `integer64` |
+| `float` | `numeric` |
+| `bool` | `logical` |
+| `time` | `nanotime` |
+
+R -> InfluxDB:
+
+| R type | InfluxDB type |
+|---|---|
+| `character` | `string` |
+| `integer`, `integer64` | `int` |
+| `numeric` | `float` |
+| `logical` | `bool` |
+| `nanotime`, `POSIXct` | `time` |
 
 ### Known Issues
 
@@ -120,7 +143,6 @@ or
 ```r
 ts1 %>% ts(freq=168) %>% stl(s.window=13) %>% autoplot()
 ```
-
 
 ### Writing data
 
