@@ -84,6 +84,10 @@ client$write(data,
 \item{\code{token}}{Authentication token}
 
 \item{\code{org}}{Organization name}
+
+\item{\code{dialect}}{Flux dialect}
+
+\item{\code{retryOptions}}{Retry options}
 }
 \if{html}{\out{</div>}}
 }
@@ -104,7 +108,7 @@ client$write(data,
 \subsection{Method \code{new()}}{
 Creates instance of \code{InfluxDBClient}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$new(url = NULL, token = NULL, org = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$new(url, token, org, retryOptions = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -112,9 +116,12 @@ Creates instance of \code{InfluxDBClient}.
 \describe{
 \item{\code{url}}{InfluxDB instance URL}
 
-\item{\code{token}}{Authetication token}
+\item{\code{token}}{Authentication token}
 
 \item{\code{org}}{Organization name}
+
+\item{\code{org}}{Retry options. See \code{RetryOptions} for details. Set to \code{TRUE}
+for default retry options. Default is \code{NULL} which disables retries.}
 }
 \if{html}{\out{</div>}}
 }

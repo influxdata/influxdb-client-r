@@ -10,6 +10,8 @@
 #' @field url Database URL
 #' @field token Authentication token
 #' @field org Organization name
+#' @field dialect Flux dialect
+#' @field retryOptions Retry options
 #' @export
 InfluxDBClient <- R6::R6Class(
   'InfluxDBClient',
@@ -22,11 +24,15 @@ InfluxDBClient <- R6::R6Class(
     org = NULL,
     # query dialect
     dialect = NULL,
+    # retry options
+    retryOptions = NULL,
     # constructor
     #' @description Creates instance of \code{InfluxDBClient}.
     #' @param url InfluxDB instance URL
-    #' @param token Authetication token
+    #' @param token Authentication token
     #' @param org Organization name
+    #' @param org Retry options. See \code{RetryOptions} for details. Set to \code{TRUE}
+    #' for default retry options. Default is \code{NULL} which disables retries.
     #' @examples
     #'
     #' \dontrun{
@@ -34,7 +40,7 @@ InfluxDBClient <- R6::R6Class(
     #'                              token = "my-token",
     #'                              org = "my-org")
     #' }
-    initialize = function(url = NULL, token = NULL, org = NULL) {
+    initialize = function(url, token, org, retryOptions = NULL) {
       if (!is.null(url)) {
         self$url <- url
       }
@@ -51,6 +57,13 @@ InfluxDBClient <- R6::R6Class(
       self$dialect <-
         Dialect$new(header = TRUE,
                     annotations = c("group", "datatype", "default"))
+
+      # retry options
+      if (identical(retryOptions, TRUE)) {
+        self$retryOptions <- RetryOptions$new()
+      } else if (!is.null(retryOptions)) {
+        self$retryOptions <- retryOptions
+      }
     },
 
     #' @description Gets the health of the instance.
@@ -212,19 +225,6 @@ InfluxDBClient <- R6::R6Class(
         stop(paste("Unsupported type for write:", clazz))
       )
 
-      # reusable send
-      send <- function(body) {
-        # call API
-        resp <- self$writeApi$PostWrite(org = self$org,
-                                        bucket = bucket,
-                                        body = body,
-                                        content.type = "text/plain; charset=utf-8",
-                                        precision = precision)
-
-        # handle errors
-        private$.throwIfNot2xx(resp)
-      }
-
       # re-chunk line protocol data (https://stackoverflow.com/questions/3318333/split-a-vector-into-chunks)
       lp <- unlist(lp)
       n <- if (identical(batchSize, FALSE)) 1 else ceiling(length(lp) / batchSize)
@@ -234,9 +234,36 @@ InfluxDBClient <- R6::R6Class(
         batches <- list(lp)
       }
 
-      # send line protocol data in batches
+      # API call closure
+      call = function(body) {
+        self$writeApi$PostWrite(org = self$org,
+                                bucket = bucket,
+                                body = body,
+                                content.type = "text/plain; charset=utf-8",
+                                precision = precision)
+      }
+
+      # API call may be wrapper (in case retry options are set)
+      send <-
+        if (is.null(self$retryOptions)) {
+          call
+        } else {
+          function(body) {
+            self$apiClient$retry(body,
+                                 fun = call,
+                                 funIf = self$apiClient$is_retryable,
+                                 retryOptions = self$retryOptions)
+          }
+        }
+
+      # send the data
       for (batch in batches) {
-        send(batch)
+
+        # send batch
+        resp <- send(batch)
+
+        # handle errors
+        private$.throwIfNot2xx(resp)
       }
     }
   ),

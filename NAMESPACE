@@ -4,6 +4,7 @@
 # Client
 export(InfluxDBClient)
 export(InfluxDBApiClient)
+export(RetryOptions)
 
 # Core
 export(ApiClient)

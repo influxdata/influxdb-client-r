@@ -264,3 +264,26 @@ test_that("toLineProtocol / not existing time column", {
   expect_error(f(), "time column 'no-time' not found in data frame",
                fixed = TRUE)
 })
+
+test_that("delay / max time capped", {
+  .api.client <- InfluxDBApiClientTest$new()
+  opts <- RetryOptions$new(maxDelay = 100, maxAttempts = 10)
+  delays <- c()
+  for (i in 1:10) {
+    delays <- c(delays, .api.client$delay(retryOptions = opts, attempt = i,
+                                          retryAfter = NULL, deadline = NULL))
+  }
+  expect_true(all(diff(delays) >= 0))
+  expect_true(all(delays <= 100))
+})
+
+test_that("delay / retry-after jitter", {
+  .api.client <- InfluxDBApiClientTest$new()
+  opts <- RetryOptions$new(retryJitter = 250, maxAttempts = 10)
+  delays <- c()
+  for (i in 1:10) {
+    delays <- c(delays, .api.client$delay(retryOptions = opts, attempt = i,
+                                          retryAfter = 3, deadline = NULL))
+  }
+  expect_true(all(delays >= 3 & delays <= 3.250))
+})
