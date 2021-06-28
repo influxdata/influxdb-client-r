@@ -6,6 +6,10 @@ export(InfluxDBClient)
 export(InfluxDBApiClient)
 export(RetryOptions)
 
+# Functions
+export(client)
+export(retry_options)
+
 # Core
 export(ApiClient)
 export(ApiResponse)
