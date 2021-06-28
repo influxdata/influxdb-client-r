@@ -100,8 +100,8 @@ with_mock_api({
                      t['_measurement'] <- replicate(5, 'w-airSensors')
                      return(t)
                    })
-    retry.client <- InfluxDBClientTest$new(url = test.url, token = test.token, org = test.org,
-                                           retryOptions = TRUE)
+    retry.client <- InfluxDBClient$new(url = test.url, token = test.token, org = test.org,
+                                       retryOptions = TRUE)
     response <- retry.client$write(data, bucket = 'r-testing', precision = 'ns',
                                    tagCols = c("region", "sensor_id"))
     expect_null(response)
@@ -109,8 +109,8 @@ with_mock_api({
 
   test_that("write / retry / non-existent bucket", { # tests non-retryable error
     data <- data.frame()
-    retry.client <- InfluxDBClientTest$new(url = test.url, token = test.token, org = test.org,
-                                           retryOptions = TRUE)
+    retry.client <- InfluxDBClient$new(url = test.url, token = test.token, org = test.org,
+                                       retryOptions = TRUE)
     f = function() {
       retry.client$write(data, bucket = "no-bucket", precision = 'ns')
     }
@@ -136,8 +136,8 @@ with_mock_api({
                                         retry.delays <<- c(retry.delays, delay)
                                         FALSE
                                       })
-    retry.client <- InfluxDBClientTest$new(url = test.url, token = test.token, org = test.org,
-                                           retryOptions = retry.options)
+    retry.client <- InfluxDBClient$new(url = test.url, token = test.token, org = test.org,
+                                       retryOptions = retry.options)
 
     f = function() {
       retry.client$write(data, bucket = 'r-testing', precision = 'ns',
@@ -171,8 +171,8 @@ with_mock_api({
                                         retry.delays <<- c(retry.delays, delay)
                                         TRUE
                                       })
-    retry.client <- InfluxDBClientTest$new(url = test.url, token = test.token, org = test.org,
-                                           retryOptions = retry.options)
+    retry.client <- InfluxDBClient$new(url = test.url, token = test.token, org = test.org,
+                                       retryOptions = retry.options)
 
     f = function() {
       retry.client$write(data, bucket = 'r-testing', precision = 'ns',
@@ -206,8 +206,8 @@ with_mock_api({
                                         retry.delays <<- c(retry.delays, delay)
                                         FALSE
                                       })
-    retry.client <- InfluxDBClientTest$new(url = test.url, token = test.token, org = test.org,
-                                           retryOptions = retry.options)
+    retry.client <- InfluxDBClient$new(url = test.url, token = test.token, org = test.org,
+                                       retryOptions = retry.options)
 
     f = function() {
       retry.client$write(data, bucket = 'r-testing', precision = 'ns',

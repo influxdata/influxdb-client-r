@@ -1,31 +1,6 @@
 library(testthat)
 library(httptest)
 
-# helper for testing private methods of InfluxDBClient
-InfluxDBClientTest <- R6::R6Class(
-  inherit = InfluxDBClient,
-  public = list(
-    fromAnnotatedCsv = function(x) {
-      private$.fromAnnotatedCsv(x)
-    },
-    toLineProtocol = function(x, precision,
-                              measurementCol, tagCols, fieldCols, timeCol) {
-      private$.toLineProtocol(x, precision,
-                              measurementCol, tagCols, fieldCols, timeCol)
-    }
-  )
-)
-
-# helper for testing private methods of InfluxDBApiClient
-InfluxDBApiClientTest <- R6::R6Class(
-  inherit = InfluxDBApiClient,
-  public = list(
-    delay = function(retryOptions, attempt, retryAfter, deadline) {
-      private$.delay(retryOptions, attempt, retryAfter, deadline)
-    }
-  )
-)
-
 # test helper function (https://www.r-bloggers.com/2020/10/capture-message-warnings-and-errors-from-a-r-function/)
 expect_anything = function(f) {
   messages <- warnings <- errors <- NULL
@@ -49,7 +24,7 @@ expect_anything = function(f) {
 test.url <- 'http://localhost:8086'
 test.token <- 'DcvGNmM_fyYW0sqcSlVyllcR90MITaTKge19P3iDJvnPmCdF2vnwiL888bocS4bmIDb8Tc2fBZQfdiegB5UFDw=='
 test.org <- 'bonitoo'
-test.client <- InfluxDBClientTest$new(url = test.url, token = test.token, org = test.org)
+test.client <- InfluxDBClient$new(url = test.url, token = test.token, org = test.org)
 
 .airSensors.time5 = c(
   as.nanotime(1623232361000000000),

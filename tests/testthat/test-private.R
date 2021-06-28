@@ -1,4 +1,29 @@
-.client = test.client
+# helper for testing private methods of InfluxDBClient
+InfluxDBClientTest <- R6::R6Class(
+  inherit = InfluxDBClient,
+  public = list(
+    fromAnnotatedCsv = function(x) {
+      private$.fromAnnotatedCsv(x)
+    },
+    toLineProtocol = function(x, precision,
+                              measurementCol, tagCols, fieldCols, timeCol) {
+      private$.toLineProtocol(x, precision,
+                              measurementCol, tagCols, fieldCols, timeCol)
+    }
+  )
+)
+
+# helper for testing private methods of InfluxDBApiClient
+InfluxDBApiClientTest <- R6::R6Class(
+  inherit = InfluxDBApiClient,
+  public = list(
+    delay = function(retryOptions, attempt, retryAfter, deadline) {
+      private$.delay(retryOptions, attempt, retryAfter, deadline)
+    }
+  )
+)
+
+.client = InfluxDBClientTest$new(test.url, test.token, test.org)
 .data = test.airSensors.data
 .data.pivoted = test.airSensors.data.pivoted
 .lp = list(
