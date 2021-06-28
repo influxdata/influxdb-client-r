@@ -72,6 +72,13 @@ client <- InfluxDBClient$new(url = "http://localhost:8086",
                              token = "my-token",
                              org = "my-org")
 ```
+(or just
+```r
+client <- client(url = "http://localhost:8086",
+                 token = "my-token",
+                 org = "my-org")
+```
+)
 
 Hint: to avoid SSL certificate validation errors when accessing InfluxDB instance
 over https such as `SSL certificate problem: unable to get local issuer certificate`,
@@ -202,15 +209,23 @@ unnamed list, eg. `c("humidity", "temperature", ...)`.
 #### Write retry
 
 By default, client will *not* retry failed writes. To instantiate a client with retry
-support, pass an instance of `RetryOptions` or just `TRUE` as `retryOptions` parameter
-value for default retry strategy, eg:
+support, pass an instance of `RetryOptions`, eg:
 ```r
 client <- InfluxDBClient$new(url = "http://localhost:8086",
                              token = "my-token",
                              org = "my-org",
                              retryOptions = RetryOptions$new(maxAttempts = 3))
 ```
-or
+(or using convenience functions:
+```r
+client <- client(url = "http://localhost:8086",
+                 token = "my-token",
+                 org = "my-org",
+                 retryOptions = retry_options(maxAttempts = 3))
+```
+)
+For default retry strategy just pass `TRUE` as `retryOptions` parameter
+value:
 ```r
 client <- InfluxDBClient$new(url = "http://localhost:8086",
                              token = "my-token",
