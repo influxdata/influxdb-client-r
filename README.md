@@ -223,8 +223,8 @@ client <- client(url = "http://localhost:8086",
                  org = "my-org",
                  retryOptions = retry_options(maxAttempts = 3))
 ```
-)
-For default retry strategy just pass `TRUE` as `retryOptions` parameter
+)  
+For retry strategy with default options just pass `TRUE` as `retryOptions` parameter
 value:
 ```r
 client <- InfluxDBClient$new(url = "http://localhost:8086",
