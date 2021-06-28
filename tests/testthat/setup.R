@@ -6,23 +6,45 @@ InfluxDBClientTest <- R6::R6Class(
   inherit = InfluxDBClient,
   public = list(
     fromAnnotatedCsv = function(x) {
-      self$.fromAnnotatedCsv(x)
+      private$.fromAnnotatedCsv(x)
     },
-    toLineProtocol = function(x,
-                              precision,
-                              measurementCol,
-                              tagCols,
-                              fieldCols,
-                              timeCol) {
-      private$.toLineProtocol(x,
-                              precision,
-                              measurementCol,
-                              tagCols,
-                              fieldCols,
-                              timeCol)
+    toLineProtocol = function(x, precision,
+                              measurementCol, tagCols, fieldCols, timeCol) {
+      private$.toLineProtocol(x, precision,
+                              measurementCol, tagCols, fieldCols, timeCol)
     }
   )
 )
+
+# helper for testing private methods of InfluxDBApiClient
+InfluxDBApiClientTest <- R6::R6Class(
+  inherit = InfluxDBApiClient,
+  public = list(
+    delay = function(retryOptions, attempt, retryAfter, deadline) {
+      private$.delay(retryOptions, attempt, retryAfter, deadline)
+    }
+  )
+)
+
+# test helper function (https://www.r-bloggers.com/2020/10/capture-message-warnings-and-errors-from-a-r-function/)
+expect_anything = function(f) {
+  messages <- warnings <- errors <- NULL
+  t0 <- Sys.time()
+  res <- withCallingHandlers(
+    tryCatch(f(...), error=function(e) {
+      errors <<- c(errors, conditionMessage(e))
+      NULL
+    }), warning=function(w) {
+      warnings <<- c(warnings, conditionMessage(w))
+      invokeRestart("muffleWarning")
+    }, message = function(m) {
+      messages <<- c(messages, conditionMessage(m))
+      invokeRestart("muffleMessage")
+    })
+  t1 <- Sys.time()
+  list(result = res, elapsed = as.double(t1 - t0),
+       messages = messages, warnings = warnings, errors = errors)
+}
 
 test.url <- 'http://localhost:8086'
 test.token <- 'DcvGNmM_fyYW0sqcSlVyllcR90MITaTKge19P3iDJvnPmCdF2vnwiL888bocS4bmIDb8Tc2fBZQfdiegB5UFDw=='

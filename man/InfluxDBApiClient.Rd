@@ -13,9 +13,12 @@ InfluxDBApiClient Class
 \details{
 InfluxDBApiClient Class
 
-Customized \code{ApiClient} to handle non-JSON replies from InfluxDB,
-such as query results. Used in \code{InfluxDBClient} instead of generated
-\code{ApiClient}.
+Derived from \code{ApiClient}.
+\itemize{
+  \item handles non-JSON replies from InfluxDB, such as query results
+  \item implements exponential backoff retry strategy
+}
+Used in \code{InfluxDBClient} instead of generated \code{ApiClient}.
 }
 \section{Super class}{
 \code{\link[influxdbclient:ApiClient]{influxdbclient::ApiClient}} -> \code{InfluxDBApiClient}
@@ -24,6 +27,8 @@ such as query results. Used in \code{InfluxDBClient} instead of generated
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-deserialize}{\code{InfluxDBApiClient$deserialize()}}
+\item \href{#method-retry}{\code{InfluxDBApiClient$retry()}}
+\item \href{#method-is_retryable}{\code{InfluxDBApiClient$is_retryable()}}
 \item \href{#method-clone}{\code{InfluxDBApiClient$clone()}}
 }
 }
@@ -44,6 +49,26 @@ such as query results. Used in \code{InfluxDBClient} instead of generated
 Overriden \code{deserialize} method from base class.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{InfluxDBApiClient$deserialize(resp, returnType, pkgEnv)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-retry"></a>}}
+\if{latex}{\out{\hypertarget{method-retry}{}}}
+\subsection{Method \code{retry()}}{
+Retries \code{fun} call
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{InfluxDBApiClient$retry(x, fun, funIf = NULL, retryOptions)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-is_retryable"></a>}}
+\if{latex}{\out{\hypertarget{method-is_retryable}{}}}
+\subsection{Method \code{is_retryable()}}{
+Checks if HTTP response signals retryable error
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{InfluxDBApiClient$is_retryable(resp)}\if{html}{\out{</div>}}
 }
 
 }

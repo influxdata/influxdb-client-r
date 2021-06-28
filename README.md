@@ -49,9 +49,6 @@ R -> InfluxDB:
 
 ## Known Issues
 
-- [write] retry not implemented yet
-- [1.x compatibility] not implemented yet
-
 ## Installation
 
 ### Installing R dependencies  
@@ -201,6 +198,29 @@ Response is an instance of `ApiResponse` in case of error, otherwise `NULL`.
 Note: default `fieldCols` value is suitable for writing back unpivoted data retrieved
 from  InfluxDB before. For usual tables ("pivoted" in Flux world), `fieldCols` should be
 unnamed list, eg. `c("humidity", "temperature", ...)`.
+
+#### Write retry
+
+By default, client will *not* retry failed writes. To instantiate a client with retry
+support, pass an instance of `RetryOptions` or just `TRUE` as `retryOptions` parameter
+value for default retry strategy, eg:
+```r
+client <- InfluxDBClient$new(url = "http://localhost:8086",
+                             token = "my-token",
+                             org = "my-org",
+                             retryOptions = RetryOptions$new(maxAttempts = 3))
+```
+or
+```r
+client <- InfluxDBClient$new(url = "http://localhost:8086",
+                             token = "my-token",
+                             org = "my-org",
+                             retryOptions = TRUE)
+```
+
+Retryable InfluxDB write errors are 429 and 503 status codes.
+The retry strategy implements exponential backoff algorithm, customizable with
+`RetryOptions`.
 
 ### Getting instance info
 

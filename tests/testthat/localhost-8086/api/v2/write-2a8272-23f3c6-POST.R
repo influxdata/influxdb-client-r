@@ -1,0 +1,17 @@
+structure(list(url = "http://localhost:8086/api/v2/write?org=bonitoo&bucket=r-testing&precision=ns", 
+    status_code = 429L, headers = structure(list(`content-type` = "application/json; charset=utf-8", 
+        `x-platform-error-code` = "too many requests", date = "Fri, 25 Jun 2021 10:31:13 GMT", 
+        `retry-after` = 3, `content-length` = "64"), class = c("insensitive", 
+    "list")), all_headers = list(list(status = 429L, version = "HTTP/1.1", 
+        headers = structure(list(`content-type` = "application/json; charset=utf-8", 
+            `x-platform-error-code` = "too many requests", date = "Fri, 25 Jun 2021 10:31:13 GMT", 
+            `retry-after` = 3, `content-length` = "64"), class = c("insensitive", 
+        "list")))), cookies = structure(list(domain = logical(0), 
+        flag = logical(0), path = logical(0), secure = logical(0), 
+        expiration = structure(numeric(0), class = c("POSIXct", 
+        "POSIXt")), name = logical(0), value = logical(0)), row.names = integer(0), class = "data.frame"), 
+    content = charToRaw("{\"code\":\"too many requests\",\"message\":\"over quota\"}"), 
+    date = structure(1624617073, class = c("POSIXct", "POSIXt"
+    ), tzone = "GMT"), times = c(redirect = 0, namelookup = 0.02075, 
+    connect = 0.021013, pretransfer = 0.02173, starttransfer = 0.021741, 
+    total = 0.021766)), class = "response")
