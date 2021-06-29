@@ -17,10 +17,12 @@ jobs:
 
   "R-3.3":
     docker:
-#      - image: rstudio/r-base:3.3.3-xenial
-      - image: rocker/r-ver:3.3.3
+      - image: rstudio/r-base:3.3.3-xenial
     steps:
       - checkout
+      - run:
+          name: Install openssl
+          command: sudo apt-get install -y libssl-dev
       - run:
           name: Install package dependencies
           command: R -e "install.packages(c(\"httr\", \"jsonlite\", \"base64enc\", \"bit64\", \"nanotime\", \"plyr\"), repos = \"https://cran.r-project.org\")"
