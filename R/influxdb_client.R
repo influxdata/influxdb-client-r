@@ -367,7 +367,8 @@ InfluxDBClient <- R6::R6Class(
             text = csvTable,
             header = FALSE,
             nrows = 3,
-            comment.char = ""
+            comment.char = "",
+            stringsAsFactors = FALSE
           )[2, ])
         message(sprintf("%s ", datatypes))
 
@@ -392,7 +393,8 @@ InfluxDBClient <- R6::R6Class(
             header = TRUE,
             skip = 3,
             check.names = FALSE,
-            colClasses = colClasses
+            colClasses = colClasses,
+            stringsAsFactors = FALSE
           )
         df <- df[-1] # skip first column (result name)
 

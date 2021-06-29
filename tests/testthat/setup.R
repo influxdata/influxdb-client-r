@@ -48,7 +48,8 @@ test.airSensors.data = list(
     `_measurement` = replicate(5, 'airSensors'),
     region = replicate(5, 'south'),
     sensor_id = replicate(5, 'TLM0101'),
-    check.names = FALSE
+    check.names = FALSE,
+    stringsAsFactors = FALSE
   ),
   data.frame(
     `_time` = .airSensors.time5,
@@ -57,7 +58,8 @@ test.airSensors.data = list(
     `_measurement` = replicate(5, 'airSensors'),
     region = replicate(5, 'south'),
     sensor_id = replicate(5, 'TLM0101'),
-    check.names = FALSE
+    check.names = FALSE,
+    stringsAsFactors = FALSE
   ),
   data.frame(
     `_time` = .airSensors.time5,
@@ -66,7 +68,8 @@ test.airSensors.data = list(
     `_measurement` = replicate(5, 'airSensors'),
     region = replicate(5, 'south'),
     sensor_id = replicate(5, 'TLM0101'),
-    check.names = FALSE
+    check.names = FALSE,
+    stringsAsFactors = FALSE
   )
 )
 
@@ -85,7 +88,8 @@ test.airSensors.data.pivoted = list(
     ),
     grounded = c(FALSE, FALSE, TRUE, TRUE, FALSE),
     temperature = c(71.7844100, 71.7684399, 71.7819928, 71.7487767, 71.7335579),
-    check.names = FALSE
+    check.names = FALSE,
+    stringsAsFactors = FALSE
   )
 )
 
@@ -103,7 +107,8 @@ test.airSensors.data.multi = list(
     `_measurement` = replicate(3, 'airSensors'),
     region = replicate(3, 'south'),
     sensor_id = replicate(3, 'TLM0101'),
-    check.names = FALSE
+    check.names = FALSE,
+    stringsAsFactors = FALSE
   ),
   data.frame(
     `_time` = .airSensors.time3,
@@ -116,7 +121,8 @@ test.airSensors.data.multi = list(
     `_measurement` = replicate(3, 'airSensors'),
     region = replicate(3, 'south'),
     sensor_id = replicate(3, 'TLM0102'),
-    check.names = FALSE
+    check.names = FALSE,
+    stringsAsFactors = FALSE
   ),
   data.frame(
     `_time` = .airSensors.time3,
@@ -125,7 +131,8 @@ test.airSensors.data.multi = list(
     `_measurement` = replicate(3, 'airSensors'),
     region = replicate(3, 'south'),
     sensor_id = replicate(3, 'TLM0101'),
-    check.names = FALSE
+    check.names = FALSE,
+    stringsAsFactors = FALSE
   ),
   data.frame(
     `_time` = .airSensors.time3,
@@ -134,6 +141,7 @@ test.airSensors.data.multi = list(
     `_measurement` = replicate(3, 'airSensors'),
     region = replicate(3, 'south'),
     sensor_id = replicate(3, 'TLM0102'),
-    check.names = FALSE
+    check.names = FALSE,
+    stringsAsFactors = FALSE
   )
 )
