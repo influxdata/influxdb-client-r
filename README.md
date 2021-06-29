@@ -25,6 +25,15 @@ InfluxDB 2.0 Client supports:
 - Writing data
 - Health and readiness check
 
+## Documentation
+
+This section contains links to the client library documentation.
+
+- [Product documentation](https://docs.influxdata.com/influxdb/v2.0/tools/client-libraries/), [Getting Started](#usage)
+- [Examples](#usage)
+- API Reference
+- [Changelog](CHANGELOG.md)
+
 ### Type mapping
 
 InfluxDB/Flux -> R:
