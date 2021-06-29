@@ -26,7 +26,7 @@ jobs:
       - run:
           name: Update selected dependencies
           command: R -e "remotes::install_version(\"nanotime\", version = \">= 0.3.0\", repos = \"https://cran.r-project.org/\")"
-remotes      - run:
+      - run:
           name: Build package
           command: R CMD build .
       - run:
