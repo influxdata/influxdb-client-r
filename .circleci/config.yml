@@ -17,7 +17,7 @@ jobs:
 
   "R-3.3":
     docker:
-      - image: rstudio/r-base:3.3.3-xenial
+      - image: rstudio/r-base:3.3.3-bionic
     steps:
       - checkout
       - run:
