@@ -43,7 +43,7 @@ jobs:
           command: R -e "devtools::install_deps(dep = TRUE)"
       - run:
           name: Update selected packages
-          command: R -e "remotes::install_github(\"rcppcore/rcpp\"); remotes::install_github(\"eddelbuettel/rcppcctz\"); remotes::install_github(\"eddelbuettel/rcppdate\"); remotes::install_github(\"eddelbuettel/nanotime\"); remotes::install_github(\"nealrichardson/httptest@3.3.0\")"
+          command: R -e "remotes::install_github(\"rcppcore/rcpp\"); remotes::install_github(\"eddelbuettel/rcppcctz\"); remotes::install_github(\"eddelbuettel/rcppdate\"); remotes::install_github(\"eddelbuettel/nanotime\")"
       - run:
           name: Build package
           command: R CMD build .
