@@ -15,7 +15,7 @@ jobs:
           name: Check package
           command: R CMD check --no-manual *tar.gz
 
-  "R-6.3":
+  "R-3.6":
     docker:
       - image: rocker/tidyverse:3.6.3
     steps:
@@ -39,8 +39,8 @@ jobs:
           name: Install package dependencies
           command: R -e "devtools::install_deps(dep = TRUE)"
       - run:
-          name: Update package dependencies
-          command: R -e "remotes::install_github(\"rcppcore/rcpp\"); remotes::install_github(\"eddelbuettel/rcppcctz\"); remotes::install_github(\"eddelbuettel/rcppdate\"); remotes::install_github(\"eddelbuettel/nanotime\")"
+          name: Update selected packages
+          command: R -e "remotes::install_github(\"rcppcore/rcpp\"); remotes::install_github(\"eddelbuettel/rcppcctz\"); remotes::install_github(\"eddelbuettel/rcppdate\"); remotes::install_github(\"eddelbuettel/nanotime\"); remotes::install_github(\"nealrichardson/httptest\")"
       - run:
           name: Build package
           command: R CMD build .
