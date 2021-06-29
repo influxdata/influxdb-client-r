@@ -51,6 +51,8 @@ R -> InfluxDB:
 
 ## Installation
 
+The package requires R >= 4.0 as of now (3.x compatibility is being worked upon).
+
 ### Installing R dependencies  
 
 ```r
