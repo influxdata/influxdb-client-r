@@ -1,10 +1,6 @@
-# nanotime (< 0.3) hack
+# nanotime (< 0.3.0) hack
 if (!exists("as.nanotime")) {
-#  as.nanotime <<- nanotime::nanotime
-  s.nanotime <- function(from, ...) {
-    new("nanotime", as.integer64(from, keep.names=TRUE))
-  }
-  setGeneric("as.nanotime")
+  as.nanotime <<- nanotime::nanotime
 }
 
 # test helper function (https://www.r-bloggers.com/2020/10/capture-message-warnings-and-errors-from-a-r-function/)
