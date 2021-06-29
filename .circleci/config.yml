@@ -21,11 +21,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install package dependencies
-          command: R -e "devtools::install_deps(dep = TRUE)"
+          name: Install packages
+          command: R -e "install.packages(c(\"httr\", \"jsonlite\", \"base64enc\", \"bit64\", \"nanotime\", \"plyr\"))"
       - run:
-          name: Update selected packages
-          command: R -e "remotes::install_github(\"rcppcore/rcpp\"); remotes::install_github(\"eddelbuettel/rcppcctz\"); remotes::install_github(\"eddelbuettel/rcppdate\"); remotes::install_github(\"eddelbuettel/nanotime\")"
+          name: Install test packages
+          command: R -e "install.packages(c(\"testthat\", \"httptest\"))"
       - run:
           name: Build package
           command: R CMD build .
