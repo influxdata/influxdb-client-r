@@ -22,7 +22,7 @@ jobs:
       - checkout
       - run:
           name: Install openssl
-          command: sudo apt-get update && sudo apt-get install software-properties-common && sudo apt-add-repository 'deb http://security.ubuntu.com/ubuntu bionic-security main' && sudo apt-get install -y libssl-dev
+          command: sudo apt-get update && sudo apt-get install -y software-properties-common && sudo apt-add-repository 'deb http://security.ubuntu.com/ubuntu bionic-security main' && sudo apt-get install -y libssl-dev
       - run:
           name: Install package dependencies
           command: R -e "install.packages(c(\"httr\", \"jsonlite\", \"base64enc\", \"bit64\", \"nanotime\", \"plyr\"), repos = \"https://cran.r-project.org\")"
