@@ -25,7 +25,7 @@ jobs:
           command: R -e "devtools::install_deps(dep = TRUE)"
       - run:
           name: Update selected dependencies
-          command: R -e "install.packages(\"nanotime\", type = \"source\")"
+          command: R -e "devtools::install_version(\"nanotime\", version = \"0.3.2\")"
       - run:
           name: Build package
           command: R CMD build .
