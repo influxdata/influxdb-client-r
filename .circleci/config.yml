@@ -29,10 +29,9 @@ jobs:
             sudo apt-get install -y libssl-dev
       - run:
           name: Install package dependencies
-          command: R -e "install.packages(c(\"httr\", \"jsonlite\", \"base64enc\", \"bit64\", \"nanotime\", \"plyr\"), repos = \"https://cran.r-project.org\")"
-      - run:
-          name: Install test dependencies
-          command: R -e "install.packages(c(\"rlang\", \"magrittr\", \"testthat\", \"httptest\"), repos = \"https://cran.r-project.org\")"
+          command: |
+            R -e "options(Ncpus = 2); install.packages(c(\"httr\", \"jsonlite\", \"base64enc\", \"bit64\", \"nanotime\", \"plyr\"), repos = \"https://cran.r-project.org\")"
+            R -e "options(Ncpus = 2); install.packages(c(\"rlang\", \"magrittr\", \"testthat\", \"httptest\"), repos = \"https://cran.r-project.org\")"
       - run:
           name: Build package
           command: R CMD build .
