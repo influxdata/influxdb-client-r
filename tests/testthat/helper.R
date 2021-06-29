@@ -1,3 +1,7 @@
+# 3.x + testthat hack
+library(bit64)
+library(nanotime)
+
 # test helper function (https://www.r-bloggers.com/2020/10/capture-message-warnings-and-errors-from-a-r-function/)
 expect_anything = function(f) {
   messages <- warnings <- errors <- NULL
