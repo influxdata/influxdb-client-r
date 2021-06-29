@@ -24,9 +24,6 @@ jobs:
           name: Install package dependencies
           command: R -e "devtools::install_deps(dep = TRUE)"
       - run:
-          name: Update selected dependencies
-          command: R -e "remotes::install_github(\"eddelbuettel/nanotime\")"
-      - run:
           name: Build package
           command: R CMD build .
       - run:
