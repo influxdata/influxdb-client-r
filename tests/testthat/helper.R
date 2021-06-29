@@ -1,7 +1,3 @@
-# 3.x + testthat hack
-library(bit64)
-library(nanotime)
-
 # test helper function (https://www.r-bloggers.com/2020/10/capture-message-warnings-and-errors-from-a-r-function/)
 expect_anything = function(f) {
   messages <- warnings <- errors <- NULL
@@ -28,11 +24,11 @@ test.org <- 'bonitoo'
 test.client <- InfluxDBClient$new(url = test.url, token = test.token, org = test.org)
 
 .airSensors.time5 = c(
-  as.nanotime(1623232361000000000),
-  as.nanotime(1623232371000000000),
-  as.nanotime(1623232381000000000),
-  as.nanotime(1623232391000000000),
-  as.nanotime(1623232401000000000)
+  nanotime::as.nanotime(1623232361000000000),
+  nanotime::as.nanotime(1623232371000000000),
+  nanotime::as.nanotime(1623232381000000000),
+  nanotime::as.nanotime(1623232391000000000),
+  nanotime::as.nanotime(1623232401000000000)
 )
 
 test.airSensors.data = list(
