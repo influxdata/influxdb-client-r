@@ -29,10 +29,10 @@ InfluxDB 2.0 Client supports:
 
 This section contains links to the client library documentation.
 
-- [Product documentation](https://docs.influxdata.com/influxdb/v2.0/tools/client-libraries/), [Getting Started](#usage)
-- [Examples](#usage)
-- API Reference
-- [Changelog](CHANGELOG.md)
+* [Product documentation](https://docs.influxdata.com/influxdb/v2.0/tools/client-libraries/), [Getting Started](#usage)
+* [Examples](#usage)
+* API Reference
+* [Changelog](CHANGELOG.md)
 
 ### Type mapping
 
@@ -79,6 +79,7 @@ remotes::install_github("bonitoo-io/influxdb-client-r")
 ### Client instantiation
 
 ```r
+library(influxdbclient)
 client <- InfluxDBClient$new(url = "http://localhost:8086",
                              token = "my-token",
                              org = "my-org")
