@@ -17,12 +17,21 @@ jobs:
 
   "R-3.3":
     docker:
-      - image: rocker/tidyverse:3.3.3
+      - image: rstudio/r-base:3.3.3-bionic
     steps:
       - checkout
       - run:
+          name: Install openssl
+          command: |
+            sudo apt-get -qq update
+            sudo apt-get -qq install -y software-properties-common
+            sudo apt-add-repository 'deb http://security.ubuntu.com/ubuntu bionic-security main'
+            sudo apt-get -qq install -y libssl-dev
+      - run:
           name: Install package dependencies
-          command: R -e "devtools::install_deps(dep = TRUE)"
+          command: |
+            R -e "install.packages(c(\"httr\", \"jsonlite\", \"base64enc\", \"bit64\", \"nanotime\", \"plyr\"), repos = \"https://cloud.r-project.org\")"
+            R -e "install.packages(c(\"rlang\", \"magrittr\", \"testthat\", \"httptest\"), repos = \"https://cloud.r-project.org\")"
       - run:
           name: Build package
           command: R CMD build .
