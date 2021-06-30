@@ -31,7 +31,7 @@ jobs:
           name: Install package dependencies
           command: |
             R -e "install.packages(c(\"httr\", \"jsonlite\", \"base64enc\", \"bit64\", \"nanotime\", \"plyr\"), repos = \"https://cran.r-project.org\", Ncpus = 4)"
-            R -e "install.packages(c(\"rlang\", \"magrittr\", \"testthat\", \"httptest\"), repos = \"https://cran.r-project.org\", Ncpus = 2)"
+            R -e "install.packages(c(\"rlang\", \"magrittr\", \"testthat\", \"httptest\"), repos = \"https://cran.r-project.org\", Ncpus = 4)"
       - run:
           name: Build package
           command: R CMD build .
