@@ -71,6 +71,7 @@ install.packages(c("httr", "jsonlite", "base64enc", "bit64", "nanotime", "plyr")
 ### Installing `influxdbclient` package  
 
 ```r
+install.packages("remotes")
 remotes::install_github("bonitoo-io/influxdb-client-r")
 ```
 
@@ -83,13 +84,6 @@ client <- InfluxDBClient$new(url = "http://localhost:8086",
                              token = "my-token",
                              org = "my-org")
 ```
-(or just
-```r
-client <- client(url = "http://localhost:8086",
-                 token = "my-token",
-                 org = "my-org")
-```
-)
 
 Hint: to avoid SSL certificate validation errors when accessing InfluxDB instance
 over https such as `SSL certificate problem: unable to get local issuer certificate`,
@@ -227,14 +221,6 @@ client <- InfluxDBClient$new(url = "http://localhost:8086",
                              org = "my-org",
                              retryOptions = RetryOptions$new(maxAttempts = 3))
 ```
-(or using convenience functions:
-```r
-client <- client(url = "http://localhost:8086",
-                 token = "my-token",
-                 org = "my-org",
-                 retryOptions = retry_options(maxAttempts = 3))
-```
-)  
 For retry strategy with default options just pass `TRUE` as `retryOptions` parameter
 value:
 ```r
@@ -244,7 +230,7 @@ client <- InfluxDBClient$new(url = "http://localhost:8086",
                              retryOptions = TRUE)
 ```
 
-Retryable InfluxDB write errors are 429 and 503 status codes.
+Retryable InfluxDB write errors are \code{429} and \code{503} status codes.
 The retry strategy implements exponential backoff algorithm, customizable with
 `RetryOptions`.
 
@@ -262,7 +248,8 @@ client <- InfluxDBClient$new(url = "http://localhost:8086",
 check <- client$health()
 ```
 
-Response is either instance of `HealthCheck` or error.
+Response is list with health information elements (\code{name}, \code{status},
+\code{version} and \code{commit}), or error.
 
 #### Readiness
 
@@ -276,7 +263,7 @@ client <- InfluxDBClient$new(url = "http://localhost:8086",
 check <- client$ready()
 ```
 
-Response is either instance of `Ready` or error.
+Response is a list with status elements (\code{status}, \code{started} and \code{up}) or error.
 
 ## License
 
