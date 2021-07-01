@@ -1,6 +1,6 @@
 #' @docType class
 #' @title RetryOptions
-#' @description RetryOptions Class
+#' @description Retry options may be specified as optional argument to \code{write}.
 #' @format An \code{R6Class} object
 #' @field retryJitter Maximum number of random milliseconds included in delay. Default is \code{0}.
 #' @field retryInterval First retry delay in seconds. Default is \code{5}.
@@ -19,6 +19,8 @@ RetryOptions  <- R6::R6Class(
     maxAttempts = NULL,
     exponentialBase = NULL,
     onRetry = NULL, # intentionally undocumented
+
+    #' @description Creates instance of \code{RetryOptions}.
     initialize = function(retryJitter = 0, retryInterval = 5,
                           maxDelay = 125, maxRetryTime = 180, maxAttempts = 5,
                           exponentialBase = 2, ...) {
