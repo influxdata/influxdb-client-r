@@ -3,6 +3,11 @@
 with_mock_api({
   test_that("health", {
     response <- .client$health()
-    expect_equal(class(response), c('HealthCheck', 'R6'))
+    expected <- list("name"="influxdb",
+                     "message"="ready for queries and writes",
+                     "status"="pass",
+                     "version"="dev",
+                     "commit"="7bde3413b3")
+    expect_equal(response, expected)
   })
 })
