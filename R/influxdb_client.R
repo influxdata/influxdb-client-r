@@ -1,12 +1,31 @@
-#' InfluxDBClient Class
-#'
-#' Client for querying from and writing data to InfluxDB 2.0.
-#' Uses classes generates from OpenAPI contract.
-#'
 #' @docType class
 #' @title InfluxDBClient
-#' @description InfluxDBClient Class
+#' @description Client for querying from and writing to InfluxDB 2.x.
 #' @format An \code{R6Class} object
+#' @examples
+#' \dontrun{
+#' # Instantiation
+#' client <- InfluxDBClient$new(url = "http://localhost:8086",
+#'                              token = "my-token",
+#'                              org = "my-org")
+#'
+#' # Query
+#' data <- client$query('from(bucket: "my-bucket") |> range(start: -1h) |> drop(columns: ["_start", "_stop"])')
+#'
+#' # Write
+#' data <- data.frame(...)
+#' client$write(data, bucket = "my-bucket", precision = "us",
+#'              measurementCol = "name",
+#'              tagCols = c("location", "id"),
+#'              fieldCols = c("altitude", "temperature"),
+#'              timeCol = "time")
+#'
+#' # Ready status
+#' ready <- client$ready()
+#'
+#' # Healt info
+#' ready <- client$health()
+#' }
 #' @field url Database URL
 #' @field token Authentication token
 #' @field org Organization name
@@ -26,20 +45,13 @@ InfluxDBClient <- R6::R6Class(
     dialect = NULL,
     # retry options
     retryOptions = NULL,
-    # constructor
+
     #' @description Creates instance of \code{InfluxDBClient}.
     #' @param url InfluxDB instance URL
     #' @param token Authentication token
     #' @param org Organization name
     #' @param org Retry options. See \code{RetryOptions} for details. Set to \code{TRUE}
     #' for default retry options. Default is \code{NULL} which disables retries.
-    #' @examples
-    #'
-    #' \dontrun{
-    #' client <- InfluxDBClient$new(url = "http://localhost:8086",
-    #'                              token = "my-token",
-    #'                              org = "my-org")
-    #' }
     initialize = function(url, token, org, retryOptions = NULL) {
       if (!is.null(url)) {
         self$url <- url
@@ -66,14 +78,9 @@ InfluxDBClient <- R6::R6Class(
       }
     },
 
-    #' @description Gets the health of the instance.
-    #' @return Instance of \code{HealtCheck} or error
-    #' @examples
-    #'
-    #' \dontrun{
-    #' client <- InfluxDBClient$new(...)
-    #' status <- client$health()
-    #' }
+    #' @description Gets health info of the InfluxDB instance.
+    #' @return Named list with \code{name}, \code{message}, \code{status},
+    #' \code{version}, \code{commit} elements or error
     health = function() {
       # call API
       resp <- self$healthApi$GetHealth()
@@ -81,20 +88,14 @@ InfluxDBClient <- R6::R6Class(
       # handle errors
       private$.throwIfNot2xx(resp)
 
-      resp
+      resp$toJSON()
     },
 
-    #' @description Queries data in InfluxDB.
+    #' @description Queries data in the InfluxDB instance.
     #' @param text Flux query
     #' @param POSIXctCol Flux time to (new) \code{POSIXct} column mapping (named list).
     #' Default is \code{c("_time"="time")}. Use \code{NULL} to skip it.
     #' @return Data as (list of) \code{data.frame}
-    #' @examples
-    #'
-    #' \dontrun{
-    #' client <- InfluxDBClient$new(...)
-    #' data <- client$query('from(bucket: "my-bucket") |> range(start: -1h) |> drop(columns: ["_start", "_stop"])')
-    #' }
     query = function(text, POSIXctCol = c("_time"="time")) {
       # validate parameters
       if (is.null(text)) {
@@ -147,14 +148,8 @@ InfluxDBClient <- R6::R6Class(
       }
     },
 
-    #' @description Gets the readiness of the instance.
-    #' @return Instance of \code{Ready} or error
-    #' @examples
-    #'
-    #' \dontrun{
-    #' client <- InfluxDBClient$new(...)
-    #' status <- client$ready()
-    #' }
+    #' @description Gets readiness status of the InfluxDB instance.
+    #' @return Named list with \code{status}, \code{started} and \code{up} elements or error
     ready = function() {
       # call API
       resp <- self$readyApi$GetReady()
@@ -162,10 +157,10 @@ InfluxDBClient <- R6::R6Class(
       # handle errors
       private$.throwIfNot2xx(resp)
 
-      resp
+      resp$toJSON()
     },
 
-    #' @description Writes data to InfluxDB.
+    #' @description Writes data to the InfluxDB instance.
     #' @param x Data as (list of) \code{data.frame}
     #' @param bucket Target bucket name
     #' @param batchSize Batch size. Positive number or \code{FALSE} to disable.
@@ -179,19 +174,6 @@ InfluxDBClient <- R6::R6Class(
     #' For all other cases, just use simple vector of column names (see Examples).
     #' @param timeCol Name of time column. The column values should be either
     #' of \code{nanotime} or \code{POSIXct} type. Default is \code{"_time"}.
-    #' @examples
-    #'
-    #' \dontrun{
-    #' data <- data.frame(...)
-    #' client <- InfluxDBClient$new(...)
-    #' client$write(data,
-    #'              bucket = "my-bucket",
-    #'              precision = "ms",
-    #'              measurementCol = "name",
-    #'              tagCols = c("location", "id"),
-    #'              fieldCols = c("altitude", "temperature"),
-    #'              timeCol = "time")
-    #' }
     write = function(x, bucket,
                      batchSize = 5000,
                      precision = c("ns", "us", "ms", "s"),
@@ -529,7 +511,7 @@ InfluxDBClient <- R6::R6Class(
           defaultHeaders <- c()
           defaultHeaders['Authorization'] <- paste0("Token ", self$token)
           private$.apiClient <-
-            InfluxDBApiClient$new(basePath = paste0(self$url, "/api/v2"),
+            InfluxDBApiClient$new(basePath = self$url,
                                   defaultHeaders = defaultHeaders)
         }
       } else {
