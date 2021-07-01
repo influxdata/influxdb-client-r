@@ -1,21 +1,18 @@
-#' InfluxDBApiClient Class
-#'
-#' Derived from \code{ApiClient}.
+#' @docType class
+#' @title InfluxDBApiClient
+#' @description Subclass of \code{ApiClient}.
 #' \itemize{
 #'   \item handles non-JSON replies from InfluxDB, such as query results
 #'   \item implements exponential backoff retry strategy
+#'   \item classifies retryable errors
 #' }
-#' Used in \code{InfluxDBClient} instead of generated \code{ApiClient}.
-#' @docType class
-#' @title InfluxDBApiClient
-#' @description InfluxDBApiClient Class
+#' Used by \code{InfluxDBClient} instead of generated \code{ApiClient}.
 #' @format An \code{R6Class} object
-#' @export
 InfluxDBApiClient <- R6::R6Class(
   inherit = ApiClient,
   'InfluxDBApiClient',
   public = list(
-    #' @description Overriden \code{deserialize} method from base class.
+    #' @description Overrides \code{deserialize} method from base class.
     deserialize = function(resp, returnType, pkgEnv) {
       if (httr::http_type(resp) == "text/csv") {
         httr::content(resp, "text", encoding = "UTF-8")
@@ -26,7 +23,7 @@ InfluxDBApiClient <- R6::R6Class(
       }
     },
 
-    #' @description Retries \code{fun} call
+    #' @description Retries \code{fun} call.
     retry = function(x, fun, funIf = NULL, retryOptions) {
       resp <- NULL
       attempt <- 0
@@ -87,7 +84,7 @@ InfluxDBApiClient <- R6::R6Class(
       resp
     },
 
-    #' @description Checks if HTTP response signals retryable error
+    #' @description Checks if HTTP error response represents retryable error.
     is_retryable = function(resp) {
       httr::status_code(resp) %in% c(429, 503)
     }
