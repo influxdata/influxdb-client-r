@@ -8,7 +8,7 @@
 An \code{R6Class} object
 }
 \description{
-RetryOptions Class
+Retry options may be specified as optional argument to \code{write}.
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -38,6 +38,7 @@ RetryOptions Class
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Creates instance of \code{RetryOptions}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RetryOptions$new(
   retryJitter = 0,

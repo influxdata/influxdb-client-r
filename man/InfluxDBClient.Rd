@@ -8,72 +8,31 @@
 An \code{R6Class} object
 }
 \description{
-InfluxDBClient Class
-}
-\details{
-InfluxDBClient Class
-
-Client for querying from and writing data to InfluxDB 2.0.
-Uses classes generates from OpenAPI contract.
+Client for querying from and writing to InfluxDB 2.x.
 }
 \examples{
-
-## ------------------------------------------------
-## Method `InfluxDBClient$new`
-## ------------------------------------------------
-
-
 \dontrun{
+# Instantiation
 client <- InfluxDBClient$new(url = "http://localhost:8086",
                              token = "my-token",
                              org = "my-org")
-}
 
-## ------------------------------------------------
-## Method `InfluxDBClient$health`
-## ------------------------------------------------
-
-
-\dontrun{
-client <- InfluxDBClient$new(...)
-status <- client$health()
-}
-
-## ------------------------------------------------
-## Method `InfluxDBClient$query`
-## ------------------------------------------------
-
-
-\dontrun{
-client <- InfluxDBClient$new(...)
+# Query
 data <- client$query('from(bucket: "my-bucket") |> range(start: -1h) |> drop(columns: ["_start", "_stop"])')
-}
 
-## ------------------------------------------------
-## Method `InfluxDBClient$ready`
-## ------------------------------------------------
-
-
-\dontrun{
-client <- InfluxDBClient$new(...)
-status <- client$ready()
-}
-
-## ------------------------------------------------
-## Method `InfluxDBClient$write`
-## ------------------------------------------------
-
-
-\dontrun{
+# Write
 data <- data.frame(...)
-client <- InfluxDBClient$new(...)
-client$write(data,
-             bucket = "my-bucket",
-             precision = "ms",
+client$write(data, bucket = "my-bucket", precision = "us",
              measurementCol = "name",
              tagCols = c("location", "id"),
              fieldCols = c("altitude", "temperature"),
              timeCol = "time")
+
+# Ready status
+ready <- client$ready()
+
+# Healt info
+ready <- client$health()
 }
 }
 \section{Public fields}{
@@ -125,50 +84,26 @@ for default retry options. Default is \code{NULL} which disables retries.}
 }
 \if{html}{\out{</div>}}
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{
-\dontrun{
-client <- InfluxDBClient$new(url = "http://localhost:8086",
-                             token = "my-token",
-                             org = "my-org")
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-health"></a>}}
 \if{latex}{\out{\hypertarget{method-health}{}}}
 \subsection{Method \code{health()}}{
-Gets the health of the instance.
+Gets health info of the InfluxDB instance.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$health()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-Instance of \code{HealtCheck} or error
+Named list with \code{name}, \code{message}, \code{status},
+\code{version}, \code{commit} elements or error
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{
-\dontrun{
-client <- InfluxDBClient$new(...)
-status <- client$health()
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-query"></a>}}
 \if{latex}{\out{\hypertarget{method-query}{}}}
 \subsection{Method \code{query()}}{
-Queries data in InfluxDB.
+Queries data in the InfluxDB instance.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$query(text, POSIXctCol = c(`_time` = "time"))}\if{html}{\out{</div>}}
 }
@@ -186,49 +121,25 @@ Default is \code{c("_time"="time")}. Use \code{NULL} to skip it.}
 \subsection{Returns}{
 Data as (list of) \code{data.frame}
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{
-\dontrun{
-client <- InfluxDBClient$new(...)
-data <- client$query('from(bucket: "my-bucket") |> range(start: -1h) |> drop(columns: ["_start", "_stop"])')
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ready"></a>}}
 \if{latex}{\out{\hypertarget{method-ready}{}}}
 \subsection{Method \code{ready()}}{
-Gets the readiness of the instance.
+Gets readiness status of the InfluxDB instance.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$ready()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-Instance of \code{Ready} or error
+Named list with \code{status}, \code{started} and \code{up} elements or error
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{
-\dontrun{
-client <- InfluxDBClient$new(...)
-status <- client$ready()
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-write"></a>}}
 \if{latex}{\out{\hypertarget{method-write}{}}}
 \subsection{Method \code{write()}}{
-Writes data to InfluxDB.
+Writes data to the InfluxDB instance.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$write(
   x,
@@ -269,25 +180,6 @@ of \code{nanotime} or \code{POSIXct} type. Default is \code{"_time"}.}
 }
 \if{html}{\out{</div>}}
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{
-\dontrun{
-data <- data.frame(...)
-client <- InfluxDBClient$new(...)
-client$write(data,
-             bucket = "my-bucket",
-             precision = "ms",
-             measurementCol = "name",
-             tagCols = c("location", "id"),
-             fieldCols = c("altitude", "temperature"),
-             timeCol = "time")
-}
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
