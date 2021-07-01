@@ -250,6 +250,7 @@ InfluxDBClient <- R6::R6Class(
     }
   ),
   private = list(
+    .apiV2Client = NULL,
     .apiClient = NULL,
     .healthApi = NULL,
     .queryApi = NULL,
@@ -505,6 +506,21 @@ InfluxDBClient <- R6::R6Class(
 
   ),
   active = list(
+    apiV2Client = function(value) {
+      if (missing(value)) {
+        if (is.null(private$.apiV2Client)) {
+          defaultHeaders <- c()
+          defaultHeaders['Authorization'] <- paste0("Token ", self$token)
+          private$.apiV2Client <-
+            InfluxDBApiClient$new(basePath = paste0(self$url, "/api/v2"),
+                                  defaultHeaders = defaultHeaders)
+        }
+      } else {
+        private$.apiV2Client <- value
+      }
+      private$.apiV2Client
+    },
+
     apiClient = function(value) {
       if (missing(value)) {
         if (is.null(private$.apiClient)) {
@@ -534,7 +550,7 @@ InfluxDBClient <- R6::R6Class(
     queryApi = function(value) {
       if (missing(value)) {
         if (is.null(private$.queryApi)) {
-          private$.queryApi <- QueryApi$new(self$apiClient)
+          private$.queryApi <- QueryApi$new(self$apiV2Client)
         }
       } else {
         private$.queryApi <- value
@@ -556,7 +572,7 @@ InfluxDBClient <- R6::R6Class(
     writeApi = function(value) {
       if (missing(value)) {
         if (is.null(private$.writeApi)) {
-          private$.writeApi <- WriteApi$new(self$apiClient)
+          private$.writeApi <- WriteApi$new(self$apiV2Client)
         }
       } else {
         private$.writeApi <- value
