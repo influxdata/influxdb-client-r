@@ -231,7 +231,7 @@ client <- InfluxDBClient$new(url = "http://localhost:8086",
                              retryOptions = TRUE)
 ```
 
-Retryable InfluxDB write errors are \code{429} and \code{503} status codes.
+Retryable InfluxDB write errors are `429` and `503` status codes.
 The retry strategy implements exponential backoff algorithm, customizable with
 `RetryOptions`.
 
@@ -249,8 +249,8 @@ client <- InfluxDBClient$new(url = "http://localhost:8086",
 check <- client$health()
 ```
 
-Response is list with health information elements (\code{name}, \code{status},
-\code{version} and \code{commit}), or error.
+Response is list with health information elements (`name`, `status`, `version`,
+`commit`) or error.
 
 #### Readiness
 
@@ -264,7 +264,7 @@ client <- InfluxDBClient$new(url = "http://localhost:8086",
 check <- client$ready()
 ```
 
-Response is a list with status elements (\code{status}, \code{started} and \code{up}) or error.
+Response is a list with status elements (`status`, `started`, `up`) or error.
 
 ## License
 
