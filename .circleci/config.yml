@@ -33,7 +33,7 @@ jobs:
             R -e "install.packages(c(\"httr\", \"bit64\", \"nanotime\", \"plyr\"), repos = \"https://cloud.r-project.org\")"
             R -e "install.packages(c(\"rlang\", \"magrittr\", \"testthat\", \"httptest\"), repos = \"https://cloud.r-project.org\")"
           environment:
-            MAKE: make -j
+            MAKE: make -j4
       - run:
           name: Build package
           command: R CMD build .
