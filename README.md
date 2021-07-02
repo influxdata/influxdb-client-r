@@ -106,7 +106,7 @@ Response is a `list` of `data.frame`s. Each `data.frame` corresponds to one Flux
 | `text` | Flux query | `character` | none |
 | `POSIXctCol` | Flux time to `POSIXct` column mapping | named `list` | `c("_time"="time")` |
 
-### Incoming type mapping
+#### Incoming type mapping
 
 | Flux type | R type |
 |---|---|
@@ -203,7 +203,7 @@ Note: default `fieldCols` value is suitable for writing back unpivoted data retr
 from  InfluxDB before. For usual tables ("pivoted" in Flux world), `fieldCols` should be
 unnamed list, eg. `c("humidity", "temperature", ...)`.
 
-### Outgoing type mapping
+#### Outgoing type mapping
 
 | R type | InfluxDB type |
 |---|---|
