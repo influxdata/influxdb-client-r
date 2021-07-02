@@ -77,7 +77,12 @@ with_mock_api({
   })
 
   test_that("write / NULL bucket", {
-    data <- data.frame()
+    # change measurement value to avoid overwriting source
+    data <- lapply(.data,
+                   function(t) {
+                     t['_measurement'] <- replicate(5, 'w-airSensors')
+                     return(t)
+                   })
     f = function() {
       .client$write(data, bucket = NULL, precision = 'ns',
                     tagCols = c("region", "sensor_id"))
@@ -86,7 +91,13 @@ with_mock_api({
   })
 
   test_that("write / non-existent bucket", {
-    data <- data.frame()
+    # change measurement value to avoid overwriting source
+    data <- lapply(.data,
+                   function(t) {
+                     t['_measurement'] <- replicate(5, 'w-airSensors')
+                     return(t)
+                   })
+    # mock response: write-00506d-dfdd53-POST.R
     f = function() {
       .client$write(data, bucket = "no-bucket", precision = 'ns')
     }
@@ -108,7 +119,13 @@ with_mock_api({
   })
 
   test_that("write / retry / non-existent bucket", { # tests non-retryable error
-    data <- data.frame()
+    # change measurement value to avoid overwriting source
+    data <- lapply(.data,
+                   function(t) {
+                     t['_measurement'] <- replicate(5, 'w-airSensors')
+                     return(t)
+                   })
+    # mock response: write-00506d-dfdd53-POST.R
     retry.client <- InfluxDBClient$new(url = test.url, token = test.token, org = test.org,
                                        retryOptions = TRUE)
     f = function() {
