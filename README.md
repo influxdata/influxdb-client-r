@@ -1,29 +1,34 @@
 # influxdb-client-r
+[![CircleCI](https://circleci.com/gh/bonitoo-io/influxdb-client-r.svg?style=svg)](https://circleci.com/gh/bonitoo-io/influxdb-client-r)
 
-**DISCLAIMER: THIS IS A WORK IN PROGRESS**
-
-This repository contains R package for InfluxDB 2.0 Client per [#274: R Library Request for InfluxDB 2.x](https://github.com/influxdata/feature-requests/issues/274).
+This repository contains R package for InfluxDB 2.0 client.
 
 * [Features](#features)
-  * [Type Mapping](#type-mapping)
-* [Known Issues](#known-issues)
-* [Installation](#installation)
-  * [Installing R dependencies](#installing-r-dependencies)
+* [Installing](#installingn)
+  * [Installing dependencies](#installing-dependencies)
   * [Installing `influxdbclient` package](#installing-influxdbclient-package)
 * [Usage](#usage)
   * [Client instantiation](#client-instantiation)
   * [Querying data](#querying-data)
+    * [Type mapping](#incoming-type-mapping)
+    * [Time series](#using-retrieved-data-as-time-series)
   * [Writing data](#writing-data)
-  * [Getting instance info](#getting-instance-info)
+    * [Type mapping](#outgoing-type-mapping)
+    * [Write retrying](#write-retrying)
+  * [Getting status](#getting-status)
+    * [Health](#health-status)
+    * [Readiness](#readiness-status)
+* [Known Issues](#known-issues)
+* [Contributing](#contributing)
 * [License](#license)
 
 ## Features
 
-InfluxDB 2.0 Client supports:
+The InfluxDB 2.0 client supports:
 
 - Querying data
 - Writing data
-- Health and readiness check
+- Getting status
 
 ## Documentation
 
@@ -34,38 +39,14 @@ This section contains links to the client library documentation.
 * API Reference
 * [Changelog](CHANGELOG.md)
 
-### Type mapping
-
-InfluxDB/Flux -> R:
-
-| Flux type | R type |
-|---|---|
-| `string` | `character` |
-| `int` | `integer64` |
-| `float` | `numeric` |
-| `bool` | `logical` |
-| `time` | `nanotime` |
-
-R -> InfluxDB:
-
-| R type | InfluxDB type |
-|---|---|
-| `character` | `string` |
-| `integer`, `integer64` | `int` |
-| `numeric` | `float` |
-| `logical` | `bool` |
-| `nanotime`, `POSIXct` | `time` |
-
-## Known Issues
-
-## Installation
+## Installing
 
 The package requires R >= 3.3.
 
-### Installing R dependencies  
+### Installing dependencies
 
 ```r
-install.packages(c("httr", "jsonlite", "base64enc", "bit64", "nanotime", "plyr"))
+install.packages(c("httr", "bit64", "nanotime", "plyr"))
 ```
 
 ### Installing `influxdbclient` package  
@@ -86,6 +67,14 @@ client <- InfluxDBClient$new(url = "http://localhost:8086",
                              org = "my-org")
 ```
 
+**Parameters**
+
+| Parameter | Description | Type | Default |
+|---|---|---|---|
+| `url` | InfluxDB instance URL | `character` | none |
+| `token` | authentication token | `character` | none |
+| `org` | organization name | `character` | none |
+
 Hint: to avoid SSL certificate validation errors when accessing InfluxDB instance
 over https such as `SSL certificate problem: unable to get local issuer certificate`,
 you can try to disable the validation using the following call before using any
@@ -94,14 +83,6 @@ you can try to disable the validation using the following call before using any
 library(httr)
 httr::set_config(config(ssl_verifypeer = FALSE))
 ```
-
-#### Parameters
-
-| Parameter | Description | Type | Default |
-|---|---|---|---|
-| `url` | InfluxDB instance URL | `character` | none |
-| `token` | authentication token | `character` | none |
-| `org` | organization name | `character` | none |
 
 ### Querying data
 
@@ -118,12 +99,22 @@ data
 
 Response is a `list` of `data.frame`s. Each `data.frame` corresponds to one Flux table.
 
-#### Parameters
+**Parameters**
 
 | Parameter | Description | Type | Default |
 |---|---|---|---|
 | `text` | Flux query | `character` | none |
 | `POSIXctCol` | Flux time to `POSIXct` column mapping | named `list` | `c("_time"="time")` |
+
+### Incoming type mapping
+
+| Flux type | R type |
+|---|---|
+| `string` | `character` |
+| `int` | `integer64` |
+| `float` | `numeric` |
+| `bool` | `logical` |
+| `time` | `nanotime` |
 
 #### Using retrieved data as time series
 
@@ -191,7 +182,7 @@ The example is valid for `data.frame` `data` like the following:
  $ temperature: num  71.8 71.8 71.8 71.7 71.7
 ```
 
-#### Parameters
+**Parameters**
 
 | Parameter | Description | Type | Default |
 |---|---|---|---|
@@ -204,15 +195,25 @@ The example is valid for `data.frame` `data` like the following:
 | `fieldCols` | fields column names | `character` | `c("_field"="_value")` |
 | `timeCol` | time column name | `character` | `"_time"` |
 
-Supported time column value types: `nanotime`, `POSIXct`
+Supported time column value types: `nanotime`, `POSIXct`.
 
-Response is an instance of `ApiResponse` in case of error, otherwise `NULL`.
+Response is either `NULL` on success, or errorr otherwise.
 
 Note: default `fieldCols` value is suitable for writing back unpivoted data retrieved
 from  InfluxDB before. For usual tables ("pivoted" in Flux world), `fieldCols` should be
 unnamed list, eg. `c("humidity", "temperature", ...)`.
 
-#### Write retry
+### Outgoing type mapping
+
+| R type | InfluxDB type |
+|---|---|
+| `character` | `string` |
+| `integer`, `integer64` | `int` |
+| `numeric` | `float` |
+| `logical` | `bool` |
+| `nanotime`, `POSIXct` | `time` |
+
+#### Write retrying
 
 By default, client will *not* retry failed writes. To instantiate a client with retry
 support, pass an instance of `RetryOptions`, eg:
@@ -235,11 +236,11 @@ Retryable InfluxDB write errors are `429` and `503` status codes.
 The retry strategy implements exponential backoff algorithm, customizable with
 `RetryOptions`.
 
-### Getting instance info
+### Getting status
 
-#### Health
+#### Health status
 
-Use `health` method to get the health info.
+Use `health` method to get the health status.
 
 ```r
 client <- InfluxDBClient$new(url = "http://localhost:8086",
@@ -252,7 +253,7 @@ check <- client$health()
 Response is list with health information elements (`name`, `status`, `version`,
 `commit`) or error.
 
-#### Readiness
+#### Readiness status
 
 Use `ready` method to get the readiness status.
 
@@ -265,6 +266,12 @@ check <- client$ready()
 ```
 
 Response is a list with status elements (`status`, `started`, `up`) or error.
+
+## Known Issues
+
+## Contributing
+
+Contributions are most welcome. The fastest way to get something fixed is to open a PR.
 
 ## License
 
