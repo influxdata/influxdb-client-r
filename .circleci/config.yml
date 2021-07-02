@@ -31,7 +31,7 @@ jobs:
           name: Install package dependencies
           command: |
             R -e "install.packages(c(\"httr\", \"bit64\", \"nanotime\", \"plyr\"), repos = \"https://cloud.r-project.org\")"
-            R -e "install.packages(c(\"rlang\", \"magrittr\", \"testthat\", \"httptest\"), repos = \"https://cloud.r-project.org\")"
+            R -e "devtools::install_deps(dependencies = c(\"Suggests\"))"
       - run:
           name: Build package
           command: R CMD build .
