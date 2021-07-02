@@ -247,6 +247,23 @@ InfluxDBClient <- R6::R6Class(
         # handle errors
         private$.throwIfNot2xx(resp)
       }
+    },
+
+    #' @description Coerces data to InfluxDB line protocol.
+    #' \emph{For debugging and introspection purposes.
+    #' Parameters are the same as for }\code{write}\emph{ method}.
+    #' @return line protocol text
+    as.lp = function(x, precision = c("ns", "us", "ms", "s"),
+                     measurementCol = "_measurement",
+                     tagCols = NULL,
+                     fieldCols = c("_field"="_value"),
+                     timeCol = "_time") {
+      # vectorize x if necessary
+      if (!is.vector(x)) {
+        x <- list(x)
+      }
+      # call impl
+      private$.toLineProtocol(x, precision, measurementCol, tagCols, fieldCols, timeCol)
     }
   ),
   private = list(
