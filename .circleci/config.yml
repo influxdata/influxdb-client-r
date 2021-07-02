@@ -30,7 +30,7 @@ jobs:
       - run:
           name: Install package dependencies
           command: |
-            R -e "install.packages(c(\"httr\", \"jsonlite\", \"base64enc\", \"bit64\", \"nanotime\", \"plyr\"), repos = \"https://cloud.r-project.org\")"
+            R -e "install.packages(c(\"httr\", \"bit64\", \"nanotime\", \"plyr\"), repos = \"https://cloud.r-project.org\")"
             R -e "install.packages(c(\"rlang\", \"magrittr\", \"testthat\", \"httptest\"), repos = \"https://cloud.r-project.org\")"
       - run:
           name: Build package
