@@ -4,7 +4,7 @@
 This repository contains R package for InfluxDB 2.0 client.
 
 * [Features](#features)
-* [Installing](#installingn)
+* [Installing](#installing)
   * [Installing dependencies](#installing-dependencies)
   * [Installing `influxdbclient` package](#installing-influxdbclient-package)
 * [Usage](#usage)
