@@ -36,7 +36,7 @@ This section contains links to the client library documentation.
 
 * [Product documentation](https://docs.influxdata.com/influxdb/v2.0/tools/client-libraries/), [Getting Started](#usage)
 * [Examples](#usage)
-* API Reference
+* [API Reference](docs/influxdbclient.pdf)
 * [Changelog](CHANGELOG.md)
 
 ## Installing
