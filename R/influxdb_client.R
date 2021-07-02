@@ -182,6 +182,10 @@ InfluxDBClient <- R6::R6Class(
                      fieldCols = c("_field"="_value"),
                      timeCol = "_time",
                      ...) {
+      # vectorize x if necessary
+      if (!is.vector(x)) {
+        x <- list(x)
+      }
       # validate parameters
       xIsCharacter <- all(lapply(x, class) == "character")
       xIsDataFrame <- all(lapply(x, class) == "data.frame")
@@ -445,11 +449,6 @@ InfluxDBClient <- R6::R6Class(
           stop("mixed named 'fieldCols' list not supported")
         }
         named <- TRUE
-      }
-
-      # vectorize x if necessary
-      if (!is.vector(x)) {
-        x <- list(x)
       }
 
       # for all data frames

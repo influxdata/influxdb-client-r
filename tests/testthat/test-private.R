@@ -165,6 +165,18 @@ test_that("toLineProtocol / x is not data.frame", {
   expect_error(f(), "'x' must be data.frame", fixed = TRUE)
 })
 
+test_that("toLineProtocol / x is not data.frame", {
+  data <- 1
+  f <- function () {
+    .client$toLineProtocol(data, precision = 'ns',
+                           measurementCol = 'no-measurement',
+                           tagCols = c("region", "sensor_id"),
+                           fieldCols = c("altitude", "grounded", "temperature"),
+                           timeCol = '_time')
+  }
+  expect_error(f(), "'x' must be data.frame", fixed = TRUE)
+})
+
 test_that("toLineProtocol / x is not list of data.frame", {
   data <- list(data.frame(), "not a data.frame")
   f <- function () {
