@@ -17,7 +17,7 @@ jobs:
       - run:
           name: Calculate code coverage
           command: |
-            R -e "install.packages(\"covr\"), repos = \"https://cloud.r-project.org\")"
+            R -e "install.packages(\"covr\", repos = \"https://cloud.r-project.org\")"
             R -e "covr::codecov()"
 
   "R-3.3":
