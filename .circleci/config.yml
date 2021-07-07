@@ -14,6 +14,9 @@ jobs:
       - run:
           name: Check package
           command: R CMD check --no-manual *tar.gz
+      - run:
+          name: Calculate code coverage
+          command: r -e 'covr::codecov()'
 
   "R-3.3":
     docker:
