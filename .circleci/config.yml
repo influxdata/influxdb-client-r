@@ -16,7 +16,9 @@ jobs:
           command: R CMD check --no-manual *tar.gz
       - run:
           name: Calculate code coverage
-          command: r -e 'covr::codecov()'
+          command: |
+            R -e "install.packages(\"covr\"), repos = \"https://cloud.r-project.org\")"
+            R -e 'covr::codecov()'
 
   "R-3.3":
     docker:
