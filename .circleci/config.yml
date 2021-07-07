@@ -27,6 +27,9 @@ jobs:
             sudo apt-get -qq install -y software-properties-common
             sudo apt-add-repository 'deb http://security.ubuntu.com/ubuntu bionic-security main'
             sudo apt-get -qq install -y libssl-dev
+      - restore_cache:
+          keys:
+            - cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "DESCRIPTION" }}
       - run:
           name: Install package dependencies
           command: |
@@ -34,6 +37,10 @@ jobs:
             R -e "install.packages(c(\"rlang\", \"magrittr\", \"testthat\", \"httptest\"), repos = \"https://cloud.r-project.org\")"
           environment:
             MAKE: make -j4
+      - save_cache:
+          key: cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "DESCRIPTION" }}
+          paths:
+            - "/opt/R/3.3.3/lib/R/library"
       - run:
           name: Build package
           command: R CMD build .
