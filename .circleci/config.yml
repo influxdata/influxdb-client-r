@@ -1,13 +1,18 @@
-version: 2
+version: 2.1
 jobs:
-  "R-4.0":
+  R-4_0:
     docker:
       - image: rocker/tidyverse:4.0.5
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "DESCRIPTION" }}
       - run:
           name: Install package dependencies
-          command: R -e "devtools::install_deps(dep = TRUE)"
+          command: |
+            R -q -e ".libPaths()"
+            R -q -e "devtools::install_deps(dep = TRUE)"
       - run:
           name: Build package
           command: R CMD build .
@@ -15,12 +20,18 @@ jobs:
           name: Check package
           command: R CMD check --no-manual *tar.gz
       - run:
-          name: Calculate code coverage
+          name: Run code coverage
           command: |
-            R -e "install.packages(c(\"covr\"), repos = \"https://cloud.r-project.org\")"
-            R -e "covr::codecov()"
+            R -q -e "install.packages(\"covr\", dependencies = TRUE, repos = \"https://cloud.r-project.org\")"
+            R -q -e "covr::codecov(line_exclusions = list(\"R/api_client.R\", \"R/api_response.R\", \"R/dialect.R\", \"R/health_api.R\", \"R/health_check.R\", \"R/query_api.R\", \"R/query.R\", \"R/ready_api.R\", \"R/ready.R\", \"R/write_api.R\", \"R/zzz.R\"))"
+          environment:
+            MAKE: make -j 4
+      - save_cache:
+          key: cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "DESCRIPTION" }}
+          paths:
+            - "/usr/local/lib/R/site-library"
 
-  "R-3.3":
+  R-3_3:
     docker:
       - image: rstudio/r-base:3.3.3-bionic
     steps:
@@ -38,10 +49,11 @@ jobs:
       - run:
           name: Install package dependencies
           command: |
-            R -e "install.packages(c(\"httr\", \"bit64\", \"nanotime\", \"plyr\"), repos = \"https://cloud.r-project.org\")"
-            R -e "install.packages(c(\"rlang\", \"magrittr\", \"testthat\", \"httptest\"), repos = \"https://cloud.r-project.org\")"
+            R -q -e ".libPaths()"
+            R -q -e "install.packages(c(\"httr\", \"bit64\", \"nanotime\", \"plyr\"), repos = \"https://cloud.r-project.org\")"
+            R -q -e "install.packages(c(\"rlang\", \"magrittr\", \"testthat\", \"httptest\"), repos = \"https://cloud.r-project.org\")"
           environment:
-            MAKE: make -j4
+            MAKE: make -j 4
       - save_cache:
           key: cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "DESCRIPTION" }}
           paths:
@@ -57,5 +69,7 @@ workflows:
   version: 2
   build:
     jobs:
-      - "R-4.0"
-      - "R-3.3"
+      - R-4_0:
+          name: test-4.0
+      - R-3_3:
+          name: test-3.3
