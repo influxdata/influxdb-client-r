@@ -1,5 +1,6 @@
 # influxdb-client-r
 [![CircleCI](https://circleci.com/gh/bonitoo-io/influxdb-client-r.svg?style=svg)](https://circleci.com/gh/bonitoo-io/influxdb-client-r)
+[![codecov](https://codecov.io/gh/bonitoo-io/influxdb-client-r/branch/master/graph/badge.svg)](https://codecov.io/gh/bonitoo-io/influxdb-client-r)
 
 This repository contains R package for InfluxDB 2.0 client.
 
