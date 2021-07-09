@@ -58,7 +58,6 @@ ready <- client$health()
 \item \href{#method-query}{\code{InfluxDBClient$query()}}
 \item \href{#method-ready}{\code{InfluxDBClient$ready()}}
 \item \href{#method-write}{\code{InfluxDBClient$write()}}
-\item \href{#method-as.lp}{\code{InfluxDBClient$as.lp()}}
 \item \href{#method-clone}{\code{InfluxDBClient$clone()}}
 }
 }
@@ -151,6 +150,7 @@ Writes data to the InfluxDB instance.
   tagCols = NULL,
   fieldCols = c(`_field` = "_value"),
   timeCol = "_time",
+  object = NULL,
   ...
 )}\if{html}{\out{</div>}}
 }
@@ -178,30 +178,11 @@ For all other cases, just use simple vector of column names (see Examples).}
 
 \item{\code{timeCol}}{Name of time column. The column values should be either
 of \code{nanotime} or \code{POSIXct} type. Default is \code{"_time"}.}
+
+\item{\code{object}}{\emph{Output object name. For dry-run operation, specify the name
+of the object to receive the output. Default is \code{NULL}. For debugging purposes.}}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-as.lp"></a>}}
-\if{latex}{\out{\hypertarget{method-as.lp}{}}}
-\subsection{Method \code{as.lp()}}{
-Coerces data to InfluxDB line protocol.
-\emph{For debugging and introspection purposes.
-Parameters are the same as for }\code{write}\emph{ method}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$as.lp(
-  x,
-  precision = c("ns", "us", "ms", "s"),
-  measurementCol = "_measurement",
-  tagCols = NULL,
-  fieldCols = c(`_field` = "_value"),
-  timeCol = "_time"
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-line protocol text
 }
 }
 \if{html}{\out{<hr>}}
