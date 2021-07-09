@@ -273,6 +273,16 @@ test_that("write / dry-run", {
   expect_equal(`x-output`, expected)
 })
 
+test_that("write / invalid dry-run option", {
+  data <- data.frame()
+  f = function() {
+    .client$write(data, bucket='r-testing',
+                  precision = 'ns',
+                  object = FALSE)
+  }
+  expect_error(f(), "'object' must be NULL or character", fixed = TRUE)
+})
+
 test_that("write / invalid input type", {
   f = function() {
     .client$write(c(1,2,3,4,5), bucket = "my-bucket", batchSize = 0, precision = 'ns')
