@@ -236,6 +236,7 @@ lp
 ```
 Sample output:
 ```r
+> print(lp)
 [[1]]
 [1] "airSensors,region=south,sensor_id=TLM0101 altitude=549i,temperature=71.7844100 1623232361000000"
 [2] "airSensors,region=south,sensor_id=TLM0101 altitude=547i,temperature=71.7684399 1623232371000000"
