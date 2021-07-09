@@ -168,10 +168,11 @@ test_that("toLineProtocol / POSIXct", {
                    return(t)
                  })
   ee = function(precision, data, expected) {
-    lp <- .client$as.lp(data, precision,
-                        tagCols = c("region", "sensor_id"),
-                        fieldCols = c("altitude", "grounded", "temperature"),
-                        timeCol = "posixtime")
+    lp <- .client$toLineProtocol(data, precision,
+                                 measurementCol = "_measurement",
+                                 tagCols = c("region", "sensor_id"),
+                                 fieldCols = c("altitude", "grounded", "temperature"),
+                                 timeCol = "posixtime")
     expect_equal(lp, expected)
   }
   ee('ns', data, .lp.pivoted)
