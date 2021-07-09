@@ -15,6 +15,7 @@ This repository contains R package for InfluxDB 2.0 client.
     * [Time series](#using-retrieved-data-as-time-series)
   * [Writing data](#writing-data)
     * [Type mapping](#outgoing-type-mapping)
+    * [Output preview](#output-preview)
     * [Write retrying](#write-retrying)
   * [Getting status](#getting-status)
     * [Health](#health-status)
@@ -195,6 +196,7 @@ The example is valid for `data.frame` `data` like the following:
 | `tagCols` | tags column names | `character` | `NULL` |
 | `fieldCols` | fields column names | `character` | `c("_field"="_value")` |
 | `timeCol` | time column name | `character` | `"_time"` |
+| `object` | output object | `character` | `NULL` |
 
 Supported time column value types: `nanotime`, `POSIXct`.
 
@@ -213,6 +215,34 @@ unnamed list, eg. `c("humidity", "temperature", ...)`.
 | `numeric` | `float` |
 | `logical` | `bool` |
 | `nanotime`, `POSIXct` | `time` |
+
+#### Output preview
+
+To preview how input data are serialized to InfluxDB line protocol, pass the name
+of object to receive the output as `object` parameter value. It changes `write`
+to dry-run operation (nothing is sent to the database). The object will be assigned
+to the calling environment.  
+_This option is intended for debugging purposes._
+
+```r
+data <- ...
+response <- client$write(data, bucket = "my-bucket", precision = "us",
+                         measurementCol = "name",
+                         tagCols = c("region", "sensor_id"),
+                         fieldCols = c("altitude", "temperature"),
+                         timeCol = "time",
+                         object = "lp")
+lp
+```
+Sample output:
+```r
+[[1]]
+[1] "airSensors,region=south,sensor_id=TLM0101 altitude=549i,grounded=false,temperature=71.78441 1623232361000000000"
+[2] "airSensors,region=south,sensor_id=TLM0101 altitude=547i,grounded=false,temperature=71.7684399 1623232371000000000"
+[3] "airSensors,region=south,sensor_id=TLM0101 altitude=563i,grounded=true,temperature=71.7819928 1623232381000000000"
+[4] "airSensors,region=south,sensor_id=TLM0101 altitude=560i,grounded=true,temperature=71.7487767 1623232391000000000"
+[5] "airSensors,region=south,sensor_id=TLM0101 altitude=544i,grounded=false,temperature=71.7335579 1623232401000000000"
+```
 
 #### Write retrying
 
