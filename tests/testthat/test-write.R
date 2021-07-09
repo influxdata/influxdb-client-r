@@ -239,3 +239,23 @@ with_mock_api({
     print(retry.delays) # printed for visual inspection :(
   })
 })
+
+test_that("write / invalid input type", {
+  f = function() {
+    .client$write(c(1,2,3,4,5), bucket = "my-bucket", batchSize = 0, precision = 'ns')
+  }
+  expect_error(f(), "'x' must be data.frame or character", fixed = TRUE)
+})
+
+test_that("write / invalid batch size", {
+  # change measurement value to avoid overwriting source
+  data <- lapply(.data,
+                 function(t) {
+                   t['_measurement'] <- replicate(5, 'w-airSensors')
+                   return(t)
+                 })
+  f = function() {
+    .client$write(data, bucket = "my-bucket", batchSize = 0, precision = 'ns')
+  }
+  expect_error(f(), "'batchSize' must be >= 1 or FALSE", fixed = TRUE)
+})
