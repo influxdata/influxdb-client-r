@@ -141,7 +141,7 @@ InfluxDBClient <- R6::R6Class(
               stop(sprintf("cannot coerce '%s' to '%s': column already exist",
                            srcCol, targetCol))
             }
-            df[targetCol] <- as.POSIXct(df[,srcCol])
+            df[targetCol] <- as.POSIXct(df[,srcCol], tz = "GMT")
             df
           })
         }
@@ -311,10 +311,10 @@ InfluxDBClient <- R6::R6Class(
 
     as.lp.timestamp = function(x, precision) {
       switch(
-        class(x),
+        class(x)[1],
         "nanotime"= { private$as.rfc3339nano.timestamp(x, precision = precision) },
         "POSIXct"= { private$as.POSIXct.timestamp(x, precision = precision) },
-        stop(paste("unsupported time column type:", class(x)))
+        stop(paste("unsupported time column type:", class(x)[1]))
       )
     },
 
