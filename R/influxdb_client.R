@@ -174,6 +174,8 @@ InfluxDBClient <- R6::R6Class(
     #' For all other cases, just use simple vector of column names (see Examples).
     #' @param timeCol Name of time column. The column values should be either
     #' of \code{nanotime} or \code{POSIXct} type. Default is \code{"_time"}.
+    #' @param object \emph{Output object name. For dry-run operation, specify the name
+    #' of the object to receive the output. Default is \code{NULL}. For debugging purposes.}
     write = function(x, bucket,
                      batchSize = 5000,
                      precision = c("ns", "us", "ms", "s"),
@@ -181,6 +183,7 @@ InfluxDBClient <- R6::R6Class(
                      tagCols = NULL,
                      fieldCols = c("_field"="_value"),
                      timeCol = "_time",
+                     object = NULL,
                      ...) {
       # vectorize x if necessary
       if (!is.vector(x)) {
@@ -197,6 +200,9 @@ InfluxDBClient <- R6::R6Class(
       }
       if (is.numeric(batchSize) && batchSize < 1) {
         stop("'batchSize' must be >= 1 or FALSE")
+      }
+      if (!is.null(object) && !is.character(object)) {
+        stop("'object' must be NULL or character")
       }
 
       # serialize input into line protocol
@@ -218,6 +224,12 @@ InfluxDBClient <- R6::R6Class(
         batches <- split(lp, cut(seq_along(lp), n, labels = FALSE))
       } else {
         batches <- list(lp)
+      }
+
+      # dry run exits now
+      if (!is.null(object)) {
+        assign(object, value = unname(batches), envir = parent.frame())
+        return(NULL)
       }
 
       # API call closure
@@ -251,23 +263,6 @@ InfluxDBClient <- R6::R6Class(
         # handle errors
         private$.throwIfNot2xx(resp)
       }
-    },
-
-    #' @description Coerces data to InfluxDB line protocol.
-    #' \emph{For debugging and introspection purposes.
-    #' Parameters are the same as for }\code{write}\emph{ method}.
-    #' @return line protocol text
-    as.lp = function(x, precision = c("ns", "us", "ms", "s"),
-                     measurementCol = "_measurement",
-                     tagCols = NULL,
-                     fieldCols = c("_field"="_value"),
-                     timeCol = "_time") {
-      # vectorize x if necessary
-      if (!is.vector(x)) {
-        x <- list(x)
-      }
-      # call impl
-      private$.toLineProtocol(x, precision, measurementCol, tagCols, fieldCols, timeCol)
     }
   ),
   private = list(
