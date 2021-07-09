@@ -76,6 +76,33 @@ InfluxDBApiClientTest <- R6::R6Class(
     'w-air\\ Sensors,region\\,us=south\\ east,sensor\\ id=TLM0101 altitude=544i,grounded="x \\"false\\"",temperature=71.7335579 1623232401000000000'
   )
 )
+.lp.pivoted.secs = list(
+  c(
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=549i,grounded=false,temperature=71.78441 1623232361",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=547i,grounded=false,temperature=71.7684399 1623232371",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=563i,grounded=true,temperature=71.7819928 1623232381",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=560i,grounded=true,temperature=71.7487767 1623232391",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=544i,grounded=false,temperature=71.7335579 1623232401"
+  )
+)
+.lp.pivoted.msecs = list(
+  c(
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=549i,grounded=false,temperature=71.78441 1623232361000",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=547i,grounded=false,temperature=71.7684399 1623232371000",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=563i,grounded=true,temperature=71.7819928 1623232381000",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=560i,grounded=true,temperature=71.7487767 1623232391000",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=544i,grounded=false,temperature=71.7335579 1623232401000"
+  )
+)
+.lp.pivoted.usecs = list(
+  c(
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=549i,grounded=false,temperature=71.78441 1623232361000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=547i,grounded=false,temperature=71.7684399 1623232371000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=563i,grounded=true,temperature=71.7819928 1623232381000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=560i,grounded=true,temperature=71.7487767 1623232391000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=544i,grounded=false,temperature=71.7335579 1623232401000000"
+  )
+)
 
 test_that("toLineProtocol", {
   # change measurement value to avoid overwriting source
@@ -103,13 +130,18 @@ test_that("toLineProtocol / pivoted", {
                    colnames(t)[which(names(t) == '_measurement')] <- 'name'
                    return(t)
                  })
-  lp <- .client$toLineProtocol(data, precision = 'ns',
-                               measurementCol = 'name',
-                               tagCols = c("region", "sensor_id"),
-                               fieldCols = c("altitude", "grounded", "temperature"),
-                               timeCol = 'time')
-  expected <- .lp.pivoted
-  expect_equal(lp, expected)
+  ee = function(precision, data, expected) {
+    lp <- .client$toLineProtocol(data, precision,
+                                 measurementCol = 'name',
+                                 tagCols = c("region", "sensor_id"),
+                                 fieldCols = c("altitude", "grounded", "temperature"),
+                                 timeCol = 'time')
+    expect_equal(lp, expected)
+  }
+  ee('ns', data, .lp.pivoted)
+  ee('s', data, .lp.pivoted.secs)
+  ee('ms', data, .lp.pivoted.msecs)
+  ee('us', data, .lp.pivoted.usecs)
 })
 
 test_that("toLineProtocol / no tags", {
@@ -125,6 +157,27 @@ test_that("toLineProtocol / no tags", {
                                timeCol = '_time')
   expected <- .lp.pivoted.notags
   expect_equal(lp, expected)
+})
+
+test_that("toLineProtocol / POSIXct", {
+  # change measurement value to avoid overwriting source
+  data <- lapply(.data.pivoted,
+                 function(t) {
+                   t['_measurement'] <- replicate(5, 'w-airSensors')
+                   t['posixtime'] <- as.POSIXct(t[,'_time'], tz = "GMT")
+                   return(t)
+                 })
+  ee = function(precision, data, expected) {
+    lp <- .client$as.lp(data, precision,
+                        tagCols = c("region", "sensor_id"),
+                        fieldCols = c("altitude", "grounded", "temperature"),
+                        timeCol = "posixtime")
+    expect_equal(lp, expected)
+  }
+  ee('ns', data, .lp.pivoted)
+  ee('s', data, .lp.pivoted.secs)
+  ee('ms', data, .lp.pivoted.msecs)
+  ee('us', data, .lp.pivoted.usecs)
 })
 
 test_that("toLineProtocol / special characters", {
@@ -299,6 +352,19 @@ test_that("toLineProtocol / not existing time column", {
                            timeCol = 'no-time')
   }
   expect_error(f(), "time column 'no-time' not found in data frame",
+               fixed = TRUE)
+})
+
+test_that("toLineProtocol / unsupported time column", {
+  data <- .data.pivoted
+  f <- function () {
+    .client$toLineProtocol(data, precision = 'ns',
+                           measurementCol = '_measurement',
+                           tagCols = c("region", "sensor_id"),
+                           fieldCols = c("altitude", "grounded", "temperature"),
+                           timeCol = 'temperature')
+  }
+  expect_error(f(), "unsupported time column type: numeric",
                fixed = TRUE)
 })
 
