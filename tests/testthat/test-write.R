@@ -1,6 +1,15 @@
 .client = test.client
 .data = test.airSensors.data
 .data.pivoted = test.airSensors.data.pivoted
+.lp.pivoted = list(
+  c(
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=549i,grounded=false,temperature=71.78441 1623232361000000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=547i,grounded=false,temperature=71.7684399 1623232371000000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=563i,grounded=true,temperature=71.7819928 1623232381000000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=560i,grounded=true,temperature=71.7487767 1623232391000000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=544i,grounded=false,temperature=71.7335579 1623232401000000000"
+  )
+)
 
 with_mock_api({
   test_that("write", {
@@ -238,6 +247,40 @@ with_mock_api({
                  fixed = TRUE)
     print(retry.delays) # printed for visual inspection :(
   })
+})
+
+test_that("write / dry-run", {
+  # rename some columns in order to test non-default parameters
+  # change measurement value to avoid overwriting source
+  data <- lapply(.data.pivoted,
+                 function(t) {
+                   colnames(t)[which(names(t) == '_time')] <- 'time'
+                   colnames(t)[which(names(t) == '_measurement')] <- 'name'
+                   t['name'] <- replicate(5, 'w-airSensors')
+                   return(t)
+                 })
+  response <- .client$write(data, bucket='r-testing',
+                            batchSize = 3, # input has 5 lines -> 2 batches (3 and 2 liners)
+                            precision = 'ns',
+                            measurementCol = 'name',
+                            tagCols = c("region", "sensor_id"),
+                            fieldCols = c("altitude", "grounded", "temperature"),
+                            timeCol = 'time',
+                            object = "x-output")
+  expected <- .lp.pivoted
+  # re-chunk by batch size
+  expected <- list(expected[[1]][c(1:3)], expected[[1]][c(4:5)])
+  expect_equal(`x-output`, expected)
+})
+
+test_that("write / invalid dry-run option", {
+  data <- data.frame()
+  f = function() {
+    .client$write(data, bucket='r-testing',
+                  precision = 'ns',
+                  object = FALSE)
+  }
+  expect_error(f(), "'object' must be NULL or character", fixed = TRUE)
 })
 
 test_that("write / invalid input type", {
