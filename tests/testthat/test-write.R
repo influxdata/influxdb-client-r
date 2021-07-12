@@ -3,11 +3,11 @@
 .data.pivoted = test.airSensors.data.pivoted
 .lp.pivoted = list(
   c(
-    "w-airSensors,region=south,sensor_id=TLM0101 altitude=549i,grounded=false,temperature=71.78441 1623232361000000000",
-    "w-airSensors,region=south,sensor_id=TLM0101 altitude=547i,grounded=false,temperature=71.7684399 1623232371000000000",
-    "w-airSensors,region=south,sensor_id=TLM0101 altitude=563i,grounded=true,temperature=71.7819928 1623232381000000000",
-    "w-airSensors,region=south,sensor_id=TLM0101 altitude=560i,grounded=true,temperature=71.7487767 1623232391000000000",
-    "w-airSensors,region=south,sensor_id=TLM0101 altitude=544i,grounded=false,temperature=71.7335579 1623232401000000000"
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=549i,grounded=false,temperature=71.78441,q=42i 1623232361000000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=547i,grounded=false,temperature=71.7684399,q=42i 1623232371000000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=563i,grounded=true,temperature=71.7819928,q=42i 1623232381000000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=560i,grounded=true,temperature=71.7487767,q=42i 1623232391000000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=544i,grounded=false,temperature=71.7335579,q=42i 1623232401000000000"
   )
 )
 
@@ -252,11 +252,13 @@ with_mock_api({
 test_that("write / dry-run", {
   # rename some columns in order to test non-default parameters
   # change measurement value to avoid overwriting source
+  # add (R native) integer type column 'q'
   data <- lapply(.data.pivoted,
                  function(t) {
                    colnames(t)[which(names(t) == '_time')] <- 'time'
                    colnames(t)[which(names(t) == '_measurement')] <- 'name'
                    t['name'] <- replicate(5, 'w-airSensors')
+                   t['q'] <- replicate(5, 42L)
                    return(t)
                  })
   response <- .client$write(data, bucket='r-testing',
@@ -264,7 +266,7 @@ test_that("write / dry-run", {
                             precision = 'ns',
                             measurementCol = 'name',
                             tagCols = c("region", "sensor_id"),
-                            fieldCols = c("altitude", "grounded", "temperature"),
+                            fieldCols = c("altitude", "grounded", "temperature", "q"),
                             timeCol = 'time',
                             object = "x-output")
   expected <- .lp.pivoted
