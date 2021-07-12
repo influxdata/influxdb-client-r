@@ -293,10 +293,7 @@ InfluxDBClient <- R6::R6Class(
         "logical"= tolower(as.character(x)),
         "character" = {
           x <- gsub("\"", "\\\"", x, fixed = TRUE)
-          if (grepl(" ", x))
-            sprintf("\"%s\"", x)
-          else
-            x
+          sprintf("\"%s\"", x)
         },
         "integer" = sprintf("%di", x),
         "integer64" = sprintf("%si", as.character(x)),
