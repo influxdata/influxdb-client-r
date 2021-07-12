@@ -56,6 +56,23 @@ with_mock_api({
     }
     expect_error(f(), 'API client error (404): failed to initialize execute state: could not find bucket "no-bucket"',
                  fixed = TRUE)
+
+  })
+
+  test_that("query / invalid time mapping (src)", {
+    f <- function() {
+      .client$query(text='from(bucket: "r-testing") |> range(start: -10y) |> filter(fn: (r) => r._measurement == "airSensors" and r.sensor_id == "TLM0101") |> limit(n: 5) |> drop(columns: ["_start", "_stop"])',
+                    POSIXctCol = c("_notime"="posixct"))
+    }
+    expect_error(f(), "cannot coerce '_notime' to 'posixct': column does not exist", fixed = TRUE)
+  })
+
+  test_that("query / invalid time mapping (tgrget)", {
+    f <- function() {
+      .client$query(text='from(bucket: "r-testing") |> range(start: -10y) |> filter(fn: (r) => r._measurement == "airSensors" and r.sensor_id == "TLM0101") |> limit(n: 5) |> drop(columns: ["_start", "_stop"])',
+                    POSIXctCol = c("_time"="_time"))
+    }
+    expect_error(f(), "cannot coerce '_time' to '_time': column already exist", fixed = TRUE)
   })
 })
 
