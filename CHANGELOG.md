@@ -2,7 +2,7 @@
 
 ### Bug Fixes
 
-1. [26](https://github.com/bonitoo-io/influxdb-client-r/pull/26): Add support for query multiple results.
+1. [27](https://github.com/bonitoo-io/influxdb-client-r/pull/27): Add support for query multiple results.
 
 
 ## unreleased [2021-07-09]
