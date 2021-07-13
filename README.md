@@ -99,7 +99,8 @@ data <- client$query('from(bucket: "my-bucket") |> range(start: -1h) |> drop(col
 data
 ```
 
-Response is a `list` of `data.frame`s. Each `data.frame` corresponds to one Flux table.
+Flux query can [yield](https://docs.influxdata.com/influxdb/v2.0/reference/flux/stdlib/built-in/outputs/yield/) multiple _results_ in one response, where each result may contain multiple tables.  
+Return value is therefore a named list, where each element is a list of data frames that represent a _result_. In most(?) cases however, there is just a single result and therefore the `query` by default flattens the return value to single unnamed list of tables (data frames). This behaviour controlled by `flatSingleResult` parameter.
 
 **Parameters**
 
@@ -107,6 +108,7 @@ Response is a `list` of `data.frame`s. Each `data.frame` corresponds to one Flux
 |---|---|---|---|
 | `text` | Flux query | `character` | none |
 | `POSIXctCol` | Flux time to `POSIXct` column mapping | named `list` | `c("_time"="time")` |
+| `flatSingleResult` | Whether to return simple list when response contains single result | logical | `TRUE` |
 
 #### Incoming type mapping
 
