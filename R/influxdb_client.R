@@ -96,7 +96,7 @@ InfluxDBClient <- R6::R6Class(
     #' @param POSIXctCol Flux time to (new) \code{POSIXct} column mapping (named list).
     #' Default is \code{c("_time"="time")}. Use \code{NULL} to skip it.
     #' @return Data as (list of) \code{data.frame}
-    query = function(text, POSIXctCol = c("_time"="time")) {
+    query = function(text, POSIXctCol = c("_time"="time"), flatSingleResult = TRUE) {
       # validate parameters
       if (is.null(text)) {
         stop("'text' cannot be NULL")
@@ -127,23 +127,29 @@ InfluxDBClient <- R6::R6Class(
         NULL # TODO return empty list?
       } else {
         result <- private$.fromAnnotatedCsv(resp)
-        if (is.null(POSIXctCol)) {
-          result
-        } else {
+        if (!is.null(POSIXctCol)) {
           srcCol <- names(POSIXctCol)[[1]]
           targetCol <- POSIXctCol[[1]]
-          result <- lapply(result, function(df) {
-            if (!srcCol %in% colnames(df)) {
-              stop(sprintf("cannot coerce '%s' to '%s': column does not exist",
-                           srcCol, targetCol))
-            }
-            if (targetCol %in% colnames(df)) {
-              stop(sprintf("cannot coerce '%s' to '%s': column already exist",
-                           srcCol, targetCol))
-            }
-            df[targetCol] <- as.POSIXct(df[,srcCol], tz = "GMT")
-            df
+          result <- lapply(result, function(sub) {
+            lapply(sub, function(df) {
+              if (!srcCol %in% colnames(df)) {
+                stop(sprintf("cannot coerce '%s' to '%s': column does not exist",
+                             srcCol, targetCol))
+              }
+              if (targetCol %in% colnames(df)) {
+                stop(sprintf("cannot coerce '%s' to '%s': column already exist",
+                             srcCol, targetCol))
+              }
+              df[targetCol] <- as.POSIXct(df[,srcCol], tz = "GMT")
+              df
+            })
           })
+        }
+
+        if (flatSingleResult && length(result) == 1) {
+          result[[1]]
+        } else {
+          result
         }
       }
     },
@@ -362,10 +368,12 @@ InfluxDBClient <- R6::R6Class(
           as.character(read.csv(
             text = csvTable,
             header = FALSE,
-            nrows = 3,
+            skip = 1, # skip group key line
+            nrows = 1,
             comment.char = "",
+            colClasses = "character",
             stringsAsFactors = FALSE
-          )[2, ])
+          )[1, ])
         message(sprintf("%s ", datatypes))
 
         # map Flux types to R types
@@ -382,6 +390,20 @@ InfluxDBClient <- R6::R6Class(
             warn_missing = FALSE
           )
 
+        # read default annotation line
+        defaults <-
+          read.csv(
+            text = csvTable,
+            header = FALSE,
+            skip = 2, # skip group key and datatype lines
+            nrows = 1,
+            comment.char = "",
+            # workaround for parsing empty cell time cell fails (nanotime issue?)
+            colClasses = plyr::revalue(colClasses, c("nanotime" = "character")),
+            stringsAsFactors = FALSE
+          )[1, ]
+        defaultResultName <- as.character(defaults[1])
+
         # read CSV table into data frame
         df <-
           read.csv(
@@ -392,20 +414,35 @@ InfluxDBClient <- R6::R6Class(
             colClasses = colClasses,
             stringsAsFactors = FALSE
           )
-        df <- df[-1] # skip first column (result name)
+
+        # temporary unsupported feature check
+        if (!all(df$result == "")) {
+          stop("inline result name not supported")
+        }
+
+        # result name column not needed (yet)
+        df$result <- NULL
 
         # split data frame by table index column
         dfTables <- split(df, df$table)
 
-        # append tables to result
+        # prepare tables
         mtables <- lapply(dfTables, function (dfTable) {
           rownames(dfTable) <- NULL # reset row names to seq starting at 1
-          dfTable[-1] # first column is table index, no longer needed
+          dfTable$table <- NULL # table index column no longer needed
+          dfTable
         })
-        tables <- append(tables, mtables)
+
+        # append tables to result
+        sub <- tables[[defaultResultName]]
+        if (is.null(sub)) {
+          sub <- list()
+        }
+        sub <- append(sub, mtables)
+        tables[[defaultResultName]] <- unname(sub)
       }
 
-      unname(tables)
+      tables
     },
 
     .toLineProtocol = function(x,
