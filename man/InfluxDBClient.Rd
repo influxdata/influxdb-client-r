@@ -105,7 +105,11 @@ Named list with \code{name}, \code{message}, \code{status},
 \subsection{Method \code{query()}}{
 Queries data in the InfluxDB instance.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$query(text, POSIXctCol = c(`_time` = "time"))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{InfluxDBClient$query(
+  text,
+  POSIXctCol = c(`_time` = "time"),
+  flatSingleResult = TRUE
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -115,11 +119,17 @@ Queries data in the InfluxDB instance.
 
 \item{\code{POSIXctCol}}{Flux time to (new) \code{POSIXct} column mapping (named list).
 Default is \code{c("_time"="time")}. Use \code{NULL} to skip it.}
+
+\item{\code{flatSingleResult}}{Whether to return simple list when response contains
+only one result. Default is \code{TRUE}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Data as (list of) \code{data.frame}
+List of data frames. Data frame represents Flux table.
+It can be a named list of nested lists of data frames when query response contains
+multiple results (see \url{https://docs.influxdata.com/influxdb/cloud/reference/flux/stdlib/built-in/outputs/yield/}),
+or a simple list of data frames for single result response.
 }
 }
 \if{html}{\out{<hr>}}

@@ -95,7 +95,12 @@ InfluxDBClient <- R6::R6Class(
     #' @param text Flux query
     #' @param POSIXctCol Flux time to (new) \code{POSIXct} column mapping (named list).
     #' Default is \code{c("_time"="time")}. Use \code{NULL} to skip it.
-    #' @return Data as (list of) \code{data.frame}
+    #' @param flatSingleResult Whether to return simple list when response contains
+    #' only one result. Default is \code{TRUE}.
+    #' @return List of data frames. Data frame represents Flux table.
+    #' It can be a named list of nested lists of data frames when query response contains
+    #' multiple results (see \url{https://docs.influxdata.com/influxdb/cloud/reference/flux/stdlib/built-in/outputs/yield/}),
+    #' or a simple list of data frames for single result response.
     query = function(text, POSIXctCol = c("_time"="time"), flatSingleResult = TRUE) {
       # validate parameters
       if (is.null(text)) {

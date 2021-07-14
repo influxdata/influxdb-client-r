@@ -99,8 +99,9 @@ data <- client$query('from(bucket: "my-bucket") |> range(start: -1h) |> drop(col
 data
 ```
 
-Flux query can [yield](https://docs.influxdata.com/influxdb/v2.0/reference/flux/stdlib/built-in/outputs/yield/) multiple _results_ in one response, where each result may contain multiple tables.  
-Return value is therefore a named list, where each element is a list of data frames that represent a _result_. In most(?) cases however, there is just a single result and therefore the `query` by default flattens the return value to single unnamed list of tables (data frames). This behaviour controlled by `flatSingleResult` parameter.
+Flux query can [yield](https://docs.influxdata.com/influxdb/cloud/reference/flux/stdlib/built-in/outputs/yield/) multiple _results_ in one response, where each result may contain multiple tables.  
+Return value is therefore a named list, where each element is a list of data frames that represent a _result_. Data frame represents Flux table.  
+Quite often, though, there is just a single result and therefore the `query` by default flattens the return value to simple unnamed list of data frames. This behaviour controlled by `flatSingleResult` parameter.
 
 **Parameters**
 
@@ -108,7 +109,7 @@ Return value is therefore a named list, where each element is a list of data fra
 |---|---|---|---|
 | `text` | Flux query | `character` | none |
 | `POSIXctCol` | Flux time to `POSIXct` column mapping | named `list` | `c("_time"="time")` |
-| `flatSingleResult` | Whether to return simple list when response contains single result | logical | `TRUE` |
+| `flatSingleResult` | Whether to return simple list when response contains only one result | logical | `TRUE` |
 
 #### Incoming type mapping
 
@@ -220,10 +221,10 @@ unnamed list, eg. `c("humidity", "temperature", ...)`.
 
 #### Output preview
 
-To preview how input data are serialized to InfluxDB line protocol, pass the name
-of object to receive the output as `object` parameter value. It changes `write`
-to dry-run operation (nothing is sent to the database). The object will be assigned
-to the calling environment.  
+To preview how input data are serialized to InfluxDB [line protocol](https://docs.influxdata.com/influxdb/cloud/reference/syntax/line-protocol/),
+pass the name of object to receive the output as `object` parameter value.  
+It changes `write` to dry-run operation (nothing is sent to the database).
+The object will be assigned to the calling environment.  
 _This option is intended for debugging purposes._
 
 ```r
