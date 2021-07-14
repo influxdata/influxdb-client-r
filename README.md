@@ -100,8 +100,23 @@ data
 ```
 
 Flux query can [yield](https://docs.influxdata.com/influxdb/cloud/reference/flux/stdlib/built-in/outputs/yield/) multiple _results_ in one response, where each result may contain multiple tables.  
-Return value is therefore a named list, where each element is a list of data frames that represent a _result_. Data frame represents Flux table.  
-Quite often, though, there is just a single result and therefore the `query` by default flattens the return value to simple unnamed list of data frames. This behaviour controlled by `flatSingleResult` parameter.
+Return value is therefore a named list, where each element is a list of data frames that represent a _result_. Data frame represents Flux table. You can list the results using `names` method.
+
+Quite often, though, there is just a single result and therefore the `query` by default flattens the return value to simple unnamed list of data frames. This behaviour controlled by `flatSingleResult` parameter. With `flatSingleResult = FALSE`, you can check that the return value is contains one element with name `"_result"` (default result name when there is no explicit `yield` in the query) and use the name to retrieve it, like
+
+```r
+> names(data)
+[1] "_result"
+
+> data[["_result"]]
+[[1]]
+                      _time _value   _field _measurement region sensor_id                time
+1 2021-06-09T09:52:41+00:00    549 altitude   airSensors  south   TLM0101 2021-06-09 09:52:41
+2 2021-06-09T09:52:51+00:00    547 altitude   airSensors  south   TLM0101 2021-06-09 09:52:51
+3 2021-06-09T09:53:01+00:00    563 altitude   airSensors  south   TLM0101 2021-06-09 09:53:01
+4 2021-06-09T09:53:11+00:00    560 altitude   airSensors  south   TLM0101 2021-06-09 09:53:11
+5 2021-06-09T09:53:21+00:00    544 altitude   airSensors  south   TLM0101 2021-06-09 09:53:21
+```
 
 **Parameters**
 
