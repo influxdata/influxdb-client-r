@@ -102,7 +102,7 @@ data
 Flux query can [yield](https://docs.influxdata.com/influxdb/cloud/reference/flux/stdlib/built-in/outputs/yield/) multiple _results_ in one response, where each result may contain multiple tables.  
 Return value is therefore a named list, where each element is a list of data frames that represent a _result_. Data frame represents Flux table. You can list the results using `names` method.
 
-Quite often, though, there is just a single result and therefore the `query` by default flattens the return value to simple unnamed list of data frames. This behaviour controlled by `flatSingleResult` parameter. With `flatSingleResult = FALSE`, you can check that the return value is contains one element with name `"_result"` (default result name when there is no explicit `yield` in the query) and use the name to retrieve it, like
+Quite often, though, there is just a single result and therefore the `query` by default flattens the return value to simple unnamed list of data frames. This behaviour controlled by `flatSingleResult` parameter. With `flatSingleResult = FALSE`, you can check that the return value contains one element with name `"_result"` (default result name when there is no explicit `yield` in the query) and use the name to retrieve it, like
 
 ```r
 > names(data)
