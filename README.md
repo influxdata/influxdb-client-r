@@ -104,7 +104,7 @@ Return value is therefore a named list, where each element is a list of data fra
 
 Quite often, though, there is just a single result and therefore the `query` by default flattens the return value to simple unnamed list of data frames. This behaviour controlled by `flatSingleResult` parameter. With `flatSingleResult = FALSE`, you can check that the return value contains one element with name `"_result"` (default result name when there is no explicit `yield` in the query) and use the name to retrieve it, like
 
-```r
+```
 > names(data)
 [1] "_result"
 
