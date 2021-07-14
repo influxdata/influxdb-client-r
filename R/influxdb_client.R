@@ -565,8 +565,6 @@ InfluxDBClient <- R6::R6Class(
             InfluxDBApiClient$new(basePath = paste0(self$url, "/api/v2"),
                                   defaultHeaders = defaultHeaders)
         }
-      } else {
-        private$.apiV2Client <- value
       }
       private$.apiV2Client
     },
@@ -580,8 +578,6 @@ InfluxDBClient <- R6::R6Class(
             InfluxDBApiClient$new(basePath = self$url,
                                   defaultHeaders = defaultHeaders)
         }
-      } else {
-        private$.apiClient <- value
       }
       private$.apiClient
     },
@@ -591,8 +587,6 @@ InfluxDBClient <- R6::R6Class(
         if (is.null(private$.healthApi)) {
           private$.healthApi <- HealthApi$new(self$apiClient)
         }
-      } else {
-        private$.healthApi <- value
       }
       private$.healthApi
     },
@@ -602,8 +596,6 @@ InfluxDBClient <- R6::R6Class(
         if (is.null(private$.queryApi)) {
           private$.queryApi <- QueryApi$new(self$apiV2Client)
         }
-      } else {
-        private$.queryApi <- value
       }
       private$.queryApi
     },
@@ -613,8 +605,6 @@ InfluxDBClient <- R6::R6Class(
         if (is.null(private$.readyApi)) {
           private$.readyApi <- ReadyApi$new(self$apiClient)
         }
-      } else {
-        private$.readyApi <- value
       }
       private$.readyApi
     },
@@ -624,8 +614,6 @@ InfluxDBClient <- R6::R6Class(
         if (is.null(private$.writeApi)) {
           private$.writeApi <- WriteApi$new(self$apiV2Client)
         }
-      } else {
-        private$.writeApi <- value
       }
       private$.writeApi
     }
