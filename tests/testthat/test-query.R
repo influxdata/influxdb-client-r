@@ -50,6 +50,27 @@ with_mock_api({
     expect_equal(response, expected)
   })
 
+  test_that("query / single result not flattened", {
+    response <- .client$query(text='from(bucket: "r-testing") |> range(start: -10y) |> filter(fn: (r) => r._measurement == "airSensors" and r.sensor_id == "TLM0101") |> limit(n: 5) |> drop(columns: ["_start", "_stop"])',
+                              flatSingleResult = FALSE)
+    result = lapply(.data, function(df) {
+      df$time <- as.POSIXct(df$`_time`)
+      df
+    })
+    expected <- list("_result" = result)
+    expect_equal(response, expected)
+  })
+
+  test_that("query / multiple results", {
+    response <- .client$query(text='data = from(bucket: "r-testing") |> range(start: -10y) |> filter(fn: (r) => r._measurement == "airSensors" and r.sensor_id == "TLM0101") |> limit(n: 5) |> drop(columns: ["_start", "_stop"]) data |> yield(name: "abc") data |> yield(name: "xyz")')
+    result = lapply(.data, function(df) {
+      df$time <- as.POSIXct(df$`_time`)
+      df
+    })
+    expected <- list("abc" = result, "xyz" = result)
+    expect_equal(response, expected)
+  })
+
   test_that("query / non-existent bucket", {
     f <- function() {
       .client$query(text='from(bucket: "no-bucket") |> range(start: -10y) |> filter(fn: (r) => r._measurement == "airSensors" and r.sensor_id == "TLM0101") |> drop(columns: ["_start", "_stop"])')
