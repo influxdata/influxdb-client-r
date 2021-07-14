@@ -110,12 +110,12 @@ Quite often, though, there is just a single result and therefore the `query` by 
 
 > data[["_result"]]
 [[1]]
-                      _time _value   _field _measurement region sensor_id                time
-1 2021-06-09T09:52:41+00:00    549 altitude   airSensors  south   TLM0101 2021-06-09 09:52:41
-2 2021-06-09T09:52:51+00:00    547 altitude   airSensors  south   TLM0101 2021-06-09 09:52:51
-3 2021-06-09T09:53:01+00:00    563 altitude   airSensors  south   TLM0101 2021-06-09 09:53:01
-4 2021-06-09T09:53:11+00:00    560 altitude   airSensors  south   TLM0101 2021-06-09 09:53:11
-5 2021-06-09T09:53:21+00:00    544 altitude   airSensors  south   TLM0101 2021-06-09 09:53:21
+                       time       name region sensor_id altitude grounded temperature
+1 2021-06-09T09:52:41+00:00 airSensors  south   TLM0101      549    FALSE  71.7844100
+2 2021-06-09T09:52:51+00:00 airSensors  south   TLM0101      547    FALSE  71.7684399
+3 2021-06-09T09:53:01+00:00 airSensors  south   TLM0101      563     TRUE  71.7819928
+4 2021-06-09T09:53:11+00:00 airSensors  south   TLM0101      560     TRUE  71.7487767
+5 2021-06-09T09:53:21+00:00 airSensors  south   TLM0101      544    FALSE  71.7335579
 ```
 
 **Parameters**
