@@ -103,6 +103,53 @@ InfluxDBApiClientTest <- R6::R6Class(
     "w-airSensors,region=south,sensor_id=TLM0101 altitude=544i,grounded=false,temperature=71.7335579 1623232401000000"
   )
 )
+.csv.inf = "#group,false,false,true,true,true,true,true,true,true,true,false,false
+#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,string,string,double,double
+#default,_result,,,,,,,,,,,
+,result,table,_start,_stop,_field,_measurement,language,license,name,owner,le,_value
+,,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,stars,github_repository,C#,MIT License,influxdb-client-csharp,influxdata,0,0
+,,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,stars,github_repository,C#,MIT License,influxdb-client-csharp,influxdata,10,0
+,,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,stars,github_repository,C#,MIT License,influxdb-client-csharp,influxdata,+Inf,15
+,,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,stars,github_repository,C#,MIT License,influxdb-client-csharp,influxdata,-Inf,15"
+.csv.inline.result.name = "#group,false,false,true,true,true,true,true,true,true,true,false,false
+#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,string,string,string,double,double
+#default,,,,,,,,,,,,
+,result,table,_start,_stop,_field,_measurement,language,license,name,owner,le,_value
+,_result,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,stars,github_repository,C#,MIT License,influxdb-client-csharp,influxdata,0,0
+,_result,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,stars,github_repository,C#,MIT License,influxdb-client-csharp,influxdata,10,0
+,_result,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,stars,github_repository,C#,MIT License,influxdb-client-csharp,influxdata,+Inf,15
+,_result,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,stars,github_repository,C#,MIT License,influxdb-client-csharp,influxdata,-Inf,15"
+.data.inf = list(
+  "_result" = list(
+    data.frame(
+      `_start` = rep(as.nanotime("2021-06-23T06:50:11.897825012Z"), times = 4),
+      `_stop` = rep(as.nanotime("2021-06-25T06:50:11.897825012Z"), times = 4),
+      `_field` = replicate(4, "stars"),
+      `_measurement` = replicate(4, "github_repository"),
+      language = replicate(4, "C#"),
+      license = replicate(4, "MIT License"),
+      name = replicate(4, "influxdb-client-csharp"),
+      owner = replicate(4, "influxdata"),
+      le = c(0, 10, Inf, -Inf),
+      `_value` = c(0, 0, 15, 15),
+      check.names = FALSE,
+      stringsAsFactors = FALSE
+    )
+  )
+)
+
+test_that("fromAnnotatedCsv / inf", {
+  data <- .client$fromAnnotatedCsv(.csv.inf)
+  expected <- .data.inf
+  expect_equal(data, expected)
+})
+
+test_that("fromAnnotatedCsv / inf", {
+  f <- function() {
+    .client$fromAnnotatedCsv(.csv.inline.result.name)
+  }
+  expect_error(f(), "inline result name not supported", fixed = TRUE)
+})
 
 test_that("toLineProtocol", {
   # change measurement value to avoid overwriting source
@@ -161,6 +208,7 @@ test_that("toLineProtocol / no tags", {
 
 test_that("toLineProtocol / POSIXct", {
   # change measurement value to avoid overwriting source
+  # use POSIXct time column for timestamps
   data <- lapply(.data.pivoted,
                  function(t) {
                    t['_measurement'] <- replicate(5, 'w-airSensors')
@@ -179,6 +227,24 @@ test_that("toLineProtocol / POSIXct", {
   ee('s', data, .lp.pivoted.secs)
   ee('ms', data, .lp.pivoted.msecs)
   ee('us', data, .lp.pivoted.usecs)
+})
+
+test_that("toLineProtocol / integer type", {
+  # change measurement value to avoid overwriting source
+  # convert integer64 to integer to test it serialization (identical to integer64)
+  data <- lapply(.data.pivoted,
+                 function(t) {
+                   t['_measurement'] <- replicate(5, 'w-airSensors')
+                   t['altitude'] <- as.integer(t[,'altitude'])
+                   return(t)
+                 })
+  lp <- .client$toLineProtocol(data, "ns",
+                               measurementCol = "_measurement",
+                               tagCols = c("region", "sensor_id"),
+                               fieldCols = c("altitude", "grounded", "temperature"),
+                               timeCol = "_time")
+  expected <- .lp.pivoted
+  expect_equal(lp, expected)
 })
 
 test_that("toLineProtocol / special characters", {
