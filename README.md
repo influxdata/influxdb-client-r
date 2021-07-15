@@ -1,6 +1,6 @@
 # influxdb-client-r
-[![CircleCI](https://circleci.com/gh/bonitoo-io/influxdb-client-r.svg?style=svg)](https://circleci.com/gh/bonitoo-io/influxdb-client-r)
-[![codecov](https://codecov.io/gh/bonitoo-io/influxdb-client-r/branch/master/graph/badge.svg)](https://codecov.io/gh/bonitoo-io/influxdb-client-r)
+[![CircleCI](https://circleci.com/gh/influxdata/influxdb-client-r.svg?style=svg)](https://circleci.com/gh/influxdata/influxdb-client-r)
+[![codecov](https://codecov.io/gh/influxdata/influxdb-client-r/branch/master/graph/badge.svg)](https://codecov.io/gh/influxdata/influxdb-client-r)
 
 This repository contains R package for InfluxDB 2.0 client.
 
@@ -55,7 +55,7 @@ install.packages(c("httr", "bit64", "nanotime", "plyr"))
 
 ```r
 install.packages("remotes")
-remotes::install_github("bonitoo-io/influxdb-client-r")
+remotes::install_github("influxdata/influxdb-client-r")
 ```
 
 ## Usage
