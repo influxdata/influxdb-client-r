@@ -14,7 +14,7 @@ with_mock_api({
   test_that("query / default time mapping", {
     response <- .client$query(text='from(bucket: "r-testing") |> range(start: -10y) |> filter(fn: (r) => r._measurement == "airSensors" and r.sensor_id == "TLM0101") |> limit(n: 5) |> drop(columns: ["_start", "_stop"])')
     expected <- lapply(.data, function(df) {
-      df$time <- as.POSIXct(df$`_time`)
+      df$time <- as.POSIXct(df$`_time`, tz = "GMT")
       df
     })
     expect_equal(response, expected)
@@ -24,7 +24,7 @@ with_mock_api({
     response <- .client$query(text='from(bucket: "r-testing") |> range(start: -10y) |> filter(fn: (r) => r._measurement == "airSensors" and r.sensor_id == "TLM0101") |> limit(n: 5) |> drop(columns: ["_start", "_stop"])',
                               POSIXctCol = c("_time"="posixct"))
     expected <- lapply(.data, function(df) {
-      df$posixct <- as.POSIXct(df$`_time`)
+      df$posixct <- as.POSIXct(df$`_time`, tz = "GMT")
       df
     })
     expect_equal(response, expected)
@@ -54,7 +54,7 @@ with_mock_api({
     response <- .client$query(text='from(bucket: "r-testing") |> range(start: -10y) |> filter(fn: (r) => r._measurement == "airSensors" and r.sensor_id == "TLM0101") |> limit(n: 5) |> drop(columns: ["_start", "_stop"])',
                               flatSingleResult = FALSE)
     result = lapply(.data, function(df) {
-      df$time <- as.POSIXct(df$`_time`)
+      df$time <- as.POSIXct(df$`_time`, tz = "GMT")
       df
     })
     expected <- list("_result" = result)
@@ -64,7 +64,7 @@ with_mock_api({
   test_that("query / multiple results", {
     response <- .client$query(text='data = from(bucket: "r-testing") |> range(start: -10y) |> filter(fn: (r) => r._measurement == "airSensors" and r.sensor_id == "TLM0101") |> limit(n: 5) |> drop(columns: ["_start", "_stop"]) data |> yield(name: "abc") data |> yield(name: "xyz")')
     result = lapply(.data, function(df) {
-      df$time <- as.POSIXct(df$`_time`)
+      df$time <- as.POSIXct(df$`_time`, tz = "GMT")
       df
     })
     expected <- list("abc" = result, "xyz" = result)
