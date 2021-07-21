@@ -18,7 +18,7 @@ client <- InfluxDBClient$new(url = "http://localhost:8086",
                              org = "my-org")
 
 # Query
-data <- client$query('from(bucket: "my-bucket") |> range(start: -1h) |> drop(columns: ["_start", "_stop"])')
+data <- client$query('from(bucket: "my-bucket") |> range(start: -1h)')
 
 # Write
 data <- data.frame(...)
@@ -128,7 +128,7 @@ only one result. Default is \code{TRUE}.}
 \subsection{Returns}{
 List of data frames. Data frame represents Flux table.
 It can be a named list of nested lists of data frames when query response contains
-multiple results (see \url{https://docs.influxdata.com/influxdb/cloud/reference/flux/stdlib/built-in/outputs/yield/}),
+multiple results (see Flux \href{https://docs.influxdata.com/influxdb/v2.0/reference/flux/stdlib/built-in/outputs/yield/}{yield}),
 or a simple list of data frames for single result response.
 }
 }
