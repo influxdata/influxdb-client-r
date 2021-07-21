@@ -36,10 +36,10 @@ The InfluxDB 2.0 client supports:
 
 This section contains links to the client library documentation.
 
-* [Product documentation](https://docs.influxdata.com/influxdb/v2.0/tools/client-libraries/), [Getting Started](#usage)
+* [Product documentation](https://docs.influxdata.com/influxdb/v2.0/api-guide/client-libraries/), [Getting Started](#usage)
 * [Examples](#usage)
-* [API Reference](docs/influxdbclient.pdf)
-* [Changelog](CHANGELOG.md)
+* [API Reference](https://github.com/influxdata/influxdb-client-r/docs/influxdbclient.pdf)
+* [Changelog](https://github.com/influxdata/influxdb-client-r/CHANGELOG.md)
 
 ## Installing
 
@@ -53,8 +53,16 @@ install.packages(c("httr", "bit64", "nanotime", "plyr"))
 
 ### Installing `influxdbclient` package  
 
+The package is published on CRAN and can be installed with
+
 ```r
-install.packages("remotes")
+install.packages("influxdbclient")
+```
+
+The latest development version can be installed with
+
+```r
+# install.packages("remotes")
 remotes::install_github("influxdata/influxdb-client-r")
 ```
 
@@ -99,7 +107,7 @@ data <- client$query('from(bucket: "my-bucket") |> range(start: -1h) |> drop(col
 data
 ```
 
-Flux query can [yield](https://docs.influxdata.com/influxdb/cloud/reference/flux/stdlib/built-in/outputs/yield/) multiple _results_ in one response, where each result may contain multiple tables.  
+Flux query can [yield](https://docs.influxdata.com/influxdb/v2.0/reference/flux/stdlib/built-in/outputs/yield/) multiple _results_ in one response, where each result may contain multiple tables.  
 Return value is therefore a named list, where each element is a list of data frames that represent a _result_. Data frame represents Flux table. You can list the results using `names` method.
 
 Quite often, though, there is just a single result and therefore the `query` by default flattens the return value to simple unnamed list of data frames. This behaviour controlled by `flatSingleResult` parameter. With `flatSingleResult = FALSE`, you can check that the return value contains one element with name `"_result"` (default result name when there is no explicit `yield` in the query) and use the name to retrieve it, like
