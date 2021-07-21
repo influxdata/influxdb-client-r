@@ -1,3 +1,7 @@
+## 0.1.0 [2021-07-19]
+
+* Submitted to CRAN
+
 ## unreleased [2021-07-13]
 
 ### Bug Fixes
