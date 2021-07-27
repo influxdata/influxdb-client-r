@@ -38,8 +38,8 @@ This section contains links to the client library documentation.
 
 * [Product documentation](https://docs.influxdata.com/influxdb/v2.0/api-guide/client-libraries/), [Getting Started](#usage)
 * [Examples](#usage)
-* [API Reference](https://github.com/influxdata/influxdb-client-r/docs/influxdbclient.pdf)
-* [Changelog](https://github.com/influxdata/influxdb-client-r/CHANGELOG.md)
+* [API Reference](https://cran.r-project.org/web/packages/influxdbclient/influxdbclient.pdf)
+* [Changelog](https://github.com/influxdata/influxdb-client-r/blob/master/CHANGELOG.md)
 
 ## Installing
 
