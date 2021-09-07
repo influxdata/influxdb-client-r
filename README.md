@@ -20,6 +20,7 @@ This repository contains R package for InfluxDB 2.0 client.
   * [Getting status](#getting-status)
     * [Health](#health-status)
     * [Readiness](#readiness-status)
+  * [Advanced](#advanced)
 * [Known Issues](#known-issues)
 * [Contributing](#contributing)
 * [License](#license)
@@ -324,6 +325,19 @@ check <- client$ready()
 ```
 
 Response is a list with status elements (`status`, `started`, `up`) or error.
+
+#### Advanced
+
+The client automatically follows HTTP redirects.
+
+To use the client with proxy, use `set_config` to configure the proxy:
+
+```r
+library(httr)
+httr::set_config(
+  use_proxy(url = "my-proxy", port = 8080, username = "user",password = "password")
+)
+```
 
 ## Known Issues
 
