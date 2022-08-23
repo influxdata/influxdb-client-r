@@ -7,7 +7,7 @@ Description:
   'InfluxDB' 2.x time-series database client. Supports both 'InfluxDB' OSS (<https://portal.influxdata.com/downloads/>) and Cloud (<https://cloud2.influxdata.com/>) version.
 URL: https://github.com/influxdata/influxdb-client-r
 BugReports: https://github.com/influxdata/influxdb-client-r/issues
-Depends: R (>= 3.3)
+Depends: R (>= 3.4)
 Encoding: UTF-8
 License: MIT License + file LICENSE
 Imports: R6, httr, jsonlite, bit64, nanotime (>= 0.3.0), plyr

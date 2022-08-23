@@ -37,14 +37,15 @@ The InfluxDB 2.0 client supports:
 
 This section contains links to the client library documentation.
 
-* [Product documentation](https://docs.influxdata.com/influxdb/v2.0/api-guide/client-libraries/), [Getting Started](#usage)
+* [Product documentation](https://docs.influxdata.com/influxdb/v2.0/api-guide/client-libraries/)
+* [Getting Started](#usage)
 * [Examples](#usage)
-* [API Reference](https://cran.r-project.org/web/packages/influxdbclient/influxdbclient.pdf)
+* [API Reference](https://cran.r-project.org/package=influxdbclient/influxdbclient.pdf)
 * [Changelog](https://github.com/influxdata/influxdb-client-r/blob/master/CHANGELOG.md)
 
 ## Installing
 
-The package requires R >= 3.3.
+The package requires R >= 3.4.
 
 ### Installing dependencies
 
@@ -172,6 +173,14 @@ df1$`_value` %>% ts(freq=168) %>% stl(s.window=13) %>% autoplot()
 or
 ```r
 ts1 %>% ts(freq=168) %>% stl(s.window=13) %>% autoplot()
+```
+
+#### Querying metadata
+
+For queries returning records without time info (listing buckets, tag values etc.), set `POSIXctCol` to `NULL`.
+
+```r
+buckets <- client$query('buckets()', POSIXctCol = NULL)
 ```
 
 ### Writing data
