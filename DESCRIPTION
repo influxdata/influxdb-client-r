@@ -1,6 +1,6 @@
 Package: influxdbclient
 Title: 'InfluxDB' 2.x Client
-Version: 0.1.0
+Version: 0.1.1
 Author: Ales Pour <ales.pour@bonitoo.io>
 Maintainer: Ales Pour <ales.pour@bonitoo.io>
 Description:
