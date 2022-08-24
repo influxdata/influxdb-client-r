@@ -379,7 +379,6 @@ InfluxDBClient <- R6::R6Class(
             colClasses = "character",
             stringsAsFactors = FALSE
           )[1, ])
-        message(sprintf("%s ", datatypes))
 
         # map Flux types to R types
         colClasses <-
@@ -404,7 +403,7 @@ InfluxDBClient <- R6::R6Class(
             nrows = 1,
             comment.char = "",
             # workaround for parsing empty cell time cell fails (nanotime issue?)
-            colClasses = plyr::revalue(colClasses, c("nanotime" = "character")),
+            colClasses = plyr::revalue(colClasses, c("nanotime" = "character"), warn_missing = FALSE),
             stringsAsFactors = FALSE
           )[1, ]
         defaultResultName <- as.character(defaults[1])

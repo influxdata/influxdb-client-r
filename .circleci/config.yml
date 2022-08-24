@@ -1,8 +1,8 @@
 version: 2.1
 jobs:
-  R-4_0:
+  R-4_2:
     docker:
-      - image: rocker/tidyverse:4.0.5
+      - image: rocker/tidyverse:4.2.1
     steps:
       - checkout
       - restore_cache:
@@ -31,9 +31,9 @@ jobs:
           paths:
             - "/usr/local/lib/R/site-library"
 
-  R-3_3:
+  R-3_4:
     docker:
-      - image: rstudio/r-base:3.3.3-bionic
+      - image: rstudio/r-base:3.4.4-bionic
     steps:
       - checkout
       - run:
@@ -57,7 +57,7 @@ jobs:
       - save_cache:
           key: cache-{{ .Environment.CIRCLE_JOB }}-{{ checksum "DESCRIPTION" }}
           paths:
-            - "/opt/R/3.3.3/lib/R/library"
+            - "/opt/R/3.4.4/lib/R/library"
       - run:
           name: Build package
           command: R CMD build .
@@ -69,7 +69,7 @@ workflows:
   version: 2
   build:
     jobs:
-      - R-4_0:
-          name: test-4.0
-      - R-3_3:
-          name: test-3.3
+      - R-4_2:
+          name: test-4.2
+      - R-3_4:
+          name: test-3.4
