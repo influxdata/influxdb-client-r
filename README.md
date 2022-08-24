@@ -13,6 +13,7 @@ This repository contains R package for InfluxDB 2.0 client.
   * [Querying data](#querying-data)
     * [Type mapping](#incoming-type-mapping)
     * [Time series](#using-retrieved-data-as-time-series)
+    * [Metadata](#querying-metadata)
   * [Writing data](#writing-data)
     * [Type mapping](#outgoing-type-mapping)
     * [Output preview](#output-preview)
