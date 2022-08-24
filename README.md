@@ -1,6 +1,6 @@
 # influxdb-client-r
-[![CircleCI](https://circleci.com/gh/influxdata/influxdb-client-r.svg?style=svg)](https://circleci.com/gh/influxdata/influxdb-client-r)
-[![codecov](https://codecov.io/gh/influxdata/influxdb-client-r/branch/master/graph/badge.svg)](https://codecov.io/gh/influxdata/influxdb-client-r)
+[![CircleCI](https://circleci.com/gh/influxdata/influxdb-client-r.svg?style=svg)](https://app.circleci.com/pipelines/github/influxdata/influxdb-client-r)
+[![codecov](https://codecov.io/gh/influxdata/influxdb-client-r/branch/master/graph/badge.svg)](https://app.codecov.io/gh/influxdata/influxdb-client-r)
 
 This repository contains R package for InfluxDB 2.0 client.
 
