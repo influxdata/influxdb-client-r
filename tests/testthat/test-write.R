@@ -10,6 +10,15 @@
     "w-airSensors,region=south,sensor_id=TLM0101 altitude=544i,grounded=false,temperature=71.7335579,q=42i 1623232401000000000"
   )
 )
+.lp.pivoted.notimestamp = list(
+  c(
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=549i,grounded=false,temperature=71.78441,q=42i",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=547i,grounded=false,temperature=71.7684399,q=42i",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=563i,grounded=true,temperature=71.7819928,q=42i",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=560i,grounded=true,temperature=71.7487767,q=42i",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=544i,grounded=false,temperature=71.7335579,q=42i"
+  )
+)
 
 with_mock_api({
   test_that("write", {
@@ -272,6 +281,50 @@ test_that("write / dry-run", {
   expected <- .lp.pivoted
   # re-chunk by batch size
   expected <- list(expected[[1]][c(1:3)], expected[[1]][c(4:5)])
+  expect_equal(`x-output`, expected)
+})
+
+test_that("write / dry-run default precision", {
+  # rename some columns in order to test non-default parameters
+  # change measurement value to avoid overwriting source
+  # add (R native) integer type column 'q'
+  data <- lapply(.data.pivoted,
+                 function(t) {
+                   colnames(t)[which(names(t) == '_time')] <- 'time'
+                   colnames(t)[which(names(t) == '_measurement')] <- 'name'
+                   t['name'] <- replicate(5, 'w-airSensors')
+                   t['q'] <- replicate(5, 42L)
+                   return(t)
+                 })
+  response <- .client$write(data, bucket='r-testing',
+                            measurementCol = 'name',
+                            tagCols = c("region", "sensor_id"),
+                            fieldCols = c("altitude", "grounded", "temperature", "q"),
+                            timeCol = 'time',
+                            object = 'x-output')
+  expected <- .lp.pivoted
+  expect_equal(`x-output`, expected)
+})
+
+test_that("write / dry-run without timestamp", {
+  # rename some columns in order to test non-default parameters
+  # change measurement value to avoid overwriting source
+  # add (R native) integer type column 'q'
+  data <- lapply(.data.pivoted,
+                 function(t) {
+                   colnames(t)[which(names(t) == '_time')] <- 'time'
+                   colnames(t)[which(names(t) == '_measurement')] <- 'name'
+                   t['name'] <- replicate(5, 'w-airSensors')
+                   t['q'] <- replicate(5, 42L)
+                   return(t)
+                 })
+  response <- .client$write(data, bucket='r-testing',
+                            measurementCol = 'name',
+                            tagCols = c("region", "sensor_id"),
+                            fieldCols = c("altitude", "grounded", "temperature", "q"),
+                            timeCol = NULL,
+                            object = 'x-output')
+  expected <- .lp.pivoted.notimestamp
   expect_equal(`x-output`, expected)
 })
 
