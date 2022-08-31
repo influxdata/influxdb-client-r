@@ -471,7 +471,7 @@ InfluxDBClient <- R6::R6Class(
       if (length(fieldCols) == 0) {
         stop("'fieldCols' cannot be empty")
       }
-      if (length(timeCol) != 1) {
+      if (length(timeCol) > 1) {
         stop("'timeCol' must select single column")
       }
 
@@ -502,7 +502,7 @@ InfluxDBClient <- R6::R6Class(
           stop(sprintf("field columns not found in data frame: %s",
                        paste(notFound, sep = "", collapse = ",")))
         }
-        if (!(timeCol %in% colNames)) {
+        if (!is.null(timeCol) && !(timeCol %in% colNames)) {
           stop(sprintf("time column '%s' not found in data frame",
                        timeCol))
         }
@@ -520,7 +520,12 @@ InfluxDBClient <- R6::R6Class(
           tags <- row[tagCols]
           fields <- row[fieldCols]
           fieldNames <- if (named) row[names(fieldCols)] else fieldCols
-          time <- row[,timeCol]
+          time <-
+            if (!is.null(timeCol)) {
+              row[,timeCol]
+            } else {
+              NULL
+            }
 
           # format values for line protocol
           lpMeasurement <- private$as.lp.tag(measurement)
@@ -530,14 +535,27 @@ InfluxDBClient <- R6::R6Class(
           lpFieldSet <- paste(lapply(fieldNames, private$as.lp.tag),
                               lapply(fields, private$as.lp.value),
                               sep = "=", collapse = ",")
-          lpTimestamp <- private$as.lp.timestamp(time, precision)
+          lpTimestamp <-
+            if (!is.null(timeCol)) {
+              private$as.lp.timestamp(time, precision)
+            } else {
+              NULL
+            }
 
           # construct line
           line <-
             if (length(tagCols) > 0) {
-              sprintf("%s,%s %s %s", lpMeasurement, lpTagSet, lpFieldSet, lpTimestamp)
+              if (!is.null(timeCol)) {
+                sprintf("%s,%s %s %s", lpMeasurement, lpTagSet, lpFieldSet, lpTimestamp)
+              } else {
+                sprintf("%s,%s %s", lpMeasurement, lpTagSet, lpFieldSet)
+              }
             } else {
-              sprintf("%s %s %s", lpMeasurement, lpFieldSet, lpTimestamp)
+              if (!is.null(timeCol)) {
+                sprintf("%s %s %s", lpMeasurement, lpFieldSet, lpTimestamp)
+              } else {
+                sprintf("%s %s", lpMeasurement, lpFieldSet)
+              }
             }
 
           # write to buffer
