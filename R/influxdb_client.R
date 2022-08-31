@@ -176,7 +176,7 @@ InfluxDBClient <- R6::R6Class(
     #' @param bucket Target bucket name
     #' @param batchSize Batch size. Positive number or \code{FALSE} to disable.
     #' Default is \code{5000}.
-    #' @param precision Time precision
+    #' @param precision Time precision. Default is \code{"ns"}.
     #' @param measurementCol Name of measurement column. Default is \code{"_measurement"}.
     #' @param tagCols Names of tag (index) columns
     #' @param fieldCols Names of field columns. In case of unpivoted data
@@ -209,6 +209,7 @@ InfluxDBClient <- R6::R6Class(
       if (is.null(bucket)) {
         stop("'bucket' cannot be NULL")
       }
+      precision <- match.arg(precision, c("ns", "us", "ms", "s"))
       if (is.numeric(batchSize) && batchSize < 1) {
         stop("'batchSize' must be >= 1 or FALSE")
       }
