@@ -228,7 +228,7 @@ The example is valid for `data.frame` `data` like the following:
 | `x` | data  | `data.frame` (or list of) | none |
 | `bucket` | target bucket name | `character` | none |
 | `batchSize` | batch size | `numeric` | `5000` |
-| `precision` | timestamp precision | `character` (one of `s`, `ms`, `us`, `ns`) | none |
+| `precision` | timestamp precision | `character` (one of `s`, `ms`, `us`, `ns`) | `"ns"` |
 | `measurementCol` | measurement column name | `character` | `"_measurement"` |
 | `tagCols` | tags column names | `character` | `NULL` |
 | `fieldCols` | fields column names | `character` | `c("_field"="_value")` |
@@ -236,6 +236,8 @@ The example is valid for `data.frame` `data` like the following:
 | `object` | output object | `character` | `NULL` |
 
 Supported time column value types: `nanotime`, `POSIXct`.
+To write data points without timestamp, set `timeCol` to `NULL`.
+See [Timestamp precision](https://docs.influxdata.com/influxdb/cloud/write-data/developer-tools/line-protocol/#timestamp-precision) for details.
 
 Response is either `NULL` on success, or errorr otherwise.
 

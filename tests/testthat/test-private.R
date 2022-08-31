@@ -28,25 +28,25 @@ InfluxDBApiClientTest <- R6::R6Class(
 .data.pivoted = test.airSensors.data.pivoted
 .lp = list(
   c(
-  "w-airSensors,region=south,sensor_id=TLM0101 altitude=549i 1623232361000000000",
-  "w-airSensors,region=south,sensor_id=TLM0101 altitude=547i 1623232371000000000",
-  "w-airSensors,region=south,sensor_id=TLM0101 altitude=563i 1623232381000000000",
-  "w-airSensors,region=south,sensor_id=TLM0101 altitude=560i 1623232391000000000",
-  "w-airSensors,region=south,sensor_id=TLM0101 altitude=544i 1623232401000000000"
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=549i 1623232361000000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=547i 1623232371000000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=563i 1623232381000000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=560i 1623232391000000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 altitude=544i 1623232401000000000"
   ),
   c(
-  "w-airSensors,region=south,sensor_id=TLM0101 grounded=false 1623232361000000000",
-  "w-airSensors,region=south,sensor_id=TLM0101 grounded=false 1623232371000000000",
-  "w-airSensors,region=south,sensor_id=TLM0101 grounded=true 1623232381000000000",
-  "w-airSensors,region=south,sensor_id=TLM0101 grounded=true 1623232391000000000",
-  "w-airSensors,region=south,sensor_id=TLM0101 grounded=false 1623232401000000000"
+    "w-airSensors,region=south,sensor_id=TLM0101 grounded=false 1623232361000000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 grounded=false 1623232371000000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 grounded=true 1623232381000000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 grounded=true 1623232391000000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 grounded=false 1623232401000000000"
   ),
   c(
-  "w-airSensors,region=south,sensor_id=TLM0101 temperature=71.78441 1623232361000000000",
-  "w-airSensors,region=south,sensor_id=TLM0101 temperature=71.7684399 1623232371000000000",
-  "w-airSensors,region=south,sensor_id=TLM0101 temperature=71.7819928 1623232381000000000",
-  "w-airSensors,region=south,sensor_id=TLM0101 temperature=71.7487767 1623232391000000000",
-  "w-airSensors,region=south,sensor_id=TLM0101 temperature=71.7335579 1623232401000000000"
+    "w-airSensors,region=south,sensor_id=TLM0101 temperature=71.78441 1623232361000000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 temperature=71.7684399 1623232371000000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 temperature=71.7819928 1623232381000000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 temperature=71.7487767 1623232391000000000",
+    "w-airSensors,region=south,sensor_id=TLM0101 temperature=71.7335579 1623232401000000000"
   )
 )
 .lp.pivoted = list(
@@ -267,9 +267,9 @@ test_that("toLineProtocol / special characters", {
   expected <- .lp.specialcharacters
   expect_equal(lp, expected)
 
-# actual HTTP payload:
-# w-air\ Sensors,region\,us=south\ east,sensor\ id=TLM0101 altitude=549i,grounded="x \"false\"",temperature=71.78441 1623232361000000000
-# ...
+  # actual HTTP payload:
+  # w-air\ Sensors,region\,us=south\ east,sensor\ id=TLM0101 altitude=549i,grounded="x \"false\"",temperature=71.78441 1623232361000000000
+  # ...
 
 })
 
@@ -404,7 +404,7 @@ test_that("toLineProtocol / time column is not single column", {
                            measurementCol = '_measurement',
                            tagCols = c("region", "sensor_id"),
                            fieldCols = c("altitude", "grounded", "temperature"),
-                           timeCol = NULL)
+                           timeCol = c('time1', 'time2'))
   }
   expect_error(f(), "'timeCol' must select single column", fixed = TRUE)
 })
