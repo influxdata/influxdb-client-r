@@ -1,3 +1,9 @@
+## 0.1.2 [2022-08-31]
+
+### Features
+
+1. [33](https://github.com/influxdata/influxdb-client-r/pull/33): Enable writing data points without timestamps.
+
 ## 0.1.1 [2022-08-24]
 
 ### Bug Fixes
