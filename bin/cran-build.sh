@@ -1,4 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+SCRIPT_PATH="$( cd "$(dirname "$0")" || exit ; pwd -P )"
+
+pushd "${SCRIPT_PATH}"/../
 
 rm influxdbclient_*.tar.gz
 
@@ -9,3 +13,5 @@ R CMD build .
 
 mv LICENSE LICENSE.cran
 mv /tmp/LICENSE-influxdbclient-github LICENSE
+
+popd
