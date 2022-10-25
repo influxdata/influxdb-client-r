@@ -1,0 +1,9 @@
+packageName: influxdbclient
+packageVersion: 0.1.2
+appName: InfluxDB 2.0
+appDescription: InfluxDB 2.0
+gitUserId: bonitoo-io
+gitRepoId: influxdb-client-r
+infoName: Ales Pour / Bonitoo
+infoEmail: ales.pour@bonitoo.io
+licenseInfo: MIT License
