@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.influxdata</groupId>
+    <artifactId>influxdb-client-r</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>influxdb-client-r</name>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>5.2.1</version> <!-- required due to openapi-generator issue #9821 in previous versions -->
+                <configuration>
+                    <inputSpec>./oss.yml</inputSpec>
+                    <generatorName>r</generatorName>
+                    <configurationFile>./generator-config.yml</configurationFile>
+                    <generateModelDocumentation>false</generateModelDocumentation>
+                    <generateApiDocumentation>false</generateApiDocumentation>
+                    <generateApis>true</generateApis>
+                    <generateApiTests>false</generateApiTests>
+                    <generateModelTests>false</generateModelTests>
+                    <verbose>false</verbose>
+                    <output>generated</output>
+                    <addCompileSourceRoot>false</addCompileSourceRoot>
+                    <templateDirectory>templates</templateDirectory> <!-- modified 5.1.1 templates -->
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
